@@ -10,7 +10,7 @@
 - 集成Swagger ui的poco controller.
 - 集成ef core
 - 提供了Aop机制
-- 后续将陆续集成,Hangfire,IentityServer4,MediatR,NServiceBus,RabbitMQ,SignalR,Redis,ML,Multitenancy,virtualfilesystem等等,这些将不按特定顺序集成进来喔,很多好玩的等着小伙伴们一起来玩耍喔.
+- 后续将陆续集成,Hangfire,IentityServer4,NServiceBus,RabbitMQ,SignalR,Redis,ML,ES,Multitenancy,virtualfilesystem等等,这些将不按特定顺序集成进来喔,很多好玩的等着小伙伴们一起来玩耍喔.
 - 最后将会实施容器化,使用linux docker container来运行我们的.net core程序.使用K8S来管理我们的micro services.
 #### 2.成为一个可视化建模的平台
 **平台提供能力**
