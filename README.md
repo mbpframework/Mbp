@@ -5,7 +5,7 @@
 #### 1.成为一个rest api的开发框架
 **平台提供能力**
 - 模块化,包含.net core核心模块和aspnetcore核心模块
-- 基于Jwtde统一身份认证
+- 基于Jwt的统一身份认证
 - 基于角色和自定义策略的统一授权系统
 - 集成Swagger ui的poco controller.
 - 集成ef core
