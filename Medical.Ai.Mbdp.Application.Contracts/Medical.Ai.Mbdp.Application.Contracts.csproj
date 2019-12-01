@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Medical.Ai.Mbdp.DomainService\Medical.Ai.Mbdp.Domain.csproj" />
+    <ProjectReference Include="..\Mpb.AspNetCore\Mbp.AspNetCore.csproj" />
+    <ProjectReference Include="..\Mpb.Core\Mbp.Core.csproj" />
+  </ItemGroup>
+
+</Project>

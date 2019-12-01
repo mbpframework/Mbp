@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\Administrator.WIN-DG3TNNALDV5\source\repos\Mbp\Medical.Ai.Mbdp.Application\Medical.Ai.Mbdp.Application.xml</DocumentationFile>
+    <WarningsAsErrors />
+    <NoWarn />
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Medical.Ai.Mbdp.Application.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Medical.Ai.Mbdp.Application.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mbp.Authentication.JwtBearer\Mbp.Authentication.JwtBearer.csproj" />
+    <ProjectReference Include="..\Mbp.Authentication\Mbp.Authentication.csproj" />
+    <ProjectReference Include="..\Medical.Ai.Mbdp.Application.Contracts\Medical.Ai.Mbdp.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Medical.Ai.Mbdp.DomainService\Medical.Ai.Mbdp.Domain.csproj" />
+    <ProjectReference Include="..\Medical.Ai.Mbdp.EntityFrameworkCore\Medical.Ai.Mbdp.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\Mpb.AspNetCore\Mbp.AspNetCore.csproj" />
+    <ProjectReference Include="..\Mpb.Core\Mbp.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+</Project>

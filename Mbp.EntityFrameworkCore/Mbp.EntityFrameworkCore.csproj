@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mpb.Core\Mbp.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Domain\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.1" />
+  </ItemGroup>
+
+</Project>
