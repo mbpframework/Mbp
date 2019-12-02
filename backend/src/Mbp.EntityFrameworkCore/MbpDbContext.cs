@@ -22,10 +22,24 @@ namespace Mbp.EntityFrameworkCore
 
         public DbSet<MbpUserRole> MbpUserRoles { get; set; }
 
-        public DbSet<MbpUserClaims> MbpUserClaims { get; set; }
-
         public DbSet<MbpMenu> MbpMenus { get; set; }
 
         public DbSet<MbpRoleMenu> MbpRoleMenus { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<MbpUser>().HasData(
+                new MbpUser
+                {
+                    Id = 1,
+                    IsDeleted = false,
+                    LoginName = "admin",
+                    UserName = "admin",
+                    UserStatus = EnumUserStatus.Actived,
+                    IsAdmin = true
+                });
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
