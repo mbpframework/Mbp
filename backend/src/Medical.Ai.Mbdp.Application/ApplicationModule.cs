@@ -29,14 +29,6 @@ namespace Medical.Ai.Mbdp.Application
         {
             base.Load(builder);
 
-            // 所有集成IAppService的类型都会被扫入IOC
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                      .Where(t => t.Name.EndsWith("AppService")
-                      && typeof(IAppService).IsAssignableFrom(t)
-                      && typeof(IPerRequestDependency).IsAssignableFrom(t)
-                      )
-                      .AsImplementedInterfaces().InstancePerDependency();
-
             // 注册OOM
             builder.RegisterInstance(AutoMapperConfig.CreateMapper()).SingleInstance();
         }
