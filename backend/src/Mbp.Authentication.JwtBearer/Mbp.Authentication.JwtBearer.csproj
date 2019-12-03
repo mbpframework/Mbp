@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Mbp.EntityFrameworkCore\Mbp.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Mpb.Core\Mbp.Core.csproj" />
   </ItemGroup>
 

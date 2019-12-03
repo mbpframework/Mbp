@@ -11,13 +11,20 @@ namespace Mbp.Authentication.JwtBearer
     /// </summary>
     public interface IJwtBearerService
     {
-       /// <summary>
-       /// 生成Jwt
-       /// </summary>
-       /// <param name="userId"></param>
-       /// <param name="userName"></param>
-       /// <param name="claims"></param>
-       /// <returns></returns>
-        Task<Jwt> CreateJwt(string userId, string userName,List<Claim> claims);
+        /// <summary>
+        /// 生成Jwt
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="userName"></param>
+        /// <param name="claims"></param>
+        /// <returns></returns>
+        Task<Jwt> CreateJwt(string userId, string userName, List<Claim> claims);
+
+        /// <summary>
+        /// 刷新token
+        /// </summary>
+        /// <param name="refreshJwt"></param>
+        /// <returns></returns>
+        Task<Jwt> RefreshJwt(string refreshJwt);
     }
 }

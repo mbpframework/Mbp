@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Mbp.EntityFrameworkCore.PermissionModel;
+using Medical.Ai.Mbdp.Application.AccountService.Dto;
 using Medical.Ai.Mbdp.Application.Contracts.Demo.Dto;
 using Medical.Ai.Mbdp.Domain.DomainEntities.Demo;
 using System;
@@ -25,7 +27,13 @@ namespace Medical.Ai.Mbdp.Application
                 cfg.CreateMap<BlogDto, Blog>();
                 cfg.CreateMap<PostDto, Post>();
 
-                // to do
+                // 用户映射
+                cfg.CreateMap<UserInputDto, MbpUser>();
+                cfg.CreateMap<MbpUser, UserOutputDto>();
+
+                // 角色映射
+                cfg.CreateMap<RoleInputDto, MbpRole>();
+                cfg.CreateMap<MbpRole, RoleOutputDto>();
             });
 
             return config.CreateMapper();

@@ -80,14 +80,14 @@ namespace Medical.Ai.Mbdp.Application.Demo
 
         [AllowAnonymous]
         [HttpGet("GetToken")]
-        public async virtual Task<string> GetToken()
+        public async virtual Task<Jwt> GetToken()
         {
             // todo 取出用户的角色
             var t = await _jwtBearerService.CreateJwt("123", "lixp", new List<Claim>()
             {
                new Claim(ClaimTypes.Role, "admin")
             });
-            return t.AccessToken;
+            return t;
         }
     }
 }

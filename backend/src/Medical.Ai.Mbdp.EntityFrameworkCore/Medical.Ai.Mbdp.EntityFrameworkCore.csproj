@@ -14,8 +14,4 @@
     <ProjectReference Include="..\Medical.Ai.Mbdp.DomainService\Medical.Ai.Mbdp.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

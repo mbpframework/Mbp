@@ -26,7 +26,7 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
 
         public bool IsDeleted { get; set; }
 
-        public List<MbpRoleClaims> RoleClaims { get; set; }
+        public List<MbpMenuClaims> MenuClaims { get; set; }
 
         [MaxLength(256)]
         public string ConcurrencyStamp { get; set; }

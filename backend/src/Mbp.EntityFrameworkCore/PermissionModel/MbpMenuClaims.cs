@@ -9,7 +9,7 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
     /// <summary>
     /// 菜单操作表
     /// </summary>
-    public class MbpRoleClaims : EntityBase<int>
+    public class MbpMenuClaims : EntityBase<int>, ISoftDelete
     {
         public int MenuId { get; set; }
 
@@ -19,5 +19,7 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         public string ClaimType { get; set; }
 
         public string ClaimValue { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace Medical.Ai.Mbdp.Application.AccountService
     /// <summary>
     /// 账号管理,相关服务需要管理员权限
     /// </summary>
-    [Authorize(Roles = "admin")]
+    [Authorize("GlobalPermission")]
     [AutoAop]
     [AutoWebApi]
     [Route("api/[controller]")]
@@ -71,6 +71,18 @@ namespace Medical.Ai.Mbdp.Application.AccountService
             return new LoginOutputDto() { AccessToken = new Jwt() };
         }
 
-        // todo 添加登出, 添加用户,添加角色,添加用户角色,添加角色菜单等功能
+        [AllowAnonymous]
+        [HttpGet("RefreshToken")]
+        public async Task<Jwt> RefreshToken(string refreshToken)
+        {
+            return await _jwtBearerService.RefreshJwt(refreshToken);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("LoginOut")]
+        public void LoginOut()
+        {
+
+        }
     }
 }

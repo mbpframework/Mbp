@@ -14,6 +14,9 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         [MaxLength(256)]
         public string Name { get; set; }
 
+        [MaxLength(256)]
+        public string Code { get; set; }
+
         public string ConcurrencyStamp { get; set; }
 
         public List<MbpRoleMenu> RoleMenus { get; set; }

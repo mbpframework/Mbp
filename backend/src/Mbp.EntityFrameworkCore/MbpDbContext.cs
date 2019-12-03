@@ -16,7 +16,7 @@ namespace Mbp.EntityFrameworkCore
 
         public DbSet<MbpRole> MbpRoles { get; set; }
 
-        public DbSet<MbpRoleClaims> MbpRoleClaims { get; set; }
+        public DbSet<MbpMenuClaims>  MbpMenuClaims { get; set; }
 
         public DbSet<MbpUser> MbpUsers { get; set; }
 

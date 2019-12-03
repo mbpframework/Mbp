@@ -25,6 +25,9 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         public string UserName { get; set; }
 
         [MaxLength(256)]
+        public string Code { get; set; }
+
+        [MaxLength(256)]
         public string Email { get; set; }
 
         public string Password { get; set; }

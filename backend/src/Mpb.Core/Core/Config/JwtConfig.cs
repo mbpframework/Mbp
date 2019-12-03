@@ -25,5 +25,10 @@ namespace Mbp.Core.Core.Config
         /// 过期时间 Minutes
         /// </summary>
         public int TimeOut { get; set; }
+
+        /// <summary>
+        /// 刷新token过期时间 Minutes
+        /// </summary>
+        public int RefreshTimeOut { get; set; }
     }
 }

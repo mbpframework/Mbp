@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Mbp.Authentication.JwtBearer
 {
@@ -39,6 +40,7 @@ namespace Mbp.Authentication.JwtBearer
 
             }).AddJwtBearer(jwtBearerOptions =>
             {
+                // 设置验证参数
                 jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -49,6 +51,18 @@ namespace Mbp.Authentication.JwtBearer
                     ValidAudience = jwtConfig.Audience,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.FromMinutes(jwtConfig.TimeOut)
+                };
+                // 设置验证事件
+                jwtBearerOptions.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                        {
+                            context.Response.Headers.Add("action", "timeOut");
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

@@ -9,7 +9,7 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
     /// <summary>
     /// 用户角色表,也可以叫角色用户表,通过这个表,角色:用户==N:N
     /// </summary>
-    public class MbpUserRole : EntityBase<int>
+    public class MbpUserRole : EntityBase<int>, ISoftDelete
     {
         public int UserId { get; set; }
 
@@ -20,5 +20,7 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         public MbpRole Role { get; set; }
 
         public int RoleId { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

@@ -5,21 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\Administrator.WIN-DG3TNNALDV5\source\repos\Mbp\Medical.Ai.Mbdp.Application\Medical.Ai.Mbdp.Application.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
     <WarningsAsErrors />
     <NoWarn />
     <WarningLevel>0</WarningLevel>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Medical.Ai.Mbdp.Application.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Medical.Ai.Mbdp.Application.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
