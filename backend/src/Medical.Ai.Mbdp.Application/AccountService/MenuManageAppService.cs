@@ -13,6 +13,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Mbp.Ddd.Application.System.Linq;
+using Mbp.Ddd.Application.Mbp.UI;
 
 namespace Medical.Ai.Mbdp.Application.AccountService
 {
@@ -35,30 +37,117 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         /// 添加功能菜单
         /// </summary>
         [HttpPost("AddMenu")]
-        public void AddMenu(MenuInputDto menuInputDto)
+        public int AddMenu(MenuInputDto menuInputDto)
         {
             var menu = _mapper.Map<MbpMenu>(menuInputDto);
 
             _defaultDbContext.MbpMenus.Add(menu);
 
-            _defaultDbContext.SaveChanges();
+            return _defaultDbContext.SaveChanges();
         }
 
-        [HttpGet("GetMenus")]
-        public async Task<List<MenuOutputDto>> GetMenus()
+        /// <summary>
+        /// 更新菜单
+        /// </summary>
+        /// <param name="menuInputDto"></param>
+        /// <returns></returns>
+        [HttpPut("UpdateMenu")]
+        public int UpdateMenu(MenuInputDto menuInputDto)
         {
-            List<MbpMenu> menus = await _defaultDbContext.MbpMenus.Include(u => u.MenuClaims).ToListAsync();
+            var menu = _mapper.Map<MbpMenu>(menuInputDto);
 
-            return _mapper.Map<List<MenuOutputDto>>(menus);
+            _defaultDbContext.Attach(menu);
+
+            _defaultDbContext.MbpMenus.Update(menu);
+
+            return _defaultDbContext.SaveChanges();
+        }
+
+        /// <summary>
+        /// 获取菜单列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetMenus")]
+        public async Task<PagedList<MenuOutputDto>> GetMenus(int pageSize, int pageIndex)
+        {
+            int total = 0;
+
+            List<MbpMenu> menus = _defaultDbContext.MbpMenus.Include(u => u.MenuClaims).PageByAscending(pageSize, pageIndex, out total, (c) => true, (c => c.Id)).ToList();
+
+            // 返回列表分页数据
+            return new PagedList<MenuOutputDto>()
+            {
+                Content = _mapper.Map<List<MenuOutputDto>>(menus),
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Total = total
+            };
         }
 
         /// <summary>
         /// 配置功能操作权限
         /// </summary>
+        /// <param name="menuId"></param>
+        /// <param name="claims"></param>
+        /// <returns></returns>
         [HttpPost("AddMenuClaims")]
-        public void AddMenuClaims()
+        public int AddMenuClaims(int menuId, List<MenuClaimInputDto> claims)
         {
+            // 删除Claims
+            DeleteMenuClaims(menuId);
 
+            List<MbpMenuClaims> menuClaims = new List<MbpMenuClaims>();
+
+            foreach (var claim in claims)
+            {
+                menuClaims.Add(new MbpMenuClaims()
+                {
+                    MenuId = menuId,
+                    ClaimType = claim.ClaimType,
+                    ClaimValue = claim.ClaimValue
+                });
+            }
+
+            _defaultDbContext.MbpMenuClaims.AddRange(menuClaims);
+
+            return _defaultDbContext.SaveChanges();
+        }
+
+        /// <summary>
+        /// 删除菜单,单条
+        /// </summary>
+        /// <param name="menuId"></param>
+        /// <returns></returns>
+        [HttpDelete("DeleteMenu")]
+        public int DeleteMenu(int menuId)
+        {
+            var menu = _defaultDbContext.MbpMenus.Include(m => m.MenuClaims).Where(m => m.Id == menuId).First();
+            _defaultDbContext.MbpMenus.Remove(menu);
+
+            return _defaultDbContext.SaveChanges();
+        }
+
+        /// <summary>
+        /// 删除菜单,多条
+        /// </summary>
+        /// <param name="menuIds"></param>
+        /// <returns></returns>
+        [HttpDelete("DeleteMenus")]
+        public int DeleteMenus(List<int> menuIds)
+        {
+            var menus = _defaultDbContext.MbpMenus.Include(m => m.MenuClaims).Where(m => menuIds.Contains(m.Id));
+            _defaultDbContext.MbpMenus.RemoveRange(menus);
+
+            return _defaultDbContext.SaveChanges();
+        }
+
+        private int DeleteMenuClaims(int menuId)
+        {
+            var menuClaims = _defaultDbContext.MbpMenuClaims.Where(c => c.MenuId == menuId);
+
+            _defaultDbContext.MbpMenuClaims.RemoveRange(menuClaims);
+
+            return _defaultDbContext.SaveChanges();
         }
     }
 }

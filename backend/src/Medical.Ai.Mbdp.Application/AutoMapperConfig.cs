@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Mbp.Ddd.Application.Mbp.UI;
 using Mbp.EntityFrameworkCore.PermissionModel;
 using Medical.Ai.Mbdp.Application.AccountService.Dto;
 using Medical.Ai.Mbdp.Application.Contracts.Demo.Dto;
@@ -34,6 +35,10 @@ namespace Medical.Ai.Mbdp.Application
                 // 角色映射
                 cfg.CreateMap<RoleInputDto, MbpRole>();
                 cfg.CreateMap<MbpRole, RoleOutputDto>();
+
+                // 菜单映射
+                cfg.CreateMap<MenuInputDto, MbpMenu>();
+                cfg.CreateMap<MbpMenu, MenuOutputDto>();
             });
 
             return config.CreateMapper();

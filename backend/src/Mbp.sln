@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Medical.Ai.Mbdp.EntityFrame
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mbp.Authentication.JwtBearer", "Mbp.Authentication.JwtBearer\Mbp.Authentication.JwtBearer.csproj", "{2DF0A70C-B5D8-481E-BD96-A130E22B18D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mbp.Authentication", "Mbp.Authentication\Mbp.Authentication.csproj", "{48DDF2BA-2A2E-42BE-939F-5F66C6223F9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mbp.Authentication", "Mbp.Authentication\Mbp.Authentication.csproj", "{48DDF2BA-2A2E-42BE-939F-5F66C6223F9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mbp.Ddd.Application", "Mbp.Ddd.Application\Mbp.Ddd.Application.csproj", "{3F288424-6224-48DC-B5C3-91FF7BCC44B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +81,10 @@ Global
 		{48DDF2BA-2A2E-42BE-939F-5F66C6223F9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48DDF2BA-2A2E-42BE-939F-5F66C6223F9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48DDF2BA-2A2E-42BE-939F-5F66C6223F9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F288424-6224-48DC-B5C3-91FF7BCC44B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F288424-6224-48DC-B5C3-91FF7BCC44B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F288424-6224-48DC-B5C3-91FF7BCC44B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F288424-6224-48DC-B5C3-91FF7BCC44B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +101,7 @@ Global
 		{48B2E35C-5BB3-44C4-94B1-130E5F68F6F5} = {35D18E91-88BD-4B36-8517-5EE7DF4283D5}
 		{2DF0A70C-B5D8-481E-BD96-A130E22B18D6} = {26B62ACB-79D5-4A64-9B9D-F938F5BFE33C}
 		{48DDF2BA-2A2E-42BE-939F-5F66C6223F9D} = {26B62ACB-79D5-4A64-9B9D-F938F5BFE33C}
+		{3F288424-6224-48DC-B5C3-91FF7BCC44B9} = {26B62ACB-79D5-4A64-9B9D-F938F5BFE33C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {81EC689B-3E67-4D2A-A1C9-4A4A01EB9B6E}

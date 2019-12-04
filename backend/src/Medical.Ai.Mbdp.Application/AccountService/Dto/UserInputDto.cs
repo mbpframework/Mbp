@@ -8,6 +8,9 @@ namespace Medical.Ai.Mbdp.Application.AccountService.Dto
     public class UserInputDto
     {
         [Required]
+        public int Id { get; set; }
+
+        [Required]
         public string LoginName { get; set; }
 
         public string UserName { get; set; }

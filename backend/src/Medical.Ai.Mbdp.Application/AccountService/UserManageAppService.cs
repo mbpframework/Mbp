@@ -13,6 +13,8 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Linq;
+using Mbp.Ddd.Application.Mbp.UI;
+using Mbp.Ddd.Application.System.Linq;
 
 namespace Medical.Ai.Mbdp.Application.AccountService
 {
@@ -45,15 +47,41 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         }
 
         /// <summary>
+        /// 更新用户信息
+        /// </summary>
+        /// <param name="userInputDto"></param>
+        /// <returns></returns>
+        [HttpPut("UpdateUser")]
+        public int UpdateUser(UserInputDto userInputDto)
+        {
+            var user = _mapper.Map<MbpUser>(userInputDto);
+
+            _defaultDbContext.Attach(user);
+
+            _defaultDbContext.MbpUsers.Update(user);
+
+            return _defaultDbContext.SaveChanges();
+        }
+
+        /// <summary>
         /// 获取用户列表
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetUsers")]
-        public async Task<List<UserOutputDto>> GetUsers()
+        public async Task<PagedList<UserOutputDto>> GetUsers(int pageSize, int pageIndex)
         {
-            List<MbpUser> users = await _defaultDbContext.MbpUsers.Include(u => u.UserRoles).ToListAsync();
+            int total = 0;
 
-            return _mapper.Map<List<UserOutputDto>>(users);
+            var users = _defaultDbContext.MbpUsers.Include(u => u.UserRoles).PageByAscending(pageSize, pageIndex, out total,
+                (c) => true, (c => c.Id)).ToList();
+
+            return new PagedList<UserOutputDto>()
+            {
+                Content = _mapper.Map<List<UserOutputDto>>(users),
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Total = total
+            };
         }
 
         /// <summary>

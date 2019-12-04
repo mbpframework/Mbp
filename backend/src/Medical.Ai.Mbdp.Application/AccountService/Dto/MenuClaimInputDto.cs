@@ -5,15 +5,15 @@ using System.Text;
 
 namespace Medical.Ai.Mbdp.Application.AccountService.Dto
 {
-    public class RoleInputDto
+    public class MenuClaimInputDto
     {
         [Required]
-        public int Id { get; set; }
+        public int MenuId { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string ClaimType { get; set; }
 
         [Required]
-        public string Code { get; set; }
+        public string ClaimValue { get; set; }
     }
 }

@@ -79,8 +79,8 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         }
 
         [AllowAnonymous]
-        [HttpGet("LoginOut")]
-        public void LoginOut()
+        [HttpGet("LogOut")]
+        public void LogOut()
         {
 
         }

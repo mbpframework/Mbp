@@ -19,10 +19,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Medical.Ai.Mbdp.Application.AuthenticatePolicyHanlder;
+using Mbp.Ddd.Application;
 
 namespace Medical.Ai.Mbdp.Application
 {
-    public class ApplicationModule : MbpModule
+    public class ApplicationModule : MbpDddApplicationModule
     {
         public override EnumModuleGrade Level => EnumModuleGrade.Application;
         protected override void Load(ContainerBuilder builder)

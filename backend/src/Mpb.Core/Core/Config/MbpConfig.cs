@@ -12,5 +12,7 @@ namespace Mbp.Core.Core.Config
         public JwtConfig Jwt { get; set; }
 
         public SwaggerConfig Swagger { get; set; }
+
+        public DatabaseConfig Database { get; set; }
     }
 }

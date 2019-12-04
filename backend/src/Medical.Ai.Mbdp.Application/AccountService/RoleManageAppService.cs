@@ -13,6 +13,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Mbp.Ddd.Application.System.Linq;
+using Mbp.Ddd.Application.Mbp.UI;
 
 namespace Medical.Ai.Mbdp.Application.AccountService
 {
@@ -35,21 +37,53 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         /// 添加角色
         /// </summary>
         [HttpPost("AddRole")]
-        public void AddRole(RoleInputDto roleInputDto)
+        public int AddRole(RoleInputDto roleInputDto)
         {
             var role = _mapper.Map<MbpRole>(roleInputDto);
 
             _defaultDbContext.MbpRoles.Add(role);
 
-            _defaultDbContext.SaveChanges();
+            return _defaultDbContext.SaveChanges();
         }
 
-        [HttpGet("GetRoles")]
-        public async Task<List<RoleOutputDto>> GetRoles()
+        /// <summary>
+        /// 更新角色
+        /// </summary>
+        /// <param name="roleInputDto"></param>
+        /// <returns></returns>
+        [HttpPut("UpdateRole")]
+        public int UpdateRole(RoleInputDto roleInputDto)
         {
-            List<MbpRole> roles = await _defaultDbContext.MbpRoles.Include(u => u.RoleMenus).ToListAsync();
+            var role = _mapper.Map<MbpRole>(roleInputDto);
 
-            return _mapper.Map<List<RoleOutputDto>>(roles);
+            _defaultDbContext.Attach(role);
+
+            _defaultDbContext.MbpRoles.Update(role);
+
+            return _defaultDbContext.SaveChanges();
+        }
+
+        /// <summary>
+        /// 获取角色列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetRoles")]
+        public async Task<PagedList<RoleOutputDto>> GetRoles(int pageSize, int pageIndex)
+        {
+            int total = 0;
+
+            // 分页查询 PageByAscending
+            var roles = _defaultDbContext.MbpRoles.Include(u => u.RoleMenus).PageByAscending(pageSize, pageIndex, out total,
+                (c) => true, (c => c.Id)).ToList();
+
+            // 返回列表分页数据
+            return new PagedList<RoleOutputDto>()
+            {
+                Content = _mapper.Map<List<RoleOutputDto>>(roles),
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Total = total
+            };
         }
 
         /// <summary>
@@ -104,6 +138,37 @@ namespace Medical.Ai.Mbdp.Application.AccountService
             _defaultDbContext.MbpRoleMenus.Remove(roleMenu);
 
             return _defaultDbContext.SaveChanges();
+        }
+
+        /// <summary>
+        /// 获取角色下的菜单
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        [HttpDelete("GetRoleMenus")]
+        public List<RoleMenuOutputDto> GetRoleMenus(int roleId)
+        {
+            var menuRoles = _defaultDbContext.MbpRoleMenus.Where(rm => rm.RoleId == roleId)
+                .Include(rm => rm.Menu)
+                .ToList();
+
+            List<RoleMenuOutputDto> roleMenuOutputDtos = new List<RoleMenuOutputDto>();
+
+            menuRoles.ForEach(e =>
+            {
+                roleMenuOutputDtos.Add(new RoleMenuOutputDto()
+                {
+                    RoleId = e.RoleId,
+                    MenuId = e.MenuId,
+                    MenuCode = e.Menu.Code,
+                    MenuLevel = e.Menu.Level,
+                    MenuName = e.Menu.Name,
+                    ParentId = e.Menu.ParentId,
+                    Path = e.Menu.Path
+                });
+            });
+
+            return roleMenuOutputDtos;
         }
     }
 }

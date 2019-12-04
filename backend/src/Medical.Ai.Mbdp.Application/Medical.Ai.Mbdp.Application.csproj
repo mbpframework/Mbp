@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Mbp.Authentication.JwtBearer\Mbp.Authentication.JwtBearer.csproj" />
     <ProjectReference Include="..\Mbp.Authentication\Mbp.Authentication.csproj" />
+    <ProjectReference Include="..\Mbp.Ddd.Application\Mbp.Ddd.Application.csproj" />
     <ProjectReference Include="..\Medical.Ai.Mbdp.Application.Contracts\Medical.Ai.Mbdp.Application.Contracts.csproj" />
     <ProjectReference Include="..\Medical.Ai.Mbdp.DomainService\Medical.Ai.Mbdp.Domain.csproj" />
     <ProjectReference Include="..\Medical.Ai.Mbdp.EntityFrameworkCore\Medical.Ai.Mbdp.EntityFrameworkCore.csproj" />
