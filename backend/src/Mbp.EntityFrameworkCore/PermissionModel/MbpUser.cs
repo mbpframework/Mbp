@@ -51,5 +51,7 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         public bool IsAdmin { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public string SystemCode { get; set; }
     }
 }

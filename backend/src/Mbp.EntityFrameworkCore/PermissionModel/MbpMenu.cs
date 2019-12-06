@@ -15,6 +15,8 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
 
         public string Code { get; set; }
 
+        public int Order { get; set; }
+
         /// <summary>
         /// 菜单等级,1,2,3
         /// </summary>
@@ -30,5 +32,7 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
 
         [MaxLength(256)]
         public string ConcurrencyStamp { get; set; }
+
+        public string SystemCode { get; set; }
     }
 }

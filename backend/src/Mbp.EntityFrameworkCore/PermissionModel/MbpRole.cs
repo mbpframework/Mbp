@@ -24,5 +24,7 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         public List<MbpUserRole> UserRoles { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public string SystemCode { get; set; }
     }
 }
