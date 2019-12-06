@@ -15,6 +15,9 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
+  SET_RRTOKEN: (state, refreshToken) => {
+    state.refreshToken = refreshToken
+  },
   SET_NAME: (state, name) => {
     state.name = name
   },
@@ -27,22 +30,34 @@ const mutations = {
 }
 
 const actions = {
-  // user login
+  // 用户登录
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ LoginName: username.trim(), Password: password, ClientID: guid() }).then(response => {
-        commit('SET_TOKEN', response.Data.AccessToken.AccessToken)
-        setToken(response.Data.AccessToken.AccessToken)
-        setRefreshToken(response.Data.AccessToken.RefreshToken)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      login({ LoginName: username.trim(), Password: password, ClientID: guid() })
+        .then(response => {
+          // 保存登录token到vuex
+          commit('SET_TOKEN', response.Data.AccessToken.AccessToken)
+          // 保存token到cookies
+          setToken(response.Data.AccessToken.AccessToken)
+          // 保存刷新token到vuex
+          commit('SET_RRTOKEN', response.Data.AccessToken.RefreshToken)
+          // 保存刷新token到cookies
+          setRefreshToken(response.Data.AccessToken.RefreshToken)
+
+          const { Role, UserName } = response.Data
+
+          commit('SET_NAME', UserName)
+          commit('SET_AVATAR', 'avatar')
+          commit('SET_ROLES', Role)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
     })
   },
 
-  // get user info
+  // 获取用户信息
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
@@ -71,11 +86,13 @@ const actions = {
     })
   },
 
-  // user logout
+  // 用户注销
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
+        // token和刷新token的清空
         commit('SET_TOKEN', '')
+        commit('SET_RRTOKEN', '')
         removeToken()
         removeRefreshToken()
         resetRouter()
@@ -90,6 +107,7 @@ const actions = {
   resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
+      commit('SET_RRTOKEN', '')
       removeToken()
       removeRefreshToken()
       resolve()

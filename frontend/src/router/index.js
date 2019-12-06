@@ -64,172 +64,66 @@ export const constantRoutes = [
       component: () => import('@/views/dashboard/index'),
       meta: { title: '首页', icon: 'dashboard', affix: true }
     }]
-  },
-  {
-    path: '/order',
-    component: Layout,
-    redirect: '/order',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/order/index'),
-        name: 'Order',
-        meta: { title: '订单列表', icon: 'documentation', affix: true }
-      },
-      {
-        path: 'orderDetail/:orderInfoId',
-        component: () => import('@/views/order/orderDetail'),
-        name: 'orderDetail',
-        meta: { title: '订单详情', noCache: true, activeMenu: '/order/index' },
-        hidden: true
-      }
-    ]
-  },
-  {
-    path: '/followup',
-    component: Layout,
-    redirect: '/followup',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/followup/index'),
-        name: 'Followup',
-        meta: { title: '跟进列表', icon: 'documentation' }
-      }
-    ]
-  },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-
-  {
-    path: '/form',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      }
-    ]
-  },
-
-  {
+  }, {
     path: '/nested',
     component: Layout,
     redirect: '/nested/menu1',
     name: 'Nested',
     meta: {
-      title: 'Nested',
-      icon: 'nested'
+      title: '用户管理',
+      icon: 'user'
     },
     children: [
       {
         path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
+        name: 'menu1',
+        component: () => import('@/views/nested/menu2/index'),
+        meta: { title: '用户管理' }
       },
       {
         path: 'menu2',
+        name: 'menu2',
         component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
+        meta: { title: '角色管理' }
+      },
+      {
+        path: 'menu3',
+        name: 'menu3',
+        component: () => import('@/views/nested/menu2/index'),
+        meta: { title: '菜单管理' }
       }
     ]
   },
-
   {
-    path: 'external-link',
+    path: '/report',
     component: Layout,
+    redirect: '/report/index',
+    alwaysShow: true, // will always show the root menu
+    name: 'Report',
+    meta: {
+      title: 'Report',
+      icon: 'excel',
+      roles: ['admin'] // you can set roles in root nav
+    },
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'page',
+        component: () => import('@/views/report/index'),
+        name: 'ReportPage',
+        meta: {
+          title: 'Page Report',
+          icon: 'excel',
+          roles: ['admin'] // or you can only set roles in sub nav
+        }
       }
     ]
   }
 ]
 
-export const asyncRoutes = [{
-  path: '/report',
-  component: Layout,
-  redirect: '/report/index',
-  alwaysShow: true, // will always show the root menu
-  name: 'Report',
-  meta: {
-    title: 'Report',
-    icon: 'excel',
-    roles: ['admin'] // you can set roles in root nav
-  },
-  children: [
-    {
-      path: 'page',
-      component: () => import('@/views/report/index'),
-      name: 'ReportPage',
-      meta: {
-        title: 'Page Report',
-        icon: 'excel',
-        roles: ['admin'] // or you can only set roles in sub nav
-      }
-    }
-  ]
-},
-// 404 page must be placed at the end !!!
-{ path: '*', redirect: '/404', hidden: true }]
+// 动态路由
+export const asyncRoutes = [
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support

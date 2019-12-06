@@ -45,7 +45,7 @@ const mutations = {
     state.routes = constantRoutes.concat(routes)
   }
 }
-
+// 生成路由
 const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
