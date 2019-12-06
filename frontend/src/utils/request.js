@@ -45,11 +45,11 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    if (res.Success) {
+    if (res.Code === 200) {
       return res
     } else {
       Message({
-        message: res.error || res.error.message,
+        message: res.Message,
         type: 'error',
         duration: 5 * 1000
       })
@@ -58,7 +58,7 @@ service.interceptors.response.use(
   error => {
     console.log('err' + error) // for debug
     Message({
-      message: error || error.message,
+      message: error || error.Message,
       type: 'error',
       duration: 5 * 1000
     })

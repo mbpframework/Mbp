@@ -1,10 +1,11 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken, removeRefreshToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import { guid } from '@/utils/uuid'
 
 const state = {
   token: getToken(),
+  refreshToken: getRefreshToken(),
   name: '',
   avatar: '',
   roles: []
@@ -31,8 +32,9 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ LoginName: username.trim(), Password: password, ClientID: guid() }).then(response => {
-        commit('SET_TOKEN', response.Result.AccessToken)
-        setToken(response.Result.AccessToken)
+        commit('SET_TOKEN', response.Data.AccessToken.AccessToken)
+        setToken(response.Data.AccessToken.AccessToken)
+        setRefreshToken(response.Data.AccessToken.RefreshToken)
         resolve()
       }).catch(error => {
         reject(error)
@@ -75,6 +77,7 @@ const actions = {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         removeToken()
+        removeRefreshToken()
         resetRouter()
         resolve()
       }).catch(error => {
@@ -88,6 +91,7 @@ const actions = {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       removeToken()
+      removeRefreshToken()
       resolve()
     })
   }

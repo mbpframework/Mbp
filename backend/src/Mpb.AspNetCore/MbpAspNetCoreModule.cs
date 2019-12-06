@@ -56,6 +56,18 @@ namespace Mbp.AspNetCore
 
             AddAutoWebApi(services, new AutoWebApiOptions());
 
+            // 创建Cors策略
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MbpCors",
+                builder =>
+                {
+                    builder.WithOrigins(services.BuildServiceProvider().GetService<IConfiguration>().GetSection("AllowedHosts").Value)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader(); ;
+                });
+            });
+
             return base.AddServices(services);
         }
 
@@ -96,6 +108,8 @@ namespace Mbp.AspNetCore
 
         public override void UseModule(IApplicationBuilder app)
         {
+            // 启用跨域请求中间件
+            app.UseCors("MbpCors");
             base.UseModule(app);
         }
     }

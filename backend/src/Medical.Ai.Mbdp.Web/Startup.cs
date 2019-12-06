@@ -28,7 +28,8 @@ namespace Medical.Ai.Mbdp.Web
             services.AddMedicalFramework<AspMbpModuleManager>();
         }
 
-        // asp.net core 管道
+        // asp.net core 管道,管道顺序和微软官网的说明有些冲突,跨域资源共享中间件需要在Routing和EndPoints之间,而这里只满足在EndPoints之前
+        // 后续发现问题在纠正,届时将调整所有中间件顺序.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
