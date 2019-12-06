@@ -8,6 +8,16 @@ namespace Medical.Ai.Mbdp.Application.AccountService.Dto
     public class LoginOutputDto
     {
         /// <summary>
+        /// 用户姓名
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// 用户身份,超级管理员和非超级管理员
+        /// </summary>
+        public string Role { get; set; }
+
+        /// <summary>
         /// 身份凭据
         /// </summary>
         public Jwt AccessToken { get; set; }

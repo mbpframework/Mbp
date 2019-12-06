@@ -65,7 +65,7 @@ namespace Medical.Ai.Mbdp.Application.AccountService
                                  on trolemenu.RoleId equals tmenu.Id
                              select tmenu.Path).ToList();
 
-                return new LoginOutputDto() { AccessToken = token, Menus = menus };
+                return new LoginOutputDto() { AccessToken = token, Menus = menus, UserName = user.UserName, Role = user.IsAdmin ? "admin" : "user" };
             }
 
             return new LoginOutputDto() { AccessToken = new Jwt() };
@@ -80,9 +80,9 @@ namespace Medical.Ai.Mbdp.Application.AccountService
 
         [AllowAnonymous]
         [HttpGet("LogOut")]
-        public void LogOut()
+        public int LogOut()
         {
-
+            return 0;
         }
     }
 }
