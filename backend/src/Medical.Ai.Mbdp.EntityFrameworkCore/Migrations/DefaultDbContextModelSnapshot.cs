@@ -15,7 +15,7 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.1")
+                .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -53,7 +53,7 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                     b.ToTable("MbpMenus");
                 });
 
-            modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpMenuClaims", b =>
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpMenuClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -189,6 +189,31 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpUserClaim", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MenuClaimId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuClaimId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MbpUserClaims");
+                });
+
             modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpUserRole", b =>
                 {
                     b.Property<int>("Id")
@@ -258,7 +283,7 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpMenuClaims", b =>
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpMenuClaim", b =>
                 {
                     b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpMenu", "Menu")
                         .WithMany("MenuClaims")
@@ -278,6 +303,21 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                     b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpRole", "Role")
                         .WithMany("RoleMenus")
                         .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpUserClaim", b =>
+                {
+                    b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpMenuClaim", "MenuClaim")
+                        .WithMany()
+                        .HasForeignKey("MenuClaimId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

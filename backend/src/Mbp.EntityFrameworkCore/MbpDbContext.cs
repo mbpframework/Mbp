@@ -16,7 +16,7 @@ namespace Mbp.EntityFrameworkCore
 
         public DbSet<MbpRole> MbpRoles { get; set; }
 
-        public DbSet<MbpMenuClaims>  MbpMenuClaims { get; set; }
+        public DbSet<MbpMenuClaim> MbpMenuClaims { get; set; }
 
         public DbSet<MbpUser> MbpUsers { get; set; }
 
@@ -25,6 +25,8 @@ namespace Mbp.EntityFrameworkCore
         public DbSet<MbpMenu> MbpMenus { get; set; }
 
         public DbSet<MbpRoleMenu> MbpRoleMenus { get; set; }
+
+        public DbSet<MbpUserClaim> MbpUserClaims { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

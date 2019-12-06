@@ -96,11 +96,11 @@ namespace Medical.Ai.Mbdp.Application.AccountService
             // 删除Claims
             DeleteMenuClaims(menuId);
 
-            List<MbpMenuClaims> menuClaims = new List<MbpMenuClaims>();
+            List<MbpMenuClaim> menuClaims = new List<MbpMenuClaim>();
 
             foreach (var claim in claims)
             {
-                menuClaims.Add(new MbpMenuClaims()
+                menuClaims.Add(new MbpMenuClaim()
                 {
                     MenuId = menuId,
                     ClaimType = claim.ClaimType,

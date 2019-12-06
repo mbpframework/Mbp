@@ -2,7 +2,7 @@
 
 namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
 {
-    public partial class InitDb : Migration
+    public partial class IntiDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -175,6 +175,33 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "MbpUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(nullable: false),
+                    MenuClaimId = table.Column<int>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MbpUserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MbpUserClaims_MbpMenuClaims_MenuClaimId",
+                        column: x => x.MenuClaimId,
+                        principalTable: "MbpMenuClaims",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MbpUserClaims_MbpUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "MbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "MbpUsers",
                 columns: new[] { "Id", "Code", "ConcurrencyStamp", "Email", "IsAdmin", "IsDeleted", "LoginName", "Password", "PhoneNumber", "UserName", "UserStatus" },
@@ -196,6 +223,16 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MbpUserClaims_MenuClaimId",
+                table: "MbpUserClaims",
+                column: "MenuClaimId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MbpUserClaims_UserId",
+                table: "MbpUserClaims",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MbpUserRoles_RoleId",
                 table: "MbpUserRoles",
                 column: "RoleId");
@@ -214,10 +251,10 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MbpMenuClaims");
+                name: "MbpRoleMenus");
 
             migrationBuilder.DropTable(
-                name: "MbpRoleMenus");
+                name: "MbpUserClaims");
 
             migrationBuilder.DropTable(
                 name: "MbpUserRoles");
@@ -226,7 +263,7 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                 name: "Posts");
 
             migrationBuilder.DropTable(
-                name: "MbpMenus");
+                name: "MbpMenuClaims");
 
             migrationBuilder.DropTable(
                 name: "MbpRoles");
@@ -236,6 +273,9 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Blogs");
+
+            migrationBuilder.DropTable(
+                name: "MbpMenus");
         }
     }
 }
