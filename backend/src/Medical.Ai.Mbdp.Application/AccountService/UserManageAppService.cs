@@ -64,6 +64,20 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         }
 
         /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpDelete("DeleteUser")]
+        public int DeleteUser(int userId)
+        {
+            var user = _defaultDbContext.MbpUsers.Where(u => u.Id == userId).Include(u => u.UserRoles).FirstOrDefault();
+            _defaultDbContext.MbpUsers.Remove(user);
+
+            return _defaultDbContext.SaveChanges();
+        }
+
+        /// <summary>
         /// 获取用户列表
         /// </summary>
         /// <returns></returns>

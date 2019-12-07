@@ -64,6 +64,20 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         }
 
         /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        [HttpDelete("DeleteRole")]
+        public int DeleteRole(int roleId)
+        {
+            var role = _defaultDbContext.MbpRoles.Where(r => r.Id == roleId).Include(r => r.RoleMenus).FirstOrDefault();
+            _defaultDbContext.MbpRoles.Remove(role);
+
+            return _defaultDbContext.SaveChanges();
+        }
+
+        /// <summary>
         /// 获取角色列表
         /// </summary>
         /// <returns></returns>
