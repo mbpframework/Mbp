@@ -10,6 +10,8 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login'] // no redirect whitelist
 
+// todo 这里将实现动态挂在路由的功能.这里需要考虑的点是持久化在什么地方的问题,要保证用户数据在注销的时候一定是销毁的,而且数据要根据用户区别
+// todo 在客户端构建一个客户端数据库.将客户的基本信息,身份,权限这些数据管理起来.
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
@@ -21,6 +23,8 @@ router.beforeEach(async(to, from, next) => {
   const hasToken = getToken()
 
   console.log(hasToken)
+
+  console.log('beforeEach')
 
   if (hasToken) {
     if (to.path === '/login') {
