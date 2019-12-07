@@ -65,56 +65,33 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard', affix: true }
     }]
   }, {
-    path: '/nested',
+    path: '/usermanage',
     component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
+    redirect: '/usermanage/user',
+    name: 'user',
     meta: {
       title: '用户管理',
-      icon: 'user'
+      icon: 'user',
+      roles: ['admin']
     },
     children: [
       {
-        path: 'menu1',
-        name: 'menu1',
-        component: () => import('@/views/nested/menu2/index'),
+        path: 'user',
+        name: 'UserManage',
+        component: () => import('@/views/usermanage/user/index'),
         meta: { title: '用户管理' }
       },
       {
-        path: 'menu2',
-        name: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
+        path: 'role',
+        name: 'RoleManage',
+        component: () => import('@/views/usermanage/role/index'),
         meta: { title: '角色管理' }
       },
       {
-        path: 'menu3',
-        name: 'menu3',
-        component: () => import('@/views/nested/menu2/index'),
+        path: 'menu',
+        name: 'MenuManage',
+        component: () => import('@/views/usermanage/menu/index'),
         meta: { title: '菜单管理' }
-      }
-    ]
-  },
-  {
-    path: '/report',
-    component: Layout,
-    redirect: '/report/index',
-    alwaysShow: true, // will always show the root menu
-    name: 'Report',
-    meta: {
-      title: 'Report',
-      icon: 'excel',
-      roles: ['admin'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'page',
-        component: () => import('@/views/report/index'),
-        name: 'ReportPage',
-        meta: {
-          title: 'Page Report',
-          icon: 'excel',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
       }
     ]
   }
