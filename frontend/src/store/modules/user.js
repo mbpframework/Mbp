@@ -47,9 +47,11 @@ const actions = {
 
           const { Role, UserName } = response.Data
 
+          var roles = []
+          roles.push(Role)
           commit('SET_NAME', UserName)
           commit('SET_AVATAR', 'avatar')
-          commit('SET_ROLES', Role)
+          commit('SET_ROLES', roles)
           resolve()
         }).catch(error => {
           reject(error)
@@ -61,11 +63,7 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
-        const data = response
-
-        if (!data.Success) {
-          reject('Verification failed, please Login again.')
-        }
+        const data = { }
 
         // 先忽略权限
         data.roles = ['admin']

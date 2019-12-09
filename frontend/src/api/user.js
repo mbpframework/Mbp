@@ -9,10 +9,14 @@ export function login(data) {
 }
 
 export function getInfo(token) {
+  // return request({
+  //   url: '/api/services/app/Session/GetCurrentLoginInformations',
+  //   method: 'get',
+  //   params: { token }
+  // })
   return request({
-    url: '/api/services/app/Session/GetCurrentLoginInformations',
-    method: 'get',
-    params: { token }
+    url: '/Account/LogOut',
+    method: 'get'
   })
 }
 

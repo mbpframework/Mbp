@@ -12,8 +12,6 @@ import App from './App'
 import store from './store'
 import router from './router'
 
-import VueLocalStorage from 'vue-localstorage'
-
 import '@/icons' // icon
 import '@/permission' // permission control
 
@@ -32,11 +30,6 @@ if (process.env.NODE_ENV === 'production') {
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
-
-Vue.use(VueLocalStorage, {
-  name: 'ls',
-  bind: true // created computed members from your variable declarations
-})
 
 Vue.config.productionTip = false
 

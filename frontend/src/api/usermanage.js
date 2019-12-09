@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 添加用户
 export function AddUser(data) {
   return request({
-    url: '/UserManage/AddUse',
+    url: '/UserManage/AddUser',
     method: 'post',
     data
   })

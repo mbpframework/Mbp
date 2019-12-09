@@ -30,74 +30,71 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-export const constantRoutes = [
-  {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path*',
-        component: () => import('@/views/redirect/index')
-      }
-    ]
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
+export const constantRoutes = [{
+  path: '/redirect',
+  component: Layout,
+  hidden: true,
+  children: [
+    {
+      path: '/redirect/:path*',
+      component: () => import('@/views/redirect/index')
+    }
+  ]
+},
+{
+  path: '/login',
+  component: () => import('@/views/login/index'),
+  hidden: true
+},
 
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
+{
+  path: '/404',
+  component: () => import('@/views/404'),
+  hidden: true
+},
 
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard', affix: true }
-    }]
-  }, {
-    path: '/usermanage',
-    component: Layout,
-    redirect: '/usermanage/user',
-    name: 'user',
-    meta: {
-      title: '用户管理',
-      icon: 'user',
-      roles: ['admin']
+{
+  path: '/',
+  component: Layout,
+  redirect: '/dashboard',
+  children: [{
+    path: 'dashboard',
+    name: 'Dashboard',
+    component: () => import('@/views/dashboard/index'),
+    meta: { title: '首页', icon: 'dashboard', affix: true }
+  }]
+}, {
+  path: '/usermanage',
+  component: Layout,
+  redirect: '/usermanage/user',
+  name: 'user',
+  meta: {
+    title: '用户管理',
+    icon: 'user'
+  },
+  children: [
+    {
+      path: 'user',
+      name: 'UserManage',
+      component: () => import('@/views/usermanage/user/index'),
+      meta: { title: '用户管理' }
     },
-    children: [
-      {
-        path: 'user',
-        name: 'UserManage',
-        component: () => import('@/views/usermanage/user/index'),
-        meta: { title: '用户管理' }
-      },
-      {
-        path: 'role',
-        name: 'RoleManage',
-        component: () => import('@/views/usermanage/role/index'),
-        meta: { title: '角色管理' }
-      },
-      {
-        path: 'menu',
-        name: 'MenuManage',
-        component: () => import('@/views/usermanage/menu/index'),
-        meta: { title: '菜单管理' }
-      }
-    ]
-  }
+    {
+      path: 'role',
+      name: 'RoleManage',
+      component: () => import('@/views/usermanage/role/index'),
+      meta: { title: '角色管理' }
+    },
+    {
+      path: 'menu',
+      name: 'MenuManage',
+      component: () => import('@/views/usermanage/menu/index'),
+      meta: { title: '菜单管理' }
+    }
+  ]
+}
 ]
 
-// 动态路由
 export const asyncRoutes = [
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }]
