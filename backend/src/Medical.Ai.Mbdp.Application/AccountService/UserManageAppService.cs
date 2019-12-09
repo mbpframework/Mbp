@@ -41,6 +41,8 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         {
             var user = _mapper.Map<MbpUser>(userInputDto);
 
+            user.UserStatus = EnumUserStatus.Actived;
+
             _defaultDbContext.MbpUsers.Add(user);
 
             return _defaultDbContext.SaveChanges();
@@ -54,7 +56,13 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         [HttpPut("UpdateUser")]
         public int UpdateUser(UserInputDto userInputDto)
         {
-            var user = _mapper.Map<MbpUser>(userInputDto);
+            var user = _defaultDbContext.MbpUsers.Where(u => u.Id == userInputDto.Id).FirstOrDefault();
+
+            user.IsAdmin = userInputDto.IsAdmin;
+            user.PhoneNumber = userInputDto.PhoneNumber;
+            user.UserName = userInputDto.UserName;
+            user.Code = userInputDto.Code;
+            user.Email = userInputDto.Email;
 
             _defaultDbContext.Attach(user);
 

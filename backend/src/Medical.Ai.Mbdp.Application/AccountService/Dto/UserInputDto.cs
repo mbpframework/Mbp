@@ -25,5 +25,8 @@ namespace Medical.Ai.Mbdp.Application.AccountService.Dto
 
         [Required]
         public string PhoneNumber { get; set; }
+
+        [Required]
+        public bool IsAdmin { get; set; }
     }
 }

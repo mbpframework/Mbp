@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mbp.EntityFrameworkCore.PermissionModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -18,5 +19,9 @@ namespace Medical.Ai.Mbdp.Application.AccountService.Dto
         public string Email { get; set; }
 
         public string PhoneNumber { get; set; }
+
+        public EnumUserStatus UserStatus { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 }
