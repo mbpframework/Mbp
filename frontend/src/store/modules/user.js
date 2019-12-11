@@ -2,13 +2,16 @@ import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken, removeRefreshToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import { guid } from '@/utils/uuid'
+// import router from '@/router'
+// import store from '@/store'
 
 const state = {
   token: getToken(),
   refreshToken: getRefreshToken(),
   name: '',
   avatar: '',
-  roles: []
+  roles: [],
+  menus: []
 }
 
 const mutations = {
@@ -26,6 +29,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_MENUS: (state, menus) => {
+    state.menus = menus
   }
 }
 
@@ -45,13 +51,20 @@ const actions = {
           // 保存刷新token到cookies
           setRefreshToken(response.Data.AccessToken.RefreshToken)
 
-          const { Role, UserName } = response.Data
-
+          const { Role, UserName, Menus } = response.Data
           var roles = []
           roles.push(Role)
+
           commit('SET_NAME', UserName)
           commit('SET_AVATAR', 'avatar')
-          commit('SET_ROLES', roles)
+          // commit('SET_ROLES', roles)
+          commit('SET_MENUS', Menus)
+
+          // // generate accessible routes map based on roles
+          // const accessRoutes = store.dispatch('permission/generateRoutes', roles)
+          // // store.dispatch('user/setMenus', accessRoutes)
+          // router.addRoutes(accessRoutes)
+
           resolve()
         }).catch(error => {
           reject(error)
@@ -64,7 +77,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const data = { }
-
+        console.log('getInfo')
         // 先忽略权限
         data.roles = ['admin']
         const { roles, name, avatar } = data
@@ -91,6 +104,7 @@ const actions = {
         // token和刷新token的清空
         commit('SET_TOKEN', '')
         commit('SET_RRTOKEN', '')
+        commit('SET_ROLES', [])
         removeToken()
         removeRefreshToken()
         resetRouter()
@@ -108,6 +122,12 @@ const actions = {
       commit('SET_RRTOKEN', '')
       removeToken()
       removeRefreshToken()
+      resolve()
+    })
+  },
+  setMenus({ commit }, menus) {
+    return new Promise(resolve => {
+      commit('SET_MENUS', menus)
       resolve()
     })
   }

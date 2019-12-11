@@ -41,6 +41,20 @@ namespace Mbp.EntityFrameworkCore
                     IsAdmin = true
                 });
 
+            modelBuilder.Entity<MbpMenu>().HasData(
+                new MbpMenu
+                {
+                    Id = 1,
+                    IsDeleted = false,
+                    Code = "root",
+                    Level = 1,
+                    Name = "医学大数据平台",
+                    Order = 1,
+                    ParentId = 0,
+                    Path = "/",
+                    CodePath = "root"
+                });
+
             base.OnModelCreating(modelBuilder);
         }
     }

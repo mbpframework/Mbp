@@ -1,0 +1,16 @@
+﻿using Mbp.Ddd.Application.Mbp.UI;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Medical.Ai.Mbdp.Application.AccountService.DtoSearch
+{
+    public class MenuSearchOptions
+    {
+        public string Name { get; set; } = string.Empty;
+
+        public string Code { get; set; } = string.Empty;
+
+        public string SystemCode { get; set; } = string.Empty;
+    }
+}

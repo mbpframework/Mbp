@@ -16,12 +16,18 @@ namespace Medical.Ai.Mbdp.Application.AccountService.Dto
         [Required]
         public string Code { get; set; }
 
+        public string CodePath { get; set; }
+
         [Required]
         public int Level { get; set; }
 
         [Required]
         public string Path { get; set; }
 
+        [Required]
         public int ParentId { get; set; }
+
+        [Required]
+        public int Order { get; set; }
     }
 }

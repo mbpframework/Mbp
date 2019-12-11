@@ -8,12 +8,8 @@ export function login(data) {
   })
 }
 
+// 暂时获取信息
 export function getInfo(token) {
-  // return request({
-  //   url: '/api/services/app/Session/GetCurrentLoginInformations',
-  //   method: 'get',
-  //   params: { token }
-  // })
   return request({
     url: '/Account/LogOut',
     method: 'get'

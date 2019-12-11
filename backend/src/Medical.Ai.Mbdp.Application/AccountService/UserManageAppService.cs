@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Mbp.Ddd.Application.Mbp.UI;
 using Mbp.Ddd.Application.System.Linq;
+using Medical.Ai.Mbdp.Application.AccountService.DtoSearch;
 
 namespace Medical.Ai.Mbdp.Application.AccountService
 {
@@ -90,18 +91,21 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetUsers")]
-        public async Task<PagedList<UserOutputDto>> GetUsers(int pageSize, int pageIndex)
+        public async Task<PagedList<UserOutputDto>> GetUsers(SearchOptions<UserSearchOptions> searchOptions)
         {
             int total = 0;
 
-            var users = _defaultDbContext.MbpUsers.Include(u => u.UserRoles).PageByAscending(pageSize, pageIndex, out total,
-                (c) => true, (c => c.Id)).ToList();
+            var users = _defaultDbContext.MbpUsers.Include(u => u.UserRoles).PageByAscending(searchOptions.PageSize, searchOptions.PageIndex, out total,
+                (c) =>
+            c.UserName.Contains(searchOptions.Search.UserName == null ? "" : searchOptions.Search.UserName) &&
+            c.LoginName.Contains(searchOptions.Search.LoginName == null ? "" : searchOptions.Search.LoginName) &&
+           (!string.IsNullOrEmpty(searchOptions.Search.IsAdmin) ? c.IsAdmin == (searchOptions.Search.IsAdmin == "Y" ? true : false) : true), (c => c.Id)).ToList();
 
             return new PagedList<UserOutputDto>()
             {
                 Content = _mapper.Map<List<UserOutputDto>>(users),
-                PageIndex = pageIndex,
-                PageSize = pageSize,
+                PageIndex = searchOptions.PageIndex,
+                PageSize = searchOptions.PageSize,
                 Total = total
             };
         }
@@ -164,9 +168,9 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetUserRoles")]
-        public List<UserRoleOutputDto> GetUserRoles(int userId)
+        public List<UserRoleOutputDto> GetUserRoles(int userId, string systemCode)
         {
-            var userRoles = _defaultDbContext.MbpUserRoles.Where(ur => ur.UserId == userId)
+            var userRoles = _defaultDbContext.MbpUserRoles.Where(ur => ur.UserId == userId && ur.Role.SystemCode == systemCode)
                 .Include(ur => ur.Role)
                 .ToList();
 
@@ -179,7 +183,8 @@ namespace Medical.Ai.Mbdp.Application.AccountService
                     UserId = e.UserId,
                     RoleId = e.RoleId,
                     RoleCode = e.Role.Code,
-                    RoleName = e.Role.Name
+                    RoleName = e.Role.Name,
+                    SystemCode = e.Role.SystemCode
                 });
             });
 

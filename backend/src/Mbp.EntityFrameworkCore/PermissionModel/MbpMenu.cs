@@ -18,6 +18,11 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         public int Order { get; set; }
 
         /// <summary>
+        /// 主要用作菜单层级查询
+        /// </summary>
+        public string CodePath { get; set; }
+
+        /// <summary>
         /// 菜单等级,1,2,3
         /// </summary>
         public int Level { get; set; }

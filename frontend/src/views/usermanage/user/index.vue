@@ -4,14 +4,21 @@
       <el-input
         v-model="listQuery.UserName"
         placeholder="姓名"
-        style="width: 200px;"
+        style="width: 150px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />
+      <el-input
+        v-model="listQuery.LoginName"
+        placeholder="登录名"
+        style="width: 150px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <el-select
         v-model="listQuery.isAdmin"
         placeholder="是否超管"
-        style="width: 90px"
+        style="width: 110px"
         class="filter-item"
         @change="handleFilter"
       >
@@ -22,7 +29,7 @@
           :value="item.key"
         />
       </el-select>
-      <el-select
+      <!-- <el-select
         v-model="listQuery.sort"
         style="width: 140px"
         class="filter-item"
@@ -34,7 +41,7 @@
           :label="item.label"
           :value="item.key"
         />
-      </el-select>
+      </el-select> -->
       <el-button
         v-waves
         class="filter-item"
@@ -86,7 +93,7 @@
           <span>{{ row.LoginName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="姓名">
+      <el-table-column label="姓名" align="center">
         <template slot-scope="{row}">
           <span class="link-type" @click="handleUpdate(row)">{{ row.UserName }}</span>
         </template>
@@ -116,11 +123,6 @@
           <span>{{ getIsAdmin(row.IsAdmin) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="系统编号" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.SystemCode }}</span>
-        </template>
-      </el-table-column>
       <el-table-column
         label="操作"
         align="center"
@@ -129,11 +131,12 @@
       >
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
+          <el-button type="primary" size="mini" @click="handleGrant(row)">授权</el-button>
           <el-button
-            v-if="row.status!='deleted'"
+            v-if="row.status!='deleted'&&row.LoginName!='admin'"
             size="mini"
             type="danger"
-            @click="handleModifyStatus(row,'deleted')"
+            @click="handleDelete(row)"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -162,7 +165,7 @@
               <el-input v-model="temp.Id" />
             </el-form-item>
             <el-form-item label="登录名" prop="LoginName">
-              <el-input v-model="temp.LoginName" readonly />
+              <el-input v-model="temp.LoginName" :readonly="dialogStatus==='update'?'readonly':false" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -208,11 +211,44 @@
         <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="用户授权" :visible.sync="dialogGrantFormVisible">
+      <el-form
+        ref="dataForm"
+        label-position="right"
+        label-width="70px"
+        style="width: 400px; margin-left:50px;"
+      >
+        <el-row>
+          <el-col :span="24">数据建模平台</el-col>
+          <el-col :span="24">
+            <el-checkbox v-model="grantTemp.checkMdpAll" :indeterminate="grantTemp.isMdpIndeterminate" @change="handleCheckMdpAllChange">全选</el-checkbox>
+            <div style="margin: 15px 0;" />
+            <el-checkbox-group v-model="grantTemp.checkedMdpRoles" @change="handleCheckedMdpRolesChange">
+              <el-checkbox v-for="role in grantTemp.userMdpRoles" :key="role.Id" :label="role.Id" border>{{ role.Name }}</el-checkbox>
+            </el-checkbox-group></el-col>
+        </el-row>
+        <el-row style="margin-top:50px;">
+          <el-col :span="24">大数据平台</el-col>
+          <el-col :span="24">
+            <el-checkbox v-model="grantTemp.checkMbdpAll" :indeterminate="grantTemp.isMbpdIndeterminate" @change="handleCheckMbdpAllChange">全选</el-checkbox>
+            <div style="margin: 15px 0;" />
+            <el-checkbox-group v-model="grantTemp.checkedMbdpRoles" @change="handleCheckedMbdpRolesChange">
+              <el-checkbox v-for="role in grantTemp.userMbdpRoles" :key="role.Id" :label="role.Id" border>{{ role.Name }}</el-checkbox>
+            </el-checkbox-group></el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogGrantFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="GrantUserRole()">确认</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { AddUser, UpdateUser, GetUser } from '@/api/usermanage'
+import { AddUser, UpdateUser, GetUser, DeleteUser, GetUserRoles, AddUserRoles } from '@/api/usermanage'
+import { GetRoles } from '@/api/rolemanage'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -233,12 +269,13 @@ export default {
         pageSize: 20,
         isAdmin: undefined,
         UserName: undefined,
+        LoginName: undefined,
         sort: '+Id'
       },
       isAdminOptions: [
-        { label: '全部', key: 0 },
-        { label: '是', key: 1 },
-        { label: '否', key: 2 }
+        { label: '全部', key: '' },
+        { label: '是', key: 'Y' },
+        { label: '否', key: 'N' }
       ],
       sortOptions: [
         { label: 'ID Ascending', key: '+Id' },
@@ -255,6 +292,7 @@ export default {
         IsAdmin: false
       },
       dialogFormVisible: false,
+      dialogGrantFormVisible: false,
       dialogStatus: '',
       textMap: {
         update: '编辑用户',
@@ -268,7 +306,18 @@ export default {
         UserName: [{ required: true, message: '姓名必填', trigger: 'change' }]
       },
       downloadLoading: false,
-      isUpdate: false
+      isUpdate: false,
+      grantTemp: {
+        currentUserId: 0,
+        checkMdpAll: false,
+        checkMbdpAll: false,
+        checkedMdpRoles: [],
+        checkedMbdpRoles: [],
+        userMdpRoles: [],
+        userMbdpRoles: [],
+        isMdpIndeterminate: true,
+        isMbpdIndeterminate: true
+      }
     }
   },
   created() {
@@ -384,14 +433,67 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      DeleteUser(row.Id).then(() => {
+        this.$notify({
+          title: 'Success',
+          message: 'Delete Successfully',
+          type: 'success',
+          duration: 2000
+        })
+        const index = this.list.indexOf(row)
+        this.list.splice(index, 1)
       })
-      const index = this.list.indexOf(row)
-      this.list.splice(index, 1)
+    },
+    handleGrant(row) {
+      const that = this
+      this.grantTemp.currentUserId = row.Id
+      // 获取所有角色
+      GetRoles({ pageIndex: 1, pageSize: 999, SystemCode: 'mdp' }).then(response => {
+        this.grantTemp.userMdpRoles = response.Data.Content
+      })
+      GetRoles({ pageIndex: 1, pageSize: 999, SystemCode: 'mbdp' }).then(response => {
+        this.grantTemp.userMbdpRoles = response.Data.Content
+      })
+      // 获取选择中角色
+      GetUserRoles(row.Id, 'mdp').then((response) => {
+        that.grantTemp.checkedMdpRoles = response.Data.map(r => r.RoleId)
+      })
+      GetUserRoles(row.Id, 'mbdp').then((response) => {
+        this.grantTemp.checkedMbdpRoles = response.Data.map(r => r.RoleId)
+      })
+
+      this.dialogGrantFormVisible = true
+    },
+    GrantUserRole() {
+      const roleIds = this.grantTemp.checkedMdpRoles.concat(this.grantTemp.checkedMbdpRoles)
+      const userId = this.grantTemp.currentUserId
+      AddUserRoles(userId, roleIds).then(() => {
+        this.dialogGrantFormVisible = false
+        this.$notify({
+          title: 'Success',
+          message: 'Grant Successfully',
+          type: 'success',
+          duration: 2000
+        })
+      })
+    },
+    handleCheckMdpAllChange(val) {
+      this.grantTemp.checkedMdpRoles = val ? this.grantTemp.userMdpRoles.map(r => r.Id) : []
+      this.grantTemp.isMdpIndeterminate = false
+    },
+    handleCheckedMdpRolesChange(value) {
+      const checkedMdbCount = value.length
+      this.grantTemp.checkMdpAll = checkedMdbCount === this.grantTemp.userMdpRoles.length
+      this.grantTemp.isMdpIndeterminate = checkedMdbCount > 0 && checkedMdbCount < this.grantTemp.userMdpRoles.length
+    },
+    handleCheckMbdpAllChange(val) {
+      this.grantTemp.checkedMbdpRoles = val ? this.grantTemp.userMbdpRoles.map(r => r.Id) : []
+      this.grantTemp.isMbpdIndeterminate = false
+    },
+    handleCheckedMbdpRolesChange(value) {
+      const checkedMbdpCount = value.length
+      this.grantTemp.checkMbdpAll = checkedMbdpCount === this.grantTemp.userMbdpRoles.length
+      this.grantTemp.isMbpdIndeterminate = checkedMbdpCount > 0 && checkedMbdpCount < this.grantTemp.userMbdpRoles.length
     },
     handleDownload() {
       this.downloadLoading = true

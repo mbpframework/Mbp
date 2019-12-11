@@ -12,5 +12,7 @@ namespace Medical.Ai.Mbdp.Application.AccountService.Dto
         public string Name { get; set; }
 
         public string Code { get; set; }
+
+        public string SystemCode { get; set; }
     }
 }

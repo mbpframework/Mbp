@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Mbp.Ddd.Application.System.Linq;
 using Mbp.Ddd.Application.Mbp.UI;
+using Medical.Ai.Mbdp.Application.AccountService.DtoSearch;
 
 namespace Medical.Ai.Mbdp.Application.AccountService
 {
@@ -39,6 +40,11 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         [HttpPost("AddMenu")]
         public int AddMenu(MenuInputDto menuInputDto)
         {
+            var parentMenu = _defaultDbContext.MbpMenus.Where(m => m.Id == menuInputDto.ParentId).FirstOrDefault();
+
+            menuInputDto.CodePath = string.Concat(parentMenu.CodePath, "/", menuInputDto.Code);
+            menuInputDto.Level += parentMenu.Level;
+
             var menu = _mapper.Map<MbpMenu>(menuInputDto);
 
             _defaultDbContext.MbpMenus.Add(menu);
@@ -68,18 +74,22 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetMenus")]
-        public async Task<PagedList<MenuOutputDto>> GetMenus(int pageSize, int pageIndex)
+        public async Task<PagedList<MenuOutputDto>> GetMenus(SearchOptions<MenuSearchOptions> searchOptions)
         {
             int total = 0;
 
-            List<MbpMenu> menus = _defaultDbContext.MbpMenus.Include(u => u.MenuClaims).PageByAscending(pageSize, pageIndex, out total, (c) => true, (c => c.Id)).ToList();
+            List<MbpMenu> menus = _defaultDbContext.MbpMenus.Include(u => u.MenuClaims).PageByAscending(searchOptions.PageSize, searchOptions.PageIndex, out total, (c) =>
+            c.Name.Contains(searchOptions.Search.Name == null ? "" : searchOptions.Search.Name) &&
+            c.Code.Contains(searchOptions.Search.Code == null ? "" : searchOptions.Search.Code) &&
+           (!string.IsNullOrEmpty(searchOptions.Search.SystemCode) ? c.SystemCode == searchOptions.Search.SystemCode : true),
+            (c => c.Id)).ToList();
 
             // 返回列表分页数据
             return new PagedList<MenuOutputDto>()
             {
                 Content = _mapper.Map<List<MenuOutputDto>>(menus),
-                PageIndex = pageIndex,
-                PageSize = pageSize,
+                PageIndex = searchOptions.PageIndex,
+                PageSize = searchOptions.PageSize,
                 Total = total
             };
         }
@@ -121,8 +131,11 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         [HttpDelete("DeleteMenu")]
         public int DeleteMenu(int menuId)
         {
-            var menu = _defaultDbContext.MbpMenus.Include(m => m.MenuClaims).Where(m => m.Id == menuId).First();
-            _defaultDbContext.MbpMenus.Remove(menu);
+            var menu = _defaultDbContext.MbpMenus.Where(m => m.Id == menuId).First();
+
+            var menus = _defaultDbContext.MbpMenus.Include(m => m.MenuClaims).Where(m => m.CodePath.StartsWith(menu.CodePath));
+
+            _defaultDbContext.MbpMenus.RemoveRange(menus);
 
             return _defaultDbContext.SaveChanges();
         }

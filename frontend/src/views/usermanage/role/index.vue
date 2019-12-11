@@ -4,14 +4,14 @@
       <el-input
         v-model="listQuery.RoleName"
         placeholder="角色名称"
-        style="width: 200px;"
+        style="width: 150px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <el-select
         v-model="listQuery.SystemCode"
         placeholder="来源"
-        style="width: 90px"
+        style="width: 150px"
         class="filter-item"
         @change="handleFilter"
       >
@@ -86,9 +86,9 @@
           <span>{{ row.Name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="编码">
+      <el-table-column label="编码" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.UserName }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.Code }}</span>
         </template>
       </el-table-column>
       <el-table-column label="系统编号" align="center">
@@ -99,11 +99,12 @@
       <el-table-column
         label="操作"
         align="center"
-        width="230"
+        width="270"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
+          <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑权限</el-button>
           <el-button
             v-if="row.status!='deleted'"
             size="mini"
@@ -128,7 +129,7 @@
         :rules="rules"
         :model="temp"
         label-position="right"
-        label-width="70px"
+        label-width="90px"
         style="width: 400px; margin-left:50px;"
       >
         <el-row>
@@ -137,7 +138,7 @@
               <el-input v-model="temp.Id" />
             </el-form-item>
             <el-form-item label="角色名" prop="Name">
-              <el-input v-model="temp.Name" readonly />
+              <el-input v-model="temp.Name" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -149,7 +150,15 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="系统编码" prop="SystemCode">
-              <el-input v-model="temp.SystemCode" />
+              <el-select v-model="temp.SystemCode" placeholder="请选择系统">
+                <el-option
+                  v-for="item in SystemEditCodeOptions"
+                  :key="item.key"
+                  :label="item.label"
+                  :value="item.key"
+                />
+              </el-select>
+              <!-- <el-input v-model="temp.SystemCode" /> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -163,7 +172,7 @@
 </template>
 
 <script>
-import { AddUser, UpdateUser, GetUser } from '@/api/usermanage'
+import { AddRole, UpdateRole, GetRoles } from '@/api/rolemanage'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -187,13 +196,18 @@ export default {
         sort: '+Id'
       },
       SystemCodeOptions: [
-        { label: '全部', key: 0 },
-        { label: '数据建模平台', key: 1 },
-        { label: '大数据平台', key: 2 }
+        { label: '全部', key: '' },
+        { label: '数据建模平台', key: 'mdp' },
+        { label: '大数据平台', key: 'mbdp' }
+      ],
+      SystemEditCodeOptions: [
+        { label: '全部', key: '' },
+        { label: '数据建模平台', key: 'mdp' },
+        { label: '大数据平台', key: 'mbdp' }
       ],
       sortOptions: [
-        { label: 'ID Ascending', key: '+Id' },
-        { label: 'ID Descending', key: '-Id' }
+        { label: 'ID升序', key: '+Id' },
+        { label: 'ID降序', key: '-Id' }
       ],
       temp: {
         Id: 0,
@@ -207,11 +221,11 @@ export default {
         create: '新增角色'
       },
       rules: {
-        LoginName: [
-          { required: true, message: '登录名必填', trigger: 'change' }
+        Name: [
+          { required: true, message: '角色名必填', trigger: 'change' }
         ],
-        Password: [{ required: true, message: '密码必填', trigger: 'change' }],
-        UserName: [{ required: true, message: '姓名必填', trigger: 'change' }]
+        Code: [{ required: true, message: '编码必填', trigger: 'change' }],
+        SystemCode: [{ required: true, message: '系统编码必填', trigger: 'change' }]
       },
       downloadLoading: false,
       isUpdate: false
@@ -223,7 +237,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      GetUser(this.listQuery).then(response => {
+      GetRoles(this.listQuery).then(response => {
         this.list = response.Data.Content
         this.total = response.Data.Total
 
@@ -277,7 +291,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          AddUser(this.temp).then(() => {
+          AddRole(this.temp).then(() => {
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({
@@ -304,8 +318,7 @@ export default {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          // const that = this
-          UpdateUser(tempData).then(() => {
+          UpdateRole(tempData).then(() => {
             for (const v of this.list) {
               if (v.Id === this.temp.Id) {
                 const index = this.list.indexOf(v)
@@ -337,13 +350,12 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
+        const tHeader = ['Id', 'Name', 'Code', 'SystemCode']
         const filterVal = [
-          'timestamp',
-          'title',
-          'type',
-          'importance',
-          'status'
+          'Id',
+          'Name',
+          'Code',
+          'SystemCode'
         ]
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({

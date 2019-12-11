@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Mbp.Ddd.Application.System.Linq;
 using Mbp.Ddd.Application.Mbp.UI;
+using Medical.Ai.Mbdp.Application.AccountService.DtoSearch;
 
 namespace Medical.Ai.Mbdp.Application.AccountService
 {
@@ -82,20 +83,22 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetRoles")]
-        public async Task<PagedList<RoleOutputDto>> GetRoles(int pageSize, int pageIndex)
+        public async Task<PagedList<RoleOutputDto>> GetRoles(SearchOptions<RoleSearchOptions> searchOptions)
         {
             int total = 0;
 
             // 分页查询 PageByAscending
-            var roles = _defaultDbContext.MbpRoles.Include(u => u.RoleMenus).PageByAscending(pageSize, pageIndex, out total,
-                (c) => true, (c => c.Id)).ToList();
+            var roles = _defaultDbContext.MbpRoles.Include(u => u.RoleMenus).PageByAscending(searchOptions.PageSize, searchOptions.PageIndex, out total,
+                (c) =>
+            c.Name.Contains(searchOptions.Search.Name == null ? "" : searchOptions.Search.Name) &&
+           (!string.IsNullOrEmpty(searchOptions.Search.SystemCode) ? c.SystemCode == searchOptions.Search.SystemCode : true), (c => c.Id)).ToList();
 
             // 返回列表分页数据
             return new PagedList<RoleOutputDto>()
             {
                 Content = _mapper.Map<List<RoleOutputDto>>(roles),
-                PageIndex = pageIndex,
-                PageSize = pageSize,
+                PageIndex = searchOptions.PageIndex,
+                PageSize = searchOptions.PageSize,
                 Total = total
             };
         }

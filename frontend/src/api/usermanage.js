@@ -23,10 +23,12 @@ export function GetUser(data) {
   return request({
     url: '/UserManage/GetUsers',
     method: 'get',
-    params: { pageSize: data.pageSize, pageIndex: data.pageIndex }
+    params: { pageSize: data.pageSize, pageIndex: data.pageIndex, 'Search.UserName': data.UserName,
+      'Search.LoginName': data.LoginName, 'Search.IsAdmin': data.isAdmin }
   })
 }
 
+// 删除用户
 export function DeleteUser(userId) {
   return request({
     url: '/UserManage/DeleteUser',
@@ -36,11 +38,12 @@ export function DeleteUser(userId) {
 }
 
 // 添加用户角色
-export function AddUserRoles(data) {
+export function AddUserRoles(userId, data) {
   return request({
     url: '/UserManage/AddUserRoles',
     method: 'post',
-    data
+    data,
+    params: { userId }
   })
 }
 
@@ -63,10 +66,10 @@ export function DeleteUserRole(data) {
 }
 
 // 获取用户角色信息
-export function GetUserRoles(userId) {
+export function GetUserRoles(userId, systemCode) {
   return request({
     url: '/UserManage/GetUserRoles',
     method: 'get',
-    params: { userId }
+    params: { userId, systemCode }
   })
 }

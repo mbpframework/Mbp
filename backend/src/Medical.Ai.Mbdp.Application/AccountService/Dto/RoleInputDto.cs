@@ -15,5 +15,8 @@ namespace Medical.Ai.Mbdp.Application.AccountService.Dto
 
         [Required]
         public string Code { get; set; }
+
+        [Required]
+        public string SystemCode { get; set; }
     }
 }

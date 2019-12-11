@@ -17,5 +17,7 @@ namespace Medical.Ai.Mbdp.Application.AccountService.Dto
         public string Path { get; set; }
 
         public int ParentId { get; set; }
+
+        public int Order { get; set; }
     }
 }
