@@ -16,6 +16,8 @@ using System.Linq;
 using Mbp.Ddd.Application.Mbp.UI;
 using Mbp.Ddd.Application.System.Linq;
 using Medical.Ai.Mbdp.Application.AccountService.DtoSearch;
+using System.Security.Cryptography;
+using Microsoft.Extensions.Configuration;
 
 namespace Medical.Ai.Mbdp.Application.AccountService
 {
@@ -29,9 +31,12 @@ namespace Medical.Ai.Mbdp.Application.AccountService
 
         private readonly DefaultDbContext _defaultDbContext = null;
 
-        public UserManageAppService(DefaultDbContext defaultDbContext)
+        private readonly IConfiguration _config;
+
+        public UserManageAppService(DefaultDbContext defaultDbContext, IConfiguration config)
         {
             _defaultDbContext = defaultDbContext;
+            _config = config;
         }
 
         /// <summary>
@@ -41,13 +46,15 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         public int AddUser(UserInputDto userInputDto)
         {
             var user = _mapper.Map<MbpUser>(userInputDto);
-
             user.UserStatus = EnumUserStatus.Actived;
+            user.Password = ApplicationHelper.EncryptPwdMd5(userInputDto.Password);
 
             _defaultDbContext.MbpUsers.Add(user);
 
             return _defaultDbContext.SaveChanges();
         }
+
+        
 
         /// <summary>
         /// 更新用户信息
@@ -64,6 +71,7 @@ namespace Medical.Ai.Mbdp.Application.AccountService
             user.UserName = userInputDto.UserName;
             user.Code = userInputDto.Code;
             user.Email = userInputDto.Email;
+            user.Password = ApplicationHelper.EncryptPwdMd5(userInputDto.Password);
 
             _defaultDbContext.Attach(user);
 

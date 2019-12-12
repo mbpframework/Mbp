@@ -104,9 +104,13 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
+          this.$store.dispatch('user/login', this.loginForm).then(response => {
+            if (response.IsPassPwdCheck) {
+              this.$router.push({ path: this.redirect || '/' })
+              this.loading = false
+            } else {
+              this.loading = false
+            }
           }).catch((e) => {
             this.loading = false
           })

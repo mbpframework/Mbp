@@ -237,7 +237,7 @@ export default {
         sort: '+Id'
       },
       SystemCodeOptions: [
-        { label: '全部', key: undefined },
+        { label: '全部', key: '' },
         { label: '数据建模平台', key: 'mdp' },
         { label: '大数据平台', key: 'mbdp' }
       ],
@@ -308,7 +308,6 @@ export default {
     getValue(value) {
       this.valueId = value
       this.temp.ParentId = value
-      console.log(this.valueId)
     },
     getList() {
       this.listLoading = true
@@ -323,7 +322,7 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.pageIndex = 1
       this.getList()
     },
     handleModifyStatus(row, status) {
@@ -360,6 +359,7 @@ export default {
     handleCreate() {
       this.getMenuForSelectBox()
       this.resetTemp()
+      this.valueId = 1 // 清空给下拉选择框的值
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.isUpdate = false
@@ -368,7 +368,7 @@ export default {
       })
     },
     createData() {
-      this.temp.ParentId = this.valueId
+      this.temp.ParentId = 0
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           AddMenu(this.temp).then(() => {
@@ -380,6 +380,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.handleFilter()
           })
         }
       })
@@ -416,6 +417,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.handleFilter()
           })
         }
       })
@@ -428,8 +430,9 @@ export default {
           type: 'success',
           duration: 2000
         })
-        const index = this.list.indexOf(row)
-        this.list.splice(index, 1)
+        // const index = this.list.indexOf(row)
+        // this.list.splice(index, 1)
+        this.handleFilter()
       })
     },
     handleDownload() {

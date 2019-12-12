@@ -39,5 +39,7 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         public string ConcurrencyStamp { get; set; }
 
         public string SystemCode { get; set; }
+
+        public bool HasChildren { get; set; }
     }
 }

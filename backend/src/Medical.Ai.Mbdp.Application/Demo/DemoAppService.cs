@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Mbp.Core.Core.System;
 using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
 
 namespace Medical.Ai.Mbdp.Application.Demo
 {
@@ -37,10 +38,13 @@ namespace Medical.Ai.Mbdp.Application.Demo
 
         private readonly IJwtBearerService _jwtBearerService = null;
 
-        public DemoAppService(DefaultDbContext defaultDbContext, IJwtBearerService jwtBearerService)
+        private readonly IConfiguration _config;
+
+        public DemoAppService(DefaultDbContext defaultDbContext, IJwtBearerService jwtBearerService, IConfiguration config)
         {
             _defaultDbContext = defaultDbContext;
             _jwtBearerService = jwtBearerService;
+            _config = config;
         }
 
         /// <summary>

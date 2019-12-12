@@ -2,6 +2,7 @@ import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken, removeRefreshToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import { guid } from '@/utils/uuid'
+import crypto from 'crypto'
 // import router from '@/router'
 // import store from '@/store'
 
@@ -39,8 +40,12 @@ const actions = {
   // 用户登录
   login({ commit }, userInfo) {
     const { username, password } = userInfo
+    var md5 = crypto.createHash('md5')
+    md5.update(password)
+    const passwordMd5 = md5.digest('hex')
+    console.log(passwordMd5)
     return new Promise((resolve, reject) => {
-      login({ LoginName: username.trim(), Password: password, ClientID: guid() })
+      login({ LoginName: username.trim(), Password: passwordMd5, ClientID: guid() })
         .then(response => {
           // 保存登录token到vuex
           commit('SET_TOKEN', response.Data.AccessToken.AccessToken)
@@ -60,12 +65,7 @@ const actions = {
           // commit('SET_ROLES', roles)
           commit('SET_MENUS', Menus)
 
-          // // generate accessible routes map based on roles
-          // const accessRoutes = store.dispatch('permission/generateRoutes', roles)
-          // // store.dispatch('user/setMenus', accessRoutes)
-          // router.addRoutes(accessRoutes)
-
-          resolve()
+          resolve({ 'IsPassPwdCheck': response.Data.IsPassPwdCheck })
         }).catch(error => {
           reject(error)
         })

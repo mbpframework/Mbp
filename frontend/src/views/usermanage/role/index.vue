@@ -104,7 +104,7 @@
       >
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑权限</el-button>
+          <el-button type="primary" size="mini" @click="handleRoleGrant(row)">编辑权限</el-button>
           <el-button
             v-if="row.status!='deleted'"
             size="mini"
@@ -168,11 +168,38 @@
         <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
       </div>
     </el-dialog>
+    <el-dialog :visible.sync="dialogPermissionVisible" title="角色授权">
+      <el-form :model="roleGrantModel" label-width="80px" label-position="left">
+        <el-form-item label="角色名称">
+          <el-input v-model="roleGrantModel.Name" readonly />
+        </el-form-item>
+        <el-form-item label="角色编码">
+          <el-input v-model="roleGrantModel.Code" readonly />
+        </el-form-item>
+        <el-form-item label="角色功能">
+          <el-tree
+            ref="tree"
+            :data="roleMenus"
+            :default-checked-keys="checkedMenus"
+            :props="defaultProps"
+            show-checkbox
+            default-expand-all
+            node-key="Id"
+            class="permission-tree"
+          />
+        </el-form-item>
+      </el-form>
+      <div style="text-align:right;">
+        <el-button @click="dialogPermissionVisible=false">取消</el-button>
+        <el-button type="primary" @click="GrantRole(roleGrantModel.Id)">确认</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { AddRole, UpdateRole, GetRoles } from '@/api/rolemanage'
+import { AddRole, UpdateRole, GetRoles, AddRoleMenus, GetRoleMenus } from '@/api/rolemanage'
+import { GetMenus } from '@/api/menumanage'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -228,13 +255,39 @@ export default {
         SystemCode: [{ required: true, message: '系统编码必填', trigger: 'change' }]
       },
       downloadLoading: false,
-      isUpdate: false
+      isUpdate: false,
+      // 角色授权
+      roleGrantModel: {
+        Id: '',
+        Name: '',
+        Code: '',
+        SystemCode: ''
+      },
+      roleMenus: [], // 角色菜单,目前只能放到data层
+      checkedMenus: [], // 已经选中的角色菜单
+      dialogPermissionVisible: false,
+      defaultProps: {
+        value: 'Id',
+        children: 'children',
+        label: 'Name'
+      }
     }
   },
   created() {
     this.getList()
   },
   methods: {
+    optionData(menus) {
+      const cloneData = JSON.parse(JSON.stringify(menus)) // 对源数据深度克隆
+      return cloneData.filter(father => {
+        // 循环所有项，并添加children属性
+        const branchArr = cloneData.filter(
+          child => father.Id === child.ParentId
+        ) // 返回每一项的子级数组
+        branchArr.length > 0 ? (father.children = branchArr) : '' // 给父级添加一个children属性，并赋值
+        return father.ParentId === 0 // 返回根
+      })
+    },
     getList() {
       this.listLoading = true
       GetRoles(this.listQuery).then(response => {
@@ -248,7 +301,7 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.pageIndex = 1
       this.getList()
     },
     handleModifyStatus(row, status) {
@@ -300,6 +353,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.handleFilter()
           })
         }
       })
@@ -333,6 +387,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.handleFilter()
           })
         }
       })
@@ -344,8 +399,9 @@ export default {
         type: 'success',
         duration: 2000
       })
-      const index = this.list.indexOf(row)
-      this.list.splice(index, 1)
+      this.handleFilter()
+      // const index = this.list.indexOf(row)
+      // this.list.splice(index, 1)
     },
     handleDownload() {
       this.downloadLoading = true
@@ -391,6 +447,45 @@ export default {
     },
     getIsAdmin: function(isAdmin) {
       return isAdmin ? '是' : '否'
+    },
+    resetroleGrantModel() {
+      this.roleGrantModel = {
+        Id: '',
+        Name: '',
+        Code: '',
+        SystemCode: ''
+      }
+      this.roleMenus = [] // 角色菜单,目前只能放到data层
+      this.checkedMenus = [] // 已经选中的角色菜单
+    },
+    handleRoleGrant(row) {
+      this.resetroleGrantModel()
+      const me = this
+      this.roleGrantModel = Object.assign({}, row) // copy obj
+      // 查询菜单,根据systemcode,查询角色已有菜单,根据roleid
+      GetMenus({ 'pageSize': 999, 'pageIndex': 1, 'SystemCode': this.roleGrantModel.SystemCode })
+        .then(response => {
+          this.roleGrantModel.Menus = me.optionData(response.Data.Content)
+          this.roleMenus = this.roleGrantModel.Menus
+        })
+        // 查询角色已有的菜单
+      GetRoleMenus(row.Id).then(response => {
+        this.checkedMenus = response.Data.map(r => r.MenuId)
+      })
+      this.dialogPermissionVisible = true
+    },
+    GrantRole(roleId) {
+      var checkedMenus = this.$refs.tree.getCheckedKeys()
+      AddRoleMenus(roleId, checkedMenus).then(() => {
+        this.dialogPermissionVisible = false
+        this.$notify({
+          title: 'Success',
+          message: 'GrantRole Successfully',
+          type: 'success',
+          duration: 2000
+        })
+        this.handleFilter()
+      })
     }
   }
 }

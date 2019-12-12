@@ -169,7 +169,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="!isUpdate" label="密码" prop="Password">
+            <el-form-item label="密码" prop="Password">
               <el-input v-model="temp.Password" show-password />
             </el-form-item>
           </el-col>
@@ -252,6 +252,7 @@ import { GetRoles } from '@/api/rolemanage'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import crypto from 'crypto'
 
 export default {
   name: 'UserManage',
@@ -337,7 +338,7 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.pageIndex = 1
       this.getList()
     },
     handleModifyStatus(row, status) {
@@ -373,6 +374,19 @@ export default {
         IsAdmin: false
       }
     },
+    restGrantTemp() {
+      this.grantTemp = {
+        currentUserId: 0,
+        checkMdpAll: false,
+        checkMbdpAll: false,
+        checkedMdpRoles: [],
+        checkedMbdpRoles: [],
+        userMdpRoles: [],
+        userMbdpRoles: [],
+        isMdpIndeterminate: true,
+        isMbpdIndeterminate: true
+      }
+    },
     handleCreate() {
       this.resetTemp()
       this.dialogStatus = 'create'
@@ -385,6 +399,9 @@ export default {
     createData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
+          var md5 = crypto.createHash('md5')
+          md5.update(this.temp.Password)
+          this.temp.Password = md5.digest('hex')
           AddUser(this.temp).then(() => {
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
@@ -394,6 +411,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.handleFilter()
           })
         }
       })
@@ -412,6 +430,9 @@ export default {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
+          var md5 = crypto.createHash('md5')
+          md5.update(tempData.Password)
+          tempData.Password = md5.digest('hex')
           // const that = this
           UpdateUser(tempData).then(() => {
             for (const v of this.list) {
@@ -428,6 +449,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.handleFilter()
           })
         }
       })
@@ -440,11 +462,13 @@ export default {
           type: 'success',
           duration: 2000
         })
-        const index = this.list.indexOf(row)
-        this.list.splice(index, 1)
+        // const index = this.list.indexOf(row)
+        // this.list.splice(index, 1)
+        this.handleFilter()
       })
     },
     handleGrant(row) {
+      this.restGrantTemp()
       const that = this
       this.grantTemp.currentUserId = row.Id
       // 获取所有角色
@@ -475,6 +499,7 @@ export default {
           type: 'success',
           duration: 2000
         })
+        this.handleFilter()
       })
     },
     handleCheckMdpAllChange(val) {

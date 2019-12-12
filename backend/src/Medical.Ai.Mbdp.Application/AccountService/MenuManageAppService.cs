@@ -43,7 +43,8 @@ namespace Medical.Ai.Mbdp.Application.AccountService
             var parentMenu = _defaultDbContext.MbpMenus.Where(m => m.Id == menuInputDto.ParentId).FirstOrDefault();
 
             menuInputDto.CodePath = string.Concat(parentMenu.CodePath, "/", menuInputDto.Code);
-            menuInputDto.Level += parentMenu.Level;
+            menuInputDto.Level = parentMenu.Level + 1;
+            menuInputDto.SystemCode = parentMenu.SystemCode;
 
             var menu = _mapper.Map<MbpMenu>(menuInputDto);
 
@@ -81,7 +82,7 @@ namespace Medical.Ai.Mbdp.Application.AccountService
             List<MbpMenu> menus = _defaultDbContext.MbpMenus.Include(u => u.MenuClaims).PageByAscending(searchOptions.PageSize, searchOptions.PageIndex, out total, (c) =>
             c.Name.Contains(searchOptions.Search.Name == null ? "" : searchOptions.Search.Name) &&
             c.Code.Contains(searchOptions.Search.Code == null ? "" : searchOptions.Search.Code) &&
-           (!string.IsNullOrEmpty(searchOptions.Search.SystemCode) ? c.SystemCode == searchOptions.Search.SystemCode : true),
+           (!string.IsNullOrEmpty(searchOptions.Search.SystemCode) ? (c.SystemCode == searchOptions.Search.SystemCode || c.Id == 1) : true),
             (c => c.Id)).ToList();
 
             // 返回列表分页数据

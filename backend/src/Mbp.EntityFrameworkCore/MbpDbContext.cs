@@ -52,7 +52,34 @@ namespace Mbp.EntityFrameworkCore
                     Order = 1,
                     ParentId = 0,
                     Path = "/",
-                    CodePath = "root"
+                    CodePath = "root",
+                    HasChildren = true
+                }, new MbpMenu
+                {
+                    Id = 2,
+                    IsDeleted = false,
+                    Code = "m10001",
+                    Level = 2,
+                    Name = "数据建模系统",
+                    Order = 1,
+                    ParentId = 1,
+                    Path = "/",
+                    CodePath = "root/m10001",
+                    SystemCode = "mdp",
+                    HasChildren = true
+                }, new MbpMenu
+                {
+                    Id = 3,
+                    IsDeleted = false,
+                    Code = "m20001",
+                    Level = 2,
+                    Name = "大数据系统",
+                    Order = 1,
+                    ParentId = 1,
+                    Path = "/",
+                    CodePath = "root/m20001",
+                    SystemCode = "mbdp",
+                    HasChildren = true
                 });
 
             base.OnModelCreating(modelBuilder);

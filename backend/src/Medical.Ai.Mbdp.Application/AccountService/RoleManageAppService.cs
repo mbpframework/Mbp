@@ -162,7 +162,7 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         /// </summary>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        [HttpDelete("GetRoleMenus")]
+        [HttpGet("GetRoleMenus")]
         public List<RoleMenuOutputDto> GetRoleMenus(int roleId)
         {
             var menuRoles = _defaultDbContext.MbpRoleMenus.Where(rm => rm.RoleId == roleId)

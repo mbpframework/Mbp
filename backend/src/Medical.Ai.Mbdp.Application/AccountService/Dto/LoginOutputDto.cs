@@ -23,6 +23,11 @@ namespace Medical.Ai.Mbdp.Application.AccountService.Dto
         public Jwt AccessToken { get; set; }
 
         /// <summary>
+        /// 是否通过密码检查
+        /// </summary>
+        public bool IsPassPwdCheck { get; set; }
+
+        /// <summary>
         /// 可见菜单 todo 设计成通用方案
         /// </summary>
         public List<string> Menus { get; set; } = new List<string>();

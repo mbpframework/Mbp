@@ -47,6 +47,11 @@ namespace Medical.Ai.Mbdp.Application.AccountService
 
             if (user != null)
             {
+                if (user.Password != ApplicationHelper.EncryptPwdMd5(loginInputDto.Password))
+                {
+                    return new LoginOutputDto() { AccessToken = new Jwt(), IsPassPwdCheck = false };
+                }
+
                 // 如果是管理员权限就给管理员属性,如果是用户就给用户属性,这里只定义两种角色,一种是超管,一种是普通用户,这里的角色只做身份鉴定,不做鉴权用
                 var token = await _jwtBearerService.CreateJwt(loginInputDto.LoginName, loginInputDto.ClientID, new List<Claim>()
                     {
@@ -65,10 +70,43 @@ namespace Medical.Ai.Mbdp.Application.AccountService
                                  on trolemenu.RoleId equals tmenu.Id
                              select tmenu.Path).ToList();
 
-                return new LoginOutputDto() { AccessToken = token, Menus = menus, UserName = user.UserName, Role = user.IsAdmin ? "admin" : "user" };
+                return new LoginOutputDto() { AccessToken = token, Menus = menus, UserName = user.UserName, Role = user.IsAdmin ? "admin" : "user", IsPassPwdCheck = true };
             }
 
-            return new LoginOutputDto() { AccessToken = new Jwt() };
+            return new LoginOutputDto() { AccessToken = new Jwt(), IsPassPwdCheck = false };
+        }
+
+        [AllowAnonymous]
+        [HttpGet("GetToken")]
+        public async Task<LoginOutputDto> GetToken(string loginName)
+        {
+            var clientID = Guid.NewGuid().ToString();
+            var user = _defaultDbContext.MbpUsers.Where(u => u.LoginName == loginName).FirstOrDefault();
+
+            if (user != null)
+            {
+                // 如果是管理员权限就给管理员属性,如果是用户就给用户属性,这里只定义两种角色,一种是超管,一种是普通用户,这里的角色只做身份鉴定,不做鉴权用
+                var token = await _jwtBearerService.CreateJwt(loginName, clientID, new List<Claim>()
+                    {
+                       new Claim(ClaimTypes.Role, user.IsAdmin?"admin":"user")
+                    });
+
+                // 取出用户的菜单权限
+                var menus = (from tuser in _defaultDbContext.Set<MbpUser>()
+                             join tuserrole in _defaultDbContext.Set<MbpUserRole>()
+                                 on tuser.Id equals tuserrole.UserId
+                             join trole in _defaultDbContext.Set<MbpRole>()
+                                 on tuserrole.RoleId equals trole.Id
+                             join trolemenu in _defaultDbContext.Set<MbpRoleMenu>()
+                                 on trole.Id equals trolemenu.RoleId
+                             join tmenu in _defaultDbContext.Set<MbpMenu>()
+                                 on trolemenu.RoleId equals tmenu.Id
+                             select tmenu.Path).ToList();
+
+                return new LoginOutputDto() { AccessToken = token, Menus = menus, UserName = user.UserName, Role = user.IsAdmin ? "admin" : "user", IsPassPwdCheck = true };
+            }
+
+            return new LoginOutputDto() { AccessToken = new Jwt(), IsPassPwdCheck = false };
         }
 
         [AllowAnonymous]
