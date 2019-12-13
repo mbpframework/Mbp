@@ -126,12 +126,13 @@
       <el-table-column
         label="操作"
         align="center"
-        width="230"
+        width="350"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
           <el-button type="primary" size="mini" @click="handleGrant(row)">授权</el-button>
+          <el-button type="warning" size="mini" @click="handleGrant(row)">修改密码</el-button>
           <el-button
             v-if="row.status!='deleted'&&row.LoginName!='admin'"
             size="mini"
@@ -169,7 +170,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="密码" prop="Password">
+            <el-form-item v-if="!isUpdate" label="密码" prop="Password">
               <el-input v-model="temp.Password" show-password />
             </el-form-item>
           </el-col>
