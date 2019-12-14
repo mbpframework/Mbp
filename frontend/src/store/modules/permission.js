@@ -49,8 +49,10 @@ const mutations = {
 const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
+      // 申请可访问的路由
       let accessedRoutes
       if (roles.includes('admin')) {
+        // 如果是管理员所有动态路由都可以访问
         accessedRoutes = asyncRoutes || []
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
