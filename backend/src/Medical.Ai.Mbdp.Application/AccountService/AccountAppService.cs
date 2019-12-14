@@ -3,7 +3,6 @@ using Mbp.AspNetCore.Mvc.Convention;
 using Mbp.Authentication.JwtBearer;
 using Mbp.Core.Core;
 using Mbp.Core.Modularity;
-using Medical.Ai.Mbdp.Application.AccountService.Dto;
 using Medical.Ai.Mbdp.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +14,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Mbp.EntityFrameworkCore.PermissionModel;
+using Medical.Ai.Mbdp.Application.Contracts.AccountService;
+using Medical.Ai.Mbdp.Application.Contracts.AccountService.Dto;
 
 namespace Medical.Ai.Mbdp.Application.AccountService
 {

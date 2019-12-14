@@ -29,10 +29,8 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       // const hasGetUserInfo = store.getters.name
-      const hasRoles = (store.getters.roles && store.getters.roles[0] === 'admin') ||
+      const hasRoles = (store.getters.roles && store.getters.roles.length > 0) ||
       (store.getters.menus && store.getters.menus.length > 1)
-
-      console.log(store.getters.menus.length)
       if (hasRoles) {
         next()
       } else {

@@ -132,7 +132,7 @@
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
           <el-button type="primary" size="mini" @click="handleGrant(row)">授权</el-button>
-          <el-button type="warning" size="mini" @click="handleGrant(row)">修改密码</el-button>
+          <el-button type="warning" size="mini" @click="handlePwdReset(row)">修改密码</el-button>
           <el-button
             v-if="row.status!='deleted'&&row.LoginName!='admin'"
             size="mini"
@@ -170,20 +170,20 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="!isUpdate" label="密码" prop="Password">
-              <el-input v-model="temp.Password" show-password />
+            <el-form-item label="姓名" prop="UserName">
+              <el-input v-model="temp.UserName" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="姓名" prop="UserName">
-              <el-input v-model="temp.UserName" />
+            <el-form-item label="用户编码" prop="Code">
+              <el-input v-model="temp.Code" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="用户编码" prop="Code">
-              <el-input v-model="temp.Code" />
+            <el-form-item label="手机号码" prop="PhoneNumber">
+              <el-input v-model="temp.PhoneNumber" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -191,11 +191,6 @@
           <el-col :span="12">
             <el-form-item label="是否超管">
               <el-switch v-model="temp.IsAdmin" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="手机号码" prop="PhoneNumber">
-              <el-input v-model="temp.PhoneNumber" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -244,11 +239,39 @@
         <el-button type="primary" @click="GrantUserRole()">确认</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="密码重置" :visible.sync="dialogPwdResetFormVisible">
+      <el-form
+        ref="dataForm"
+        :rules="pwdResetRules"
+        :model="pwdTemp"
+        label-position="right"
+        label-width="70px"
+        style="width: 400px; margin-left:50px;"
+      >
+        <el-row>
+          <el-col>
+            <el-form-item label="登录名" prop="LoginName">
+              <el-input v-model="pwdTemp.LoginName" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="密码" prop="Password">
+              <el-input v-model="pwdTemp.Password" show-password />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogPwdResetFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="PwdReset()">确认</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { AddUser, UpdateUser, GetUser, DeleteUser, GetUserRoles, AddUserRoles } from '@/api/usermanage'
+import { AddUser, UpdateUser, GetUser, DeleteUser, GetUserRoles, AddUserRoles, RestPwd } from '@/api/usermanage'
 import { GetRoles } from '@/api/rolemanage'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -289,12 +312,13 @@ export default {
         UserName: '',
         Code: '',
         Email: '',
-        Password: '',
         PhoneNumber: '',
-        IsAdmin: false
+        IsAdmin: false,
+        UserStatus: 1
       },
       dialogFormVisible: false,
       dialogGrantFormVisible: false,
+      dialogPwdResetFormVisible: false,
       dialogStatus: '',
       textMap: {
         update: '编辑用户',
@@ -306,6 +330,9 @@ export default {
         ],
         Password: [{ required: true, message: '密码必填', trigger: 'change' }],
         UserName: [{ required: true, message: '姓名必填', trigger: 'change' }]
+      },
+      pwdResetRules: {
+        Password: [{ required: true, message: '密码必填', trigger: 'change' }]
       },
       downloadLoading: false,
       isUpdate: false,
@@ -319,6 +346,10 @@ export default {
         userMbdpRoles: [],
         isMdpIndeterminate: true,
         isMbpdIndeterminate: true
+      },
+      pwdTemp: {
+        LoginName: '',
+        Password: ''
       }
     }
   },
@@ -370,9 +401,9 @@ export default {
         UserName: '',
         Code: '',
         Email: '',
-        Password: '',
         PhoneNumber: '',
-        IsAdmin: false
+        IsAdmin: false,
+        UserStatus: 1
       }
     },
     restGrantTemp() {
@@ -431,10 +462,6 @@ export default {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          var md5 = crypto.createHash('md5')
-          md5.update(tempData.Password)
-          tempData.Password = md5.digest('hex')
-          // const that = this
           UpdateUser(tempData).then(() => {
             for (const v of this.list) {
               if (v.Id === this.temp.Id) {
@@ -466,6 +493,31 @@ export default {
         // const index = this.list.indexOf(row)
         // this.list.splice(index, 1)
         this.handleFilter()
+      })
+    },
+    handlePwdReset(row) {
+      this.pwdTemp = Object.assign({}, row)
+
+      this.dialogPwdResetFormVisible = true
+    },
+    PwdReset() {
+      this.$refs['dataForm'].validate(valid => {
+        if (valid) {
+          const tempData = Object.assign({}, this.pwdTemp)
+          var md5 = crypto.createHash('md5')
+          md5.update(tempData.Password)
+          tempData.Password = md5.digest('hex')
+          RestPwd(tempData.LoginName, tempData.Password).then(() => {
+            this.dialogPwdResetFormVisible = false
+            this.$notify({
+              title: 'Success',
+              message: 'ReSetPwd Successfully',
+              type: 'success',
+              duration: 2000
+            })
+            this.handleFilter()
+          })
+        }
       })
     },
     handleGrant(row) {

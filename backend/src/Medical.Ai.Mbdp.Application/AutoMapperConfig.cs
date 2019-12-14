@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Mbp.Ddd.Application.Mbp.UI;
 using Mbp.EntityFrameworkCore.PermissionModel;
-using Medical.Ai.Mbdp.Application.AccountService.Dto;
+using Medical.Ai.Mbdp.Application.Contracts.AccountService.Dto;
 using Medical.Ai.Mbdp.Application.Contracts.Demo.Dto;
 using Medical.Ai.Mbdp.Domain.DomainEntities.Demo;
 using System;

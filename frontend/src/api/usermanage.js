@@ -18,6 +18,15 @@ export function UpdateUser(data) {
   })
 }
 
+// 重置密码
+export function RestPwd(loginName, pwd) {
+  return request({
+    url: '/UserManage/RestPwd',
+    method: 'put',
+    params: { loginName, pwd }
+  })
+}
+
 // 获取用户
 export function GetUser(data) {
   return request({

@@ -12,6 +12,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AccountService\DtoSearch\**" />
+    <Compile Remove="AccountService\Dto\**" />
+    <EmbeddedResource Remove="AccountService\DtoSearch\**" />
+    <EmbeddedResource Remove="AccountService\Dto\**" />
+    <None Remove="AccountService\DtoSearch\**" />
+    <None Remove="AccountService\Dto\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="AccountService\IAccountAppService.cs" />
+    <Compile Remove="AccountService\IMenuManageAppService.cs" />
+    <Compile Remove="AccountService\IRoleManageAppService.cs" />
+    <Compile Remove="AccountService\IUserManageAppService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
   </ItemGroup>
 

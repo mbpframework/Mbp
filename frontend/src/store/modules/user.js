@@ -3,8 +3,6 @@ import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken, remo
 import { resetRouter } from '@/router'
 import { guid } from '@/utils/uuid'
 import crypto from 'crypto'
-// import router from '@/router'
-// import store from '@/store'
 
 const state = {
   token: getToken(),
@@ -43,7 +41,6 @@ const actions = {
     var md5 = crypto.createHash('md5')
     md5.update(password)
     const passwordMd5 = md5.digest('hex')
-    console.log(passwordMd5)
     return new Promise((resolve, reject) => {
       login({ LoginName: username.trim(), Password: passwordMd5, ClientID: guid() })
         .then(response => {
@@ -62,7 +59,7 @@ const actions = {
 
           commit('SET_NAME', UserName)
           commit('SET_AVATAR', 'avatar')
-          // commit('SET_ROLES', roles)
+          commit('SET_ROLES', roles)
           commit('SET_MENUS', Menus)
 
           resolve({ 'IsPassPwdCheck': response.Data.IsPassPwdCheck })
@@ -77,7 +74,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const data = { }
-        console.log('getInfo')
         // 先忽略权限
         data.roles = ['admin']
         const { roles, name, avatar } = data

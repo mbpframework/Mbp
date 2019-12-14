@@ -3,7 +3,6 @@ using Mbp.AspNetCore.Mvc.Convention;
 using Mbp.Core.Core;
 using Mbp.Core.Modularity;
 using Mbp.EntityFrameworkCore.PermissionModel;
-using Medical.Ai.Mbdp.Application.AccountService.Dto;
 using Medical.Ai.Mbdp.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +14,11 @@ using System.Threading.Tasks;
 using System.Linq;
 using Mbp.Ddd.Application.Mbp.UI;
 using Mbp.Ddd.Application.System.Linq;
-using Medical.Ai.Mbdp.Application.AccountService.DtoSearch;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
+using Medical.Ai.Mbdp.Application.Contracts.AccountService;
+using Medical.Ai.Mbdp.Application.Contracts.AccountService.Dto;
+using Medical.Ai.Mbdp.Application.Contracts.AccountService.DtoSearch;
 
 namespace Medical.Ai.Mbdp.Application.AccountService
 {
@@ -54,8 +55,6 @@ namespace Medical.Ai.Mbdp.Application.AccountService
             return _defaultDbContext.SaveChanges();
         }
 
-        
-
         /// <summary>
         /// 更新用户信息
         /// </summary>
@@ -71,10 +70,27 @@ namespace Medical.Ai.Mbdp.Application.AccountService
             user.UserName = userInputDto.UserName;
             user.Code = userInputDto.Code;
             user.Email = userInputDto.Email;
-            user.Password = ApplicationHelper.EncryptPwdMd5(userInputDto.Password);
+            
 
             _defaultDbContext.Attach(user);
 
+            _defaultDbContext.MbpUsers.Update(user);
+
+            return _defaultDbContext.SaveChanges();
+        }
+
+        /// <summary>
+        /// 重置密码
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <param name="pwd"></param>
+        /// <returns></returns>
+        [HttpPut("RestPwd")]
+        public int RestPwd(string loginName, string pwd)
+        {
+            var user = _defaultDbContext.MbpUsers.Where(u => u.LoginName == loginName).FirstOrDefault();
+            user.Password = ApplicationHelper.EncryptPwdMd5(pwd);
+            _defaultDbContext.Attach(user);
             _defaultDbContext.MbpUsers.Update(user);
 
             return _defaultDbContext.SaveChanges();

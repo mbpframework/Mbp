@@ -3,7 +3,6 @@ using Mbp.AspNetCore.Mvc.Convention;
 using Mbp.Core.Core;
 using Mbp.Core.Modularity;
 using Mbp.EntityFrameworkCore.PermissionModel;
-using Medical.Ai.Mbdp.Application.AccountService.Dto;
 using Medical.Ai.Mbdp.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +14,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Mbp.Ddd.Application.System.Linq;
 using Mbp.Ddd.Application.Mbp.UI;
-using Medical.Ai.Mbdp.Application.AccountService.DtoSearch;
+using Medical.Ai.Mbdp.Application.Contracts.AccountService;
+using Medical.Ai.Mbdp.Application.Contracts.AccountService.Dto;
+using Medical.Ai.Mbdp.Application.Contracts.AccountService.DtoSearch;
 
 namespace Medical.Ai.Mbdp.Application.AccountService
 {

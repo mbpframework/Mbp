@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Medical.Ai.Mbdp.Application.AccountService.Dto
+namespace Medical.Ai.Mbdp.Application.Contracts.AccountService.Dto
 {
     public class UserInputDto
     {
