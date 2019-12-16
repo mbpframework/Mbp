@@ -52,6 +52,12 @@ namespace Mbp.AspNetCore
                 // 统一事务处理中间件
                 options.Filters.Add(typeof(MbpTransActionFilter));
 
+                // 统一异常处理中间件
+                options.Filters.Add(typeof(MbpExceptionFilter));
+
+                // 统一日志处理中间件
+                options.Filters.Add(typeof(MbpLogFilter));
+
             }); ;
 
             AddAutoWebApi(services, new AutoWebApiOptions());

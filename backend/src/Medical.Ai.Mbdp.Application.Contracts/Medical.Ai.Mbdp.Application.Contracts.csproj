@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mbp.Authentication.JwtBearer\Mbp.Authentication.JwtBearer.csproj" />
+    <ProjectReference Include="..\Mbp.Ddd.Application\Mbp.Ddd.Application.csproj" />
     <ProjectReference Include="..\Medical.Ai.Mbdp.DomainService\Medical.Ai.Mbdp.Domain.csproj" />
     <ProjectReference Include="..\Mpb.AspNetCore\Mbp.AspNetCore.csproj" />
     <ProjectReference Include="..\Mpb.Core\Mbp.Core.csproj" />

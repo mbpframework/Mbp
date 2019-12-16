@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Mbp.Ddd.Application.Mbp.Dto;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Medical.Ai.Mbdp.Application.Contracts.AccountService.Dto
 {
-    public class RoleMenuOutputDto
+    public class RoleMenuOutputDto : DtoBase
     {
         public int RoleId { get; set; }
 

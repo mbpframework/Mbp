@@ -48,6 +48,7 @@ namespace Medical.Ai.Mbdp.Web
                     .UseStartup<Startup>().UseSerilog((context, logger) => logger
                     .ReadFrom.Configuration(context.Configuration)
                     .Enrich.FromLogContext()
+                     .WriteTo.File($"{AppContext.BaseDirectory}Log/.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:HH:mm} || {Level} || {SourceContext:l} || {Message} || {Exception} ||end {NewLine}")
                     .WriteTo.Console());
                 });
     }

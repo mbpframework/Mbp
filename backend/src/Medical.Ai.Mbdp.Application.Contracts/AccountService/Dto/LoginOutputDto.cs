@@ -1,11 +1,12 @@
 ﻿using Mbp.Authentication.JwtBearer;
+using Mbp.Ddd.Application.Mbp.Dto;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Medical.Ai.Mbdp.Application.Contracts.AccountService.Dto
 {
-    public class LoginOutputDto
+    public class LoginOutputDto : DtoBase
     {
         /// <summary>
         /// 用户姓名

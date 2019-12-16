@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Mbp.Ddd.Application.Mbp.Dto;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Medical.Ai.Mbdp.Application.Contracts.AccountService.Dto
 {
-    public class MenuOutputDto
+    public class MenuOutputDto : DtoBase
     {
         public int Id { get; set; }
 

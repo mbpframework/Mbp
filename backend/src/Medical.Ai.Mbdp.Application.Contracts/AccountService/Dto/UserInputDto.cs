@@ -1,4 +1,5 @@
-﻿using Mbp.EntityFrameworkCore.PermissionModel;
+﻿using Mbp.Ddd.Application.Mbp.Dto;
+using Mbp.EntityFrameworkCore.PermissionModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace Medical.Ai.Mbdp.Application.Contracts.AccountService.Dto
 {
-    public class UserInputDto
+    public class UserInputDto : DtoBase
     {
         [Required]
         public int Id { get; set; }
