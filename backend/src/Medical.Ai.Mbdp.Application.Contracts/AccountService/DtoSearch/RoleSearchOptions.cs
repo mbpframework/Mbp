@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Mbp.Ddd.Application.Mbp.Dto;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Medical.Ai.Mbdp.Application.Contracts.AccountService.DtoSearch
 {
-    public class RoleSearchOptions
+    public class RoleSearchOptions : DtoBase
     {
         public string Name { get; set; } = string.Empty;
 

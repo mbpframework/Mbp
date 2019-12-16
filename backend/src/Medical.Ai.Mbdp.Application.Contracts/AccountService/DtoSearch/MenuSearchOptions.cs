@@ -1,6 +1,8 @@
-﻿namespace Medical.Ai.Mbdp.Application.Contracts.AccountService.DtoSearch
+﻿using Mbp.Ddd.Application.Mbp.Dto;
+
+namespace Medical.Ai.Mbdp.Application.Contracts.AccountService.DtoSearch
 {
-    public class MenuSearchOptions
+    public class MenuSearchOptions : DtoBase
     {
         public string Name { get; set; } = string.Empty;
 
