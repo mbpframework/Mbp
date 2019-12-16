@@ -63,10 +63,7 @@ export const constantRoutes = [{
     component: () => import('@/views/dashboard/index'),
     meta: { title: '首页', icon: 'dashboard', affix: true }
   }]
-}
-]
-
-export const asyncRoutes = [{
+}, {
   path: '/usermanage',
   component: Layout,
   redirect: '/usermanage/user',
@@ -96,9 +93,12 @@ export const asyncRoutes = [{
       meta: { title: '菜单管理' }
     }
   ]
-},
-// 404 page must be placed at the end !!!
-{ path: '*', redirect: '/404', hidden: true }]
+}
+]
+
+export const asyncRoutes = [
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support

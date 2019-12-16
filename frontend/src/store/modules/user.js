@@ -10,7 +10,7 @@ const state = {
   name: '',
   avatar: '',
   roles: [],
-  menus: []
+  isInitAdminMenu: false
 }
 
 const mutations = {
@@ -29,8 +29,8 @@ const mutations = {
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
-  SET_MENUS: (state, menus) => {
-    state.menus = menus
+  SET_ADMINMENUS: (state, isInitAdminMenu) => {
+    state.isInitAdminMenu = isInitAdminMenu
   }
 }
 
@@ -53,14 +53,13 @@ const actions = {
           // 保存刷新token到cookies
           setRefreshToken(response.Data.AccessToken.RefreshToken)
 
-          const { Role, UserName, Menus } = response.Data
+          const { Role, UserName } = response.Data
           var roles = []
           roles.push(Role)
 
           commit('SET_NAME', UserName)
           commit('SET_AVATAR', 'avatar')
           commit('SET_ROLES', roles)
-          commit('SET_MENUS', Menus)
 
           resolve({ 'IsPassPwdCheck': response.Data.IsPassPwdCheck })
         }).catch(error => {
@@ -73,20 +72,20 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
-        const data = { }
-        // 先忽略权限
-        data.roles = ['admin']
-        const { roles, name, avatar } = data
+        // const data = { }
+        // // 先忽略权限
+        // data.roles = ['admin']
+        // const { roles, name, avatar } = data
 
-        // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
-        }
+        // // roles must be a non-empty array
+        // if (!roles || roles.length <= 0) {
+        //   reject('getInfo: roles must be a non-null array!')
+        // }
 
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_ROLES', roles)
-        resolve(data)
+        // commit('SET_NAME', name)
+        // commit('SET_AVATAR', avatar)
+        // commit('SET_ROLES', roles)
+        resolve()
       }).catch(error => {
         reject(error)
       })
@@ -121,11 +120,8 @@ const actions = {
       resolve()
     })
   },
-  setMenus({ commit }, menus) {
-    return new Promise(resolve => {
-      commit('SET_MENUS', menus)
-      resolve()
-    })
+  setAdminMenus({ commit }) {
+    commit('SET_ADMINMENUS', true)
   }
 }
 
