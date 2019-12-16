@@ -38,6 +38,7 @@ namespace Mbp.EntityFrameworkCore
                     LoginName = "admin",
                     UserName = "admin",
                     UserStatus = EnumUserStatus.Actived,
+                    Password= "94c5fb886bd3cf5f821d239056181a5e",
                     IsAdmin = true
                 });
 

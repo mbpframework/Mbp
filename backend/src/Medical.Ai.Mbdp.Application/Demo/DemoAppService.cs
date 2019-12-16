@@ -20,6 +20,7 @@ using Mbp.Core.Core.System;
 using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Medical.Ai.Mbdp.Application.Demo
 {
@@ -40,11 +41,14 @@ namespace Medical.Ai.Mbdp.Application.Demo
 
         private readonly IConfiguration _config;
 
-        public DemoAppService(DefaultDbContext defaultDbContext, IJwtBearerService jwtBearerService, IConfiguration config)
+        private readonly ILogger<DemoAppService> _logger;
+
+        public DemoAppService(DefaultDbContext defaultDbContext, IJwtBearerService jwtBearerService, IConfiguration config, ILogger<DemoAppService> logger)
         {
             _defaultDbContext = defaultDbContext;
             _jwtBearerService = jwtBearerService;
             _config = config;
+            _logger = logger;
         }
 
         /// <summary>
@@ -55,6 +59,8 @@ namespace Medical.Ai.Mbdp.Application.Demo
         [AutoAop(IsTranstion = false)]
         public virtual List<BlogDto> GetBlogs()
         {
+            _logger.LogInformation("我在写日志喔");
+
             List<Blog> blogs = _defaultDbContext.Blogs.Include(b => b.Posts).ToList();
 
             return _mapper.Map<List<BlogDto>>(blogs);
