@@ -21,11 +21,11 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore
             services.AddDbContext<DefaultDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("MbdbDatabase"),
-                    options =>
+                    o =>
                     {
                         if (int.Parse(version) <= 2008)
                         {
-                            options.UseRowNumberForPaging();
+                            o.UseRowNumberForPaging();
                         }
                     });
             });
