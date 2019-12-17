@@ -28,6 +28,8 @@ namespace Mbp.EntityFrameworkCore
 
         public DbSet<MbpUserClaim> MbpUserClaims { get; set; }
 
+        public DbSet<MbpOperationLog>  MbpOperationLogs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<MbpUser>().HasData(

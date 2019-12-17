@@ -93,6 +93,16 @@ export const constantRoutes = [{
       meta: { title: '菜单管理' }
     }
   ]
+},
+{
+  path: '/logmanage',
+  component: Layout,
+  children: [{
+    path: 'loglist',
+    name: 'loglist',
+    component: () => import('@/views/log/index'),
+    meta: { title: '日志列表', icon: 'documentation' }
+  }]
 }
 ]
 

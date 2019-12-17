@@ -3,6 +3,7 @@ using Mbp.Ddd.Application.Mbp.UI;
 using Mbp.EntityFrameworkCore.PermissionModel;
 using Medical.Ai.Mbdp.Application.Contracts.AccountService.Dto;
 using Medical.Ai.Mbdp.Application.Contracts.Demo.Dto;
+using Medical.Ai.Mbdp.Application.Contracts.LogService.Dto;
 using Medical.Ai.Mbdp.Domain.DomainEntities.Demo;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,11 @@ namespace Medical.Ai.Mbdp.Application
                 // 菜单映射
                 cfg.CreateMap<MenuInputDto, MbpMenu>();
                 cfg.CreateMap<MbpMenu, MenuOutputDto>();
+
+                // 日志映射
+                cfg.CreateMap<LogInputDto, MbpOperationLog>();
+                cfg.CreateMap<MbpOperationLog, LogOutInputDto>();
+
             });
 
             return config.CreateMapper();
