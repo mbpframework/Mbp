@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Mbp.EntityFrameworkCore.PermissionModel;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
 
 namespace Medical.Ai.Mbdp.Application.LogService
 {
@@ -34,10 +35,13 @@ namespace Medical.Ai.Mbdp.Application.LogService
 
         private readonly IConfiguration _config;
 
-        public LogManageAppService(DefaultDbContext defaultDbContext, IConfiguration config)
+        private IHttpContextAccessor _accessor;
+
+        public LogManageAppService(DefaultDbContext defaultDbContext, IConfiguration config, IHttpContextAccessor accessor)
         {
             _defaultDbContext = defaultDbContext;
             _config = config;
+            _accessor = accessor;
         }
 
         /// <summary>
@@ -76,6 +80,11 @@ namespace Medical.Ai.Mbdp.Application.LogService
         [HttpPost("AddLog")]
         public int AddLog(LogInputDto logInputDto)
         {
+            if (string.IsNullOrEmpty(logInputDto.ClientIP))
+            {
+                logInputDto.ClientIP = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+            }
+            
             var log = _mapper.Map<MbpOperationLog>(logInputDto);
 
             _defaultDbContext.MbpOperationLogs.Add(log);
