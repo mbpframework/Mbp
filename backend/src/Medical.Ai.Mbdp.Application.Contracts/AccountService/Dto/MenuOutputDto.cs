@@ -1,4 +1,5 @@
 ﻿using Mbp.Ddd.Application.Mbp.Dto;
+using Mbp.EntityFrameworkCore.PermissionModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,5 +21,7 @@ namespace Medical.Ai.Mbdp.Application.Contracts.AccountService.Dto
         public int ParentId { get; set; }
 
         public int Order { get; set; }
+
+        public EnumMenuType MenuType { get; set; }
     }
 }

@@ -188,6 +188,20 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span="12">
+            <el-form-item label="菜单类型" prop="MenuType">
+              <el-select v-model="temp.MenuType" placeholder="请选择">
+                <el-option
+                  v-for="item in MenuTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="24">
             <el-form-item label="菜单路径" prop="Path">
               <el-input v-model="temp.Path" />
@@ -242,6 +256,7 @@ export default {
         { label: '数据建模平台', key: 'mdp' },
         { label: '大数据平台', key: 'mbdp' }
       ],
+      MenuTypeOptions: [{ label: '页面', value: 1 }, { label: '按钮', value: 2 }],
       sortOptions: [
         { label: 'ID升序', key: '+Id' },
         { label: 'ID降序', key: '-Id' }
@@ -253,7 +268,8 @@ export default {
         Code: '',
         Order: 1,
         Path: '',
-        ParentId: 0
+        ParentId: 0,
+        MenuType: 0
       },
       isClearable: false, // 可清空（可选）
       isAccordion: true, // 可收起（可选）
@@ -354,13 +370,15 @@ export default {
         Code: '',
         Order: 1,
         Path: '',
-        ParentId: 0
+        ParentId: 0,
+        MenuType: 1
       }
     },
     handleCreate() {
       this.getMenuForSelectBox()
       this.resetTemp()
       this.valueId = 1 // 清空给下拉选择框的值
+      this.temp.MenuType = 1
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.isUpdate = false

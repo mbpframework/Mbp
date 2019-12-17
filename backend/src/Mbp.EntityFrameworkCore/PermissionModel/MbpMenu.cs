@@ -41,5 +41,10 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         public string SystemCode { get; set; }
 
         public bool HasChildren { get; set; }
+
+        /// <summary>
+        /// 菜单的类型,页面和按钮
+        /// </summary>
+        public EnumMenuType MenuType { get; set; }
     }
 }

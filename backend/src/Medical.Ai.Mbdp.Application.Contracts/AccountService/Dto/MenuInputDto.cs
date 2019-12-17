@@ -1,4 +1,5 @@
 ﻿using Mbp.Ddd.Application.Mbp.Dto;
+using Mbp.EntityFrameworkCore.PermissionModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,5 +33,8 @@ namespace Medical.Ai.Mbdp.Application.Contracts.AccountService.Dto
         public int Order { get; set; }
 
         public string SystemCode { get; set; }
+
+        [Required]
+        public EnumMenuType MenuType { get; set; }
     }
 }
