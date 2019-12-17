@@ -63,7 +63,7 @@ namespace Medical.Ai.Mbdp.Application.LogService
            (searchOptions.Search.OpDateTimeBegin != null ? options.OpDateTime >= searchOptions.Search.OpDateTimeBegin : true) &&
            (searchOptions.Search.OpDateTimeEnd != null ? options.OpDateTime <= searchOptions.Search.OpDateTimeEnd : true);
 
-            var logs = _defaultDbContext.MbpOperationLogs.PageByAscending(searchOptions.PageSize, searchOptions.PageIndex, out total, expression, (c => c.Id)).ToList();
+            var logs = _defaultDbContext.MbpOperationLogs.PageByDescending(searchOptions.PageSize, searchOptions.PageIndex, out total, expression, (c => c.Id)).ToList();
 
             return new PagedList<LogOutInputDto>()
             {

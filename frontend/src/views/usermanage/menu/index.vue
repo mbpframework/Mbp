@@ -139,8 +139,8 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
+      :page.sync="listQuery.pageIndex"
+      :limit.sync="listQuery.pageSize"
       @pagination="getList"
     />
 
