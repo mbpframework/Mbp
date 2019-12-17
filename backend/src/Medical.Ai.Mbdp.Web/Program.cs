@@ -43,7 +43,7 @@ namespace Medical.Ai.Mbdp.Web
                 {
                     webBuilder.ConfigureKestrel(serverOptions =>
                     {
-                        serverOptions.Listen(IPAddress.Any, 5000);
+                        serverOptions.Listen(IPAddress.Any, 5008);
                     })
                     .UseStartup<Startup>().UseSerilog((context, logger) => logger
                     .ReadFrom.Configuration(context.Configuration)
