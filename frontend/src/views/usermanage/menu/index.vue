@@ -420,15 +420,7 @@ export default {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          // const that = this
           UpdateMenu(tempData).then(() => {
-            for (const v of this.list) {
-              if (v.Id === this.temp.Id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
-                break
-              }
-            }
             this.dialogFormVisible = false
             this.$notify({
               title: 'Success',
