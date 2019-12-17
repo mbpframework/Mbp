@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Medical.Ai.Mbdp.Application.Contracts.AccountService.DtoSearch
 {
-    public class RoleSearchOptions : DtoBase
+    public class RoleSearchOptions
     {
         public string Name { get; set; } = string.Empty;
 

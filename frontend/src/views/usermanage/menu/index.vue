@@ -217,7 +217,8 @@ export default {
   filters: {},
   data() {
     const validateParentId = (rule, value, callback) => {
-      if (value <= 0) {
+      console.log(this.valueId)
+      if (this.valueId <= 0) {
         callback(new Error('父级必选'))
       } else {
         callback()
@@ -368,7 +369,7 @@ export default {
       })
     },
     createData() {
-      this.temp.ParentId = 0
+      this.temp.ParentId = this.valueId
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           AddMenu(this.temp).then(() => {

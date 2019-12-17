@@ -2,7 +2,7 @@
 
 namespace Medical.Ai.Mbdp.Application.Contracts.AccountService.DtoSearch
 {
-    public class MenuSearchOptions : DtoBase
+    public class MenuSearchOptions
     {
         public string Name { get; set; } = string.Empty;
 

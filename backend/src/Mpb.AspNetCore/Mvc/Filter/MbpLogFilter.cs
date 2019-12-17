@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Security.Claims;
 
 namespace Mbp.AspNetCore.Mvc.Filter
 {
@@ -23,7 +25,14 @@ namespace Mbp.AspNetCore.Mvc.Filter
             var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
 
             var methodInfo = actionDescriptor.MethodInfo;
-            var actionName = actionDescriptor.ActionName;
+            var actionName = context.Controller.ToString();
+
+            var t = context.HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
+            var loginName = "mbp匿名用户";
+            if (t != null)
+            {
+                loginName = t.Value;
+            }
 
             //必须显示在服务类上定义AutoAopAttribute特性
             if (methodInfo.DeclaringType.IsDefined(typeof(AutoAopAttribute), true)
@@ -51,7 +60,7 @@ namespace Mbp.AspNetCore.Mvc.Filter
                     }
                     stringBuilder.Append("]");
 
-                    _logger.LogInformation($"正在执行方法:{actionName + "/" + methodInfo.Name},参数:{stringBuilder.ToString()}");
+                    _logger.LogInformation($"用户:{loginName},正在执行方法:{actionName + "/" + methodInfo.Name},参数:{stringBuilder.ToString()}");
                 }
             }
             else
