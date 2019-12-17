@@ -6,7 +6,7 @@ export function GetLogs(data) {
     url: '/LogManage/GetLogs',
     method: 'get',
     params: { pageSize: data.pageSize, pageIndex: data.pageIndex,
-      'Search.UserId': data.UserId,
+      'Search.UserName': data.UserName,
       'Search.ClientIP': data.ClientIP,
       'Search.OpDateTimeBegin': data.OpDateTimeBegin,
       'Search.OpDateTimeEnd': data.OpDateTimeEnd,
