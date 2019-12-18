@@ -193,6 +193,11 @@
               <el-switch v-model="temp.IsAdmin" />
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item v-if="!isUpdate" label="密码" prop="Password">
+              <el-input v-model="temp.Password" show-password />
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
