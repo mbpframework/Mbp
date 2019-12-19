@@ -10,9 +10,9 @@ namespace Medical.Ai.Mbdp.Application.Contracts.LogService.DtoSearch
 
         public string ClientIP { get; set; } = string.Empty;
 
-        public DateTime OpDateTimeBegin { get; set; } = DateTime.Today;
+        public DateTime OpDateTimeBegin { get; set; } = DateTime.Today.AddDays(-3);
 
-        public DateTime OpDateTimeEnd { get; set; } = DateTime.Today.AddDays(3);
+        public DateTime OpDateTimeEnd { get; set; } = DateTime.Today.AddDays(1);
 
         public string AppName { get; set; } = string.Empty;
 
