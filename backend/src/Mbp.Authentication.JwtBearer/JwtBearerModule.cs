@@ -71,6 +71,7 @@ namespace Mbp.Authentication.JwtBearer
 
         public override void UseModule(IApplicationBuilder app)
         {
+            // 鉴权中间件
             app.UseAuthentication();
             base.UseModule(app);
         }

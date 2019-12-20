@@ -43,7 +43,7 @@ namespace Medical.Ai.Mbdp.Web
             // 路由中间件
             app.UseRouting();
 
-            // 鉴权中间件
+            // 身份认证中间件
             app.UseAuthorization();
 
             // 路由终结点配置 开启终结点之后,mbp的权限过滤器将以中间件的形式独立运行,不会再添加到ActionDescriptor 
