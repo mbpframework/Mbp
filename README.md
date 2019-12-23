@@ -1,5 +1,5 @@
 # Mbp
-- Mbp是一个.net core 3的web开发框架.而如今,.net core已经在大数据,人工智能,容器云化方面取得相当大的进步.借此,本着学习的态度,整合一个基于.net core的开发框架.此框架借鉴了国外优秀开源项目abp vnext,及国内优秀开源框架Osharp的一些思想和实现.
+- Mbp是一个.net core 3的web开发框架https://www.cnblogs.com/mbpframework/.而如今,.net core已经在大数据,人工智能,容器云化方面取得相当大的进步.借此,本着学习的态度,整合一个基于.net core的开发框架.此框架借鉴了国外优秀开源项目abp vnext,及国内优秀开源框架Osharp的一些思想和实现.
 - 欢迎各路开发爱好者加入这个项目.我们将以**Scrum敏捷框架 + azure devops协同工具**的方式进行协作喔,也是为了后期的容器云化做准备.
 ### Mbp的未来,123方面
 #### 1.成为一个rest api的开发框架
