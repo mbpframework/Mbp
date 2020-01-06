@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
@@ -37,19 +38,30 @@ namespace Medical.Ai.Mbdp.Web
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.ConfigureKestrel(serverOptions =>
-                    {
-                        serverOptions.Listen(IPAddress.Any, 5008);
-                    })
-                    .UseStartup<Startup>().UseSerilog((context, logger) => logger
-                    .ReadFrom.Configuration(context.Configuration)
-                    .Enrich.FromLogContext()
-                     .WriteTo.File($"{AppContext.BaseDirectory}Log/.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:HH:mm} || {Level} || {SourceContext:l} || {Message} || {Exception} ||end {NewLine}")
-                    .WriteTo.Console());
-                });
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            // »ñÈ¡ÅäÖÃ
+            var config = new ConfigurationBuilder()
+                   .SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                   .AddEnvironmentVariables()
+                   .Build();
+
+            var port = int.Parse(config.GetSection("Port").Value);
+
+            return Host.CreateDefaultBuilder(args)
+                   .ConfigureWebHostDefaults(webBuilder =>
+                   {
+                       webBuilder.ConfigureKestrel(serverOptions =>
+                       {
+                           serverOptions.Listen(IPAddress.Any, port);
+                       })
+                       .UseStartup<Startup>().UseSerilog((context, logger) => logger
+                       .ReadFrom.Configuration(context.Configuration)
+                       .Enrich.FromLogContext()
+                        .WriteTo.File($"{AppContext.BaseDirectory}Log/.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:HH:mm} || {Level} || {SourceContext:l} || {Message} || {Exception} ||end {NewLine}")
+                       .WriteTo.Console());
+                   });
+        }
     }
 }
