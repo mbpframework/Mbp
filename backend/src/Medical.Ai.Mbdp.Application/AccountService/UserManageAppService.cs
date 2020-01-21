@@ -143,18 +143,17 @@ namespace Medical.Ai.Mbdp.Application.AccountService
         public int AddUserRoles(int userId, List<int> roleIds)
         {
             // 查询已有的用户角色
-
-            DeleteUserRoles(userId);
-
-            List<MbpUserRole> mbpUserRoles = new List<MbpUserRole>();
-
-            foreach (var roleId in roleIds)
+            var mbpUserRoles = _defaultDbContext.MbpUserRoles.Where(ur => roleIds.Contains(ur.RoleId));
+            var inserts = roleIds.Except(mbpUserRoles.Select(ur => ur.RoleId));
+            foreach (var item in inserts)
             {
-                mbpUserRoles.Add(new MbpUserRole() { UserId = userId, RoleId = roleId });
+                _defaultDbContext.MbpUserRoles.Add(new MbpUserRole() { UserId = userId, RoleId = item });
             }
-
-            _defaultDbContext.MbpUserRoles.AddRange(mbpUserRoles);
-
+            var deletes = mbpUserRoles.Select(ur => ur.RoleId).Except(roleIds);
+            foreach (var item in deletes)
+            {
+                _defaultDbContext.MbpUserRoles.Remove(mbpUserRoles.First(ur => ur.RoleId == item));
+            }
             return _defaultDbContext.SaveChanges();
         }
 
