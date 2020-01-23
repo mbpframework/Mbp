@@ -1,4 +1,5 @@
 ﻿using Mbp.Core.Entity;
+using Mbp.Core.Entity.Aggregate;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
     /// <summary>
     /// 用户表,一个用户有多个用户角色关系
     /// </summary>
-    public class MbpUser : EntityBase<int>, ISoftDelete
+    public class MbpUser : AggregateBase<int>, ISoftDelete
     {
         /// <summary>
         /// 用作登录的名称
@@ -31,9 +32,6 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         public string Email { get; set; }
 
         public string Password { get; set; }
-
-        [MaxLength(256)]
-        public string ConcurrencyStamp { get; set; }
 
         [MaxLength(256)]
         public string PhoneNumber { get; set; }

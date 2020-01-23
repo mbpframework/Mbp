@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '医学大数据主数据平台',
+  title: 'Mbp主数据平台',
 
   /**
     * @type {boolean} true | false

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
 {
@@ -11,7 +13,9 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ConcurrencyStamp = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Url = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false)
                 },
@@ -25,16 +29,20 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ConcurrencyStamp = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Name = table.Column<string>(nullable: true),
                     Code = table.Column<string>(nullable: true),
                     Order = table.Column<int>(nullable: false),
+                    CodePath = table.Column<string>(nullable: true),
                     Level = table.Column<int>(nullable: false),
                     Path = table.Column<string>(nullable: true),
                     ParentId = table.Column<int>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    ConcurrencyStamp = table.Column<string>(maxLength: 256, nullable: true),
-                    SystemCode = table.Column<string>(nullable: true)
+                    SystemCode = table.Column<string>(nullable: true),
+                    HasChildren = table.Column<bool>(nullable: false),
+                    MenuType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,14 +50,37 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MbpOperationLogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserID = table.Column<int>(nullable: false),
+                    UserName = table.Column<string>(nullable: true),
+                    RoleName = table.Column<string>(nullable: true),
+                    ClientIP = table.Column<string>(nullable: true),
+                    OpDateTime = table.Column<DateTime>(nullable: false),
+                    AppName = table.Column<string>(nullable: true),
+                    ModuleName = table.Column<string>(nullable: true),
+                    OpName = table.Column<string>(nullable: true),
+                    Desc = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MbpOperationLogs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MbpRoles",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ConcurrencyStamp = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Name = table.Column<string>(maxLength: 256, nullable: true),
                     Code = table.Column<string>(maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     SystemCode = table.Column<string>(nullable: true)
                 },
@@ -63,13 +94,14 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ConcurrencyStamp = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     LoginName = table.Column<string>(maxLength: 256, nullable: true),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
                     Code = table.Column<string>(maxLength: 256, nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
                     Password = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(maxLength: 256, nullable: true),
                     PhoneNumber = table.Column<string>(maxLength: 256, nullable: true),
                     UserStatus = table.Column<int>(nullable: false),
                     IsAdmin = table.Column<bool>(nullable: false),
@@ -86,7 +118,7 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(nullable: true),
                     Content = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
@@ -108,7 +140,7 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     MenuId = table.Column<int>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
@@ -130,7 +162,7 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     RoleId = table.Column<int>(nullable: false),
                     MenuId = table.Column<int>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false)
@@ -157,7 +189,7 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<int>(nullable: false),
                     RoleId = table.Column<int>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false)
@@ -184,7 +216,7 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<int>(nullable: false),
                     MenuClaimId = table.Column<int>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false)
@@ -207,9 +239,19 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "MbpMenus",
+                columns: new[] { "Id", "Code", "CodePath", "HasChildren", "IsDeleted", "Level", "MenuType", "Name", "Order", "ParentId", "Path", "SystemCode" },
+                values: new object[,]
+                {
+                    { 1, "root", "root", true, false, 1, 0, "医学大数据平台", 1, 0, "/", null },
+                    { 2, "m10001", "root/m10001", true, false, 2, 0, "数据建模系统", 1, 1, "/", "mdp" },
+                    { 3, "m20001", "root/m20001", true, false, 2, 0, "大数据系统", 1, 1, "/", "mbdp" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "MbpUsers",
-                columns: new[] { "Id", "Code", "ConcurrencyStamp", "Email", "IsAdmin", "IsDeleted", "LoginName", "Password", "PhoneNumber", "SystemCode", "UserName", "UserStatus" },
-                values: new object[] { 1, null, null, null, true, false, "admin", null, null, null, "admin", 1 });
+                columns: new[] { "Id", "Code", "Email", "IsAdmin", "IsDeleted", "LoginName", "Password", "PhoneNumber", "SystemCode", "UserName", "UserStatus" },
+                values: new object[] { 1, null, null, true, false, "admin", "94c5fb886bd3cf5f821d239056181a5e", null, null, "admin", 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_MbpMenuClaims_MenuId",
@@ -254,6 +296,9 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "MbpOperationLogs");
+
             migrationBuilder.DropTable(
                 name: "MbpRoleMenus");
 

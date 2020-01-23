@@ -24,7 +24,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Medical.Ai.Mbdp.Application.Demo
 {
-    [Authorize("GlobalPermission")]
+    //[Authorize("GlobalPermission")]
     [AutoAop]
     [AutoWebApi]
     [Route("api/[controller]")]
@@ -86,6 +86,52 @@ namespace Medical.Ai.Mbdp.Application.Demo
             _defaultDbContext.Blogs.Add(blog);
 
             _defaultDbContext.SaveChanges();
+        }
+
+        [HttpPut("UpdateBlog")]
+        public virtual void UpdateBlog(BlogDto blogDto)
+        {
+            var blog = _defaultDbContext.Blogs.Include(b => b.Posts).Where(b => b.Id == blogDto.Id).First();
+            blog.Url = blogDto.Url;
+            _defaultDbContext.Blogs.Update(blog);
+
+            try
+            {
+                _defaultDbContext.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                foreach (var entry in ex.Entries)
+                {
+                    if (entry.Entity is Blog)
+                    {
+                        var proposedValues = entry.CurrentValues;
+                        var databaseValues = entry.GetDatabaseValues();
+
+                        foreach (var property in proposedValues.Properties)
+                        {
+                            // 当前值
+                            var proposedValue = proposedValues[property];
+
+                            // 数据库值
+                            var databaseValue = databaseValues[property];
+
+                            // TODO: decide which value should be written to database
+                            // proposedValues[property] = <value to be saved>;
+                        }
+
+                        // Refresh original values to bypass next concurrency check
+                        entry.OriginalValues.SetValues(databaseValues);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException(
+                            "Don't know how to handle concurrency conflicts for "
+                            + entry.Metadata.Name);
+                    }
+                }
+            }
+
         }
 
         [AllowAnonymous]

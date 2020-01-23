@@ -5,11 +5,15 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Mbp.Core.Entity
+namespace Mbp.Core.Entity.Aggregate
 {
-    public abstract class EntityBase<TKey> : IEntity<TKey> where TKey : IEquatable<TKey>
+    public class AggregateBase<TKey> : IEntity<TKey> where TKey : IEquatable<TKey>
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public TKey Id { get; set; }
+
+        [Timestamp]
+        [ConcurrencyCheck]
+        public byte[] ConcurrencyStamp { get; set; }
     }
 }

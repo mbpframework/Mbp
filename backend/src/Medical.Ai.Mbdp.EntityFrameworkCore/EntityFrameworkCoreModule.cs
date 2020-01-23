@@ -4,6 +4,7 @@ using Medical.Ai.Mbdp.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Medical.Ai.Mbdp.EntityFrameworkCore.ProviderStategy;
 
 namespace Medical.Ai.Mbdp.EntityFrameworkCore
 {
@@ -11,23 +12,13 @@ namespace Medical.Ai.Mbdp.EntityFrameworkCore
     {
         public override IServiceCollection AddServices(IServiceCollection services)
         {
+            // 获取主机配置对象
             IConfiguration configuration = services.BuildServiceProvider().GetService<IConfiguration>();
 
-            // 得到配置
-            var dbType = configuration.GetSection("MbpFramework:Database:DbType").Value;
-            var version = configuration.GetSection("MbpFramework:Database:Version").Value;
-
-            // 设置在框架中设置连接字符串,并根据数据库版本特性,指定分页方式
+            // 设置数据库连接
             services.AddDbContext<DefaultDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("MbdbDatabase"),
-                    o =>
-                    {
-                        if (int.Parse(version) <= 2008)
-                        {
-                            o.UseRowNumberForPaging();
-                        }
-                    });
+                options.UseDb(configuration);
             });
 
             return base.AddServices(services);

@@ -1,11 +1,12 @@
 ﻿using Mbp.Core.Entity;
+using Mbp.Core.Entity.Aggregate;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Medical.Ai.Mbdp.Domain.DomainEntities.Demo
 {
-    public class Blog : EntityBase<int>, ISoftDelete
+    public class Blog : AggregateBase<int>, ISoftDelete
     {
         public string Url { get; set; }
 
