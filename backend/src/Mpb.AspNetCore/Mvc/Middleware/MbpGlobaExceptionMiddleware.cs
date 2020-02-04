@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -35,7 +36,7 @@ namespace Mbp.AspNetCore.Mvc.Middleware
 
                 context.Response.ContentType = "application/json";
 
-                await context.Response.WriteAsync(new { Code = 500, Message = "提交并发冲突", Version = "1", Data = new List<object>() }.ToString());
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(new { Code = 500, Message = "提交并发冲突", Version = "1", Data = new List<object>() }));
             }
             catch (Exception ex)
             {
@@ -44,7 +45,7 @@ namespace Mbp.AspNetCore.Mvc.Middleware
 
                 context.Response.ContentType = "application/json";
 
-                await context.Response.WriteAsync(new { Code = 500, Message = "服务器异常", Version = "1", Data = new List<object>() }.ToString());
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(new { Code = 500, Message = "服务器异常", Version = "1", Data = new List<object>() }));
             }
         }
     }
