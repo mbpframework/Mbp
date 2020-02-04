@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Mbp.AspNetCore.Mvc.Convention;
 using Mbp.AspNetCore.Mvc.Filter;
+using Mbp.AspNetCore.Mvc.Middleware;
 using Mbp.Core.Core;
 using Mbp.Core.Core.Config;
 using Mbp.Core.Modularity;
@@ -46,17 +47,14 @@ namespace Mbp.AspNetCore
                 // 禁用Version的绑定
                 options.ModelMetadataDetailsProviders.Add(new ExcludeBindingMetadataProvider(typeof(System.Version)));
 
-                // 请求响应统一格式处理中间件
-                options.Filters.Add(typeof(ResponseMiddleware));
-
                 // 统一事务处理中间件
                 options.Filters.Add(typeof(MbpTransActionFilter));
 
-                // 统一异常处理中间件
-                options.Filters.Add(typeof(MbpExceptionFilter));
-
                 // 统一日志处理中间件
                 options.Filters.Add(typeof(MbpLogFilter));
+
+                // 请求响应统一格式处理中间件
+                options.Filters.Add(typeof(ResponseMiddleware));
 
             }); ;
 
@@ -116,6 +114,10 @@ namespace Mbp.AspNetCore
         {
             // 启用跨域请求中间件
             app.UseCors("MbpCors");
+
+            // 启用应用服务层全局错误处理中间件
+            app.UseMiddleware(typeof(MbpGlobaExceptionMiddleware));
+
             base.UseModule(app);
         }
     }

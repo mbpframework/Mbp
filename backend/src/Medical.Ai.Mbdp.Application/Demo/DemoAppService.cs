@@ -134,6 +134,16 @@ namespace Medical.Ai.Mbdp.Application.Demo
 
         }
 
+        [HttpPut("UpdateBlog2")]
+        public virtual void UpdateBlog2(BlogDto blogDto)
+        {
+            var blog = _defaultDbContext.Blogs.Include(b => b.Posts).Where(b => b.Id == blogDto.Id).First();
+            blog.Url = blogDto.Url;
+            _defaultDbContext.Blogs.Update(blog);
+
+            _defaultDbContext.SaveChanges();
+        }
+
         [AllowAnonymous]
         [HttpGet("GetToken")]
         public async virtual Task<Jwt> GetToken()
