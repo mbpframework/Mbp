@@ -31,7 +31,7 @@ namespace Mbp.AspNetCore.Mvc.Filter
             // TODO 后面根据实际需要进行调整
             if (!methodInfo.IsPublic
                 || !methodInfo.IsVirtual
-                || !isGetMethod
+                || isGetMethod
                 || methodInfo.IsDefined(typeof(HttpGetAttribute), true)
                 || (methodInfo.IsDefined(typeof(AutoAopAttribute), true) && !((AutoAopAttribute)methodInfo.GetCustomAttributes(typeof(AutoAopAttribute), false)[0]).IsTranstion)
                 || methodInfo.Name.StartsWith("Get")
