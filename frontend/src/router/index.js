@@ -69,11 +69,23 @@ export const constantRoutes = [{
   redirect: '/usermanage/user',
   name: 'user',
   meta: {
-    title: '用户管理',
+    title: '系统管理',
     icon: 'user',
     roles: ['admin']
   },
   children: [
+    {
+      path: 'dept',
+      name: 'DeptManage',
+      component: () => import('@/views/usermanage/dept/index'),
+      meta: { title: '机构管理' }
+    },
+    {
+      path: 'person',
+      name: 'PersonManage',
+      component: () => import('@/views/usermanage/person/index'),
+      meta: { title: '人员管理' }
+    },
     {
       path: 'user',
       name: 'UserManage',
@@ -91,8 +103,96 @@ export const constantRoutes = [{
       name: 'MenuManage',
       component: () => import('@/views/usermanage/menu/index'),
       meta: { title: '菜单管理' }
+    },
+    {
+      path: 'menu',
+      name: 'MenuManage',
+      component: () => import('@/views/usermanage/menu/index'),
+      meta: { title: '岗位管理' }
+    },
+    {
+      path: 'menu',
+      name: 'MenuManage',
+      component: () => import('@/views/usermanage/menu/index'),
+      meta: { title: '科目管理' }
+    },
+    {
+      path: 'menu',
+      name: 'MenuManage',
+      component: () => import('@/views/usermanage/menu/index'),
+      meta: { title: '系统代码管理' }
+    },
+    {
+      path: 'menu',
+      name: 'MenuManage',
+      component: () => import('@/views/usermanage/menu/index'),
+      meta: { title: '文件发布' }
+    },
+    {
+      path: 'menu',
+      name: 'MenuManage',
+      component: () => import('@/views/usermanage/menu/index'),
+      meta: { title: '流程管理' }
+    },
+    {
+      path: 'menu',
+      name: 'MenuManage',
+      component: () => import('@/views/usermanage/menu/index'),
+      meta: { title: '权限管理' }
     }
   ]
+},
+{
+  path: '/bussiness',
+  component: Layout,
+  name: 'bussiness',
+  meta: {
+    title: '业务功能',
+    icon: 'excel',
+    roles: ['admin']
+  },
+  children: [{
+    path: 'plan',
+    name: 'PlanManage',
+    component: () => import('@/views/bussiness/plan/index'),
+    meta: { title: '训练计划录入' }
+  },
+  {
+    path: 'report',
+    name: 'PlanManage',
+    component: () => import('@/views/bussiness/report/index'),
+    meta: { title: '训练报告录入' }
+  },
+  {
+    path: 'meeting',
+    name: 'PlanManage',
+    component: () => import('@/views/bussiness/meeting/index'),
+    meta: { title: '训练会议录入' }
+  },
+  {
+    path: 'score',
+    name: 'PlanManage',
+    component: () => import('@/views/bussiness/score/index'),
+    meta: { title: '训练成绩录入' }
+  },
+  {
+    path: 'statistical',
+    name: 'PlanManage',
+    component: () => import('@/views/bussiness/statistical/index'),
+    meta: { title: '训练统计报表' }
+  },
+  {
+    path: 'datafx',
+    name: 'PlanManage',
+    component: () => import('@/views/bussiness/datafx/index'),
+    meta: { title: '统计数据分析' }
+  },
+  {
+    path: 'rules',
+    name: 'PlanManage',
+    component: () => import('@/views/bussiness/rules/index'),
+    meta: { title: '文件查询浏览' }
+  }]
 },
 {
   path: '/logmanage',

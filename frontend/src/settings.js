@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Mbp主数据平台',
+  title: '表报系统',
 
   /**
     * @type {boolean} true | false

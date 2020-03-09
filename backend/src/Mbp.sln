@@ -9,13 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{35D18E91-88B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mbp.Core", "Mpb.Core\Mbp.Core.csproj", "{61BFF5C8-6E4F-47F9-BC47-F0880DE93F98}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Medical.Ai.Mbdp.Web", "Medical.Ai.Mbdp.Web\Medical.Ai.Mbdp.Web.csproj", "{51559F7C-20F4-4451-9175-5CCD4A25935D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMS.Web", "EMS.Web\EMS.Web.csproj", "{51559F7C-20F4-4451-9175-5CCD4A25935D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Medical.Ai.Mbdp.Application", "Medical.Ai.Mbdp.Application\Medical.Ai.Mbdp.Application.csproj", "{C65EC942-5233-4E55-BC93-54B984763967}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMS.Application", "EMS.Application\EMS.Application.csproj", "{C65EC942-5233-4E55-BC93-54B984763967}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Medical.Ai.Mbdp.Domain", "Medical.Ai.Mbdp.DomainService\Medical.Ai.Mbdp.Domain.csproj", "{0A185E0C-FF7E-47C6-9C38-D4AC80BD2863}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMS.Domain", "EMS.DomainService\EMS.Domain.csproj", "{0A185E0C-FF7E-47C6-9C38-D4AC80BD2863}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Medical.Ai.Mbdp.Application.Contracts", "Medical.Ai.Mbdp.Application.Contracts\Medical.Ai.Mbdp.Application.Contracts.csproj", "{297FF94F-B91E-4C91-AC82-DE7B3FC2EF3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMS.Application.Contracts", "EMS.Application.Contracts\EMS.Application.Contracts.csproj", "{297FF94F-B91E-4C91-AC82-DE7B3FC2EF3E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mbp.AspNetCore", "Mpb.AspNetCore\Mbp.AspNetCore.csproj", "{3FA54449-4B5A-4A5B-917B-C0D80A31835A}"
 EndProject
@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mbp.Swagger", "Mbp.Swagger\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mbp.EntityFrameworkCore", "Mbp.EntityFrameworkCore\Mbp.EntityFrameworkCore.csproj", "{C4B79D4A-BF90-48C3-BB6C-0F47974AEF8C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Medical.Ai.Mbdp.EntityFrameworkCore", "Medical.Ai.Mbdp.EntityFrameworkCore\Medical.Ai.Mbdp.EntityFrameworkCore.csproj", "{48B2E35C-5BB3-44C4-94B1-130E5F68F6F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMS.EntityFrameworkCore", "EMS.EntityFrameworkCore\EMS.EntityFrameworkCore.csproj", "{48B2E35C-5BB3-44C4-94B1-130E5F68F6F5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mbp.Authentication.JwtBearer", "Mbp.Authentication.JwtBearer\Mbp.Authentication.JwtBearer.csproj", "{2DF0A70C-B5D8-481E-BD96-A130E22B18D6}"
 EndProject
@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mbp.Authentication", "Mbp.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mbp.Ddd.Application", "Mbp.Ddd.Application\Mbp.Ddd.Application.csproj", "{3F288424-6224-48DC-B5C3-91FF7BCC44B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mbp.LogDashboard", "Mbp.LogDashboard\Mbp.LogDashboard.csproj", "{999CA87F-D750-4F0F-80A4-361EE58E543A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mbp.LogDashboard", "Mbp.LogDashboard\Mbp.LogDashboard.csproj", "{999CA87F-D750-4F0F-80A4-361EE58E543A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

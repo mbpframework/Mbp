@@ -51,7 +51,7 @@ namespace Mbp.EntityFrameworkCore
                     IsDeleted = false,
                     Code = "root",
                     Level = 1,
-                    Name = "医学大数据平台",
+                    Name = "Mbp平台",
                     Order = 1,
                     ParentId = 0,
                     Path = "/",

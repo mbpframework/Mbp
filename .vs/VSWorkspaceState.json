@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\backend",
+    "\\backend\\src"
   ],
+  "SelectedNode": "\\backend",
   "PreviewInSolutionExplorer": false
 }

@@ -16,7 +16,7 @@ namespace Mbp.Core.Core
     public static class ServiceExtensions
     {
         /// <summary>
-        /// 使用医学大数据框架
+        /// 使用mbp框架
         /// </summary>
         /// <typeparam name="TMbpPackManager"></typeparam>
         /// <param name="services"></param>

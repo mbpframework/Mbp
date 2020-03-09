@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mbp.Authentication.JwtBearer\Mbp.Authentication.JwtBearer.csproj" />
+    <ProjectReference Include="..\Mbp.Ddd.Application\Mbp.Ddd.Application.csproj" />
+    <ProjectReference Include="..\EMS.DomainService\EMS.Domain.csproj" />
+    <ProjectReference Include="..\Mpb.AspNetCore\Mbp.AspNetCore.csproj" />
+    <ProjectReference Include="..\Mpb.Core\Mbp.Core.csproj" />
+  </ItemGroup>
+
+</Project>

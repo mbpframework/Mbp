@@ -15,7 +15,10 @@ namespace Mbp.ApiGateway
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).ConfigureAppConfiguration((hostingContext, builder) =>
+            {
+                builder.AddJsonFile("configuration.json", false, true);
+            }).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)

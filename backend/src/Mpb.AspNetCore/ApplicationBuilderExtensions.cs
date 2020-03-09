@@ -10,7 +10,7 @@ namespace Mbp.AspNetCore
     public static class ApplicationBuilderExtensions
     {
         /// <summary>
-        /// 使用医学大数据AspNetCore中间件
+        /// 使用mbp AspNetCore中间件
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
