@@ -67,30 +67,16 @@
     </div>
 
     <el-table
-      :key="tableKey"
-      v-loading="listLoading"
       :data="list"
+      style="width: 100%;margin-bottom: 20px;"
+      row-key="id"
       border
-      fit
-      highlight-current-row
-      style="width: 100%;"
-      @sort-change="sortChange"
+      :expand-row-keys="expandrowkeys"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column
-        label="ID"
-        prop="id"
-        sortable="custom"
-        align="center"
-        width="80"
-        :class-name="getSortClass('Id')"
-      >
-        <template slot-scope="{row}">
-          <span>{{ row.Id }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="名称" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.Name }}</span>
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="编码">
@@ -98,21 +84,37 @@
           <span class="link-type" @click="handleUpdate(row)">{{ row.Code }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="顺序" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.Order }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="层级" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.Level }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="路径" align="center">
         <template slot-scope="{row}">
           <span>{{ row.Path }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="组件" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.component }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="图标" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.icon }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="页面类型" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.MenuType==1?"页面":"按钮" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="顺序" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.Order }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="层级" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.Level }}</span>
+        </template>
+      </el-table-column> -->
+
       <el-table-column label="父级Id" align="center">
         <template slot-scope="{row}">
           <span>{{ row.ParentId }}</span>
@@ -136,14 +138,6 @@
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="listQuery.pageIndex"
-      :limit.sync="listQuery.pageSize"
-      @pagination="getList"
-    />
-
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
@@ -156,10 +150,10 @@
         <el-row>
           <el-col :span="12">
             <el-form-item v-show="false" label="ID" prop="Id">
-              <el-input v-model="temp.Id" />
+              <el-input v-model="temp.id" />
             </el-form-item>
             <el-form-item label="名称" prop="Name">
-              <el-input v-model="temp.Name" />
+              <el-input v-model="temp.name" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -184,6 +178,19 @@
                 :accordion="isAccordion"
                 @getValue="getValue($event)"
               />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="组件" prop="MenuCompent">
+              <el-input v-model="temp.component" />
+            </el-form-item>
+
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="图标" prop="MenuIcon">
+              <el-input v-model="temp.icon" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -221,12 +228,12 @@
 import { AddMenu, UpdateMenu, GetMenus, DeleteMenu } from '@/api/menumanage'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+// import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import SelectTree from '@/components/TreeSelect'
 
 export default {
   name: 'UserManage',
-  components: { Pagination, SelectTree },
+  components: { /* Pagination,*/ SelectTree },
   directives: { waves },
   filters: {},
   data() {
@@ -243,24 +250,18 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      expandrowkeys: ['1'],
       listQuery: {
         pageIndex: 1,
-        pageSize: 20,
+        pageSize: 999,
         Name: undefined,
         Code: undefined,
-        SystemCode: undefined,
-        sort: '+Id'
+        SystemCode: undefined
       },
       SystemCodeOptions: [
-        { label: '全部', key: '' },
-        { label: '数据建模平台', key: 'mdp' },
-        { label: '大数据平台', key: 'mbdp' }
+        { label: '全部', key: '' }
       ],
       MenuTypeOptions: [{ label: '页面', value: 1 }, { label: '按钮', value: 2 }],
-      sortOptions: [
-        { label: 'ID升序', key: '+Id' },
-        { label: 'ID降序', key: '-Id' }
-      ],
       LevelOptions: [1, 2, 3],
       temp: {
         Id: 0,
@@ -276,8 +277,8 @@ export default {
       valueId: 1, // 初始ID（可选）
       props: {
         // 配置项（必选）
-        value: 'Id',
-        label: 'Name',
+        value: 'id',
+        label: 'name',
         children: 'children'
       },
       menuList: [
@@ -289,10 +290,11 @@ export default {
         create: '新增菜单'
       },
       rules: {
-        Name: [{ required: true, message: '名称必填', trigger: 'change' }],
+        name: [{ required: true, message: '名称必填', trigger: 'change' }],
         Code: [{ required: true, message: '编码必填', trigger: 'change' }],
         ParentId: [{ required: true, message: '父级必填', validator: validateParentId, trigger: 'change' }],
-        Path: [{ required: true, message: '路径必填', trigger: 'change' }]
+        Path: [{ required: true, message: '路径必填', trigger: 'change' }],
+        component: [{ required: true, message: '组件必填', trigger: 'change' }]
       },
       downloadLoading: false,
       isUpdate: false
@@ -305,7 +307,7 @@ export default {
       return cloneData.filter(father => {
         // 循环所有项，并添加children属性
         const branchArr = cloneData.filter(
-          child => father.Id === child.ParentId
+          child => father.id === child.ParentId
         ) // 返回每一项的子级数组
         branchArr.length > 0 ? (father.children = branchArr) : '' // 给父级添加一个children属性，并赋值
         return father.ParentId === 0 // 返回第一层
@@ -348,20 +350,6 @@ export default {
         type: 'success'
       })
       row.status = status
-    },
-    sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'Id') {
-        this.sortByID(order)
-      }
-    },
-    sortByID(order) {
-      if (order === 'ascending') {
-        this.listQuery.sort = '+Id'
-      } else {
-        this.listQuery.sort = '-Id'
-      }
-      this.handleFilter()
     },
     resetTemp() {
       this.temp = {
@@ -434,7 +422,7 @@ export default {
       })
     },
     handleDelete(row) {
-      DeleteMenu(row.Id).then(() => {
+      DeleteMenu(row.id).then(() => {
         this.$notify({
           title: 'Success',
           message: 'Delete Successfully',

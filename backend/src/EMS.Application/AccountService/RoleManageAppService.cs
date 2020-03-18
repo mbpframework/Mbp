@@ -20,7 +20,7 @@ using EMS.Application.Contracts.AccountService.DtoSearch;
 
 namespace EMS.Application.AccountService
 {
-    [Authorize(Roles = "admin")]
+    //[Authorize(Roles = "admin")]
     [AutoAop]
     [AutoWebApi]
     [Route("api/[controller]")]

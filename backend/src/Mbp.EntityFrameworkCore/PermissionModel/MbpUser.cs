@@ -1,5 +1,6 @@
 ﻿using Mbp.Core.Entity;
 using Mbp.Core.Entity.Aggregate;
+using Mbp.EntityFrameworkCore.PermissionModel.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -37,6 +38,16 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         public string PhoneNumber { get; set; }
 
         public EnumUserStatus UserStatus { get; set; }
+
+        /// <summary>
+        /// 学历
+        /// </summary>
+        public string Education { get; set; }
+
+        /// <summary>
+        /// 专业
+        /// </summary>
+        public string Major { get; set; }
 
         /// <summary>
         /// 一个用户,有多个角色

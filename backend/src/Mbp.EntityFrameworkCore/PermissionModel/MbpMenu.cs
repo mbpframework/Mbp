@@ -1,5 +1,6 @@
 ﻿using Mbp.Core.Entity;
 using Mbp.Core.Entity.Aggregate;
+using Mbp.EntityFrameworkCore.PermissionModel.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -39,6 +40,12 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         public string SystemCode { get; set; }
 
         public bool HasChildren { get; set; }
+
+        public string MenuCompent { get; set; }
+
+        public string MenuIcon { get; set; }
+
+        public bool IsEnabled { get; set; }
 
         /// <summary>
         /// 菜单的类型,页面和按钮

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMS.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    [Migration("20200123092156_InitDb")]
-    partial class InitDb
+    [Migration("20200316092054_initdb")]
+    partial class initdb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,6 +18,233 @@ namespace EMS.EntityFrameworkCore.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("EMS.Domain.DomainEntities.Demo.Blog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Blogs");
+                });
+
+            modelBuilder.Entity("EMS.Domain.DomainEntities.Demo.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.Domain.MbpCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CategoryCode")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("CategoryType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("ParentCategoryCode")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ParentCategoryName")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("SystemCode")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MbpCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryCode = "f000001",
+                            CategoryName = "系统分类",
+                            CategoryType = 99,
+                            IsDeleted = false,
+                            SystemCode = "Mbp"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryCode = "f000002",
+                            CategoryName = "岗位分类",
+                            CategoryType = 1,
+                            IsDeleted = false,
+                            ParentCategoryCode = "f000001",
+                            ParentCategoryName = "系统分类",
+                            SystemCode = "Mbp"
+                        });
+                });
+
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.Domain.MbpPosition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("PositionCode")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("PositionName")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("SystemCode")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MbpPositions");
+                });
+
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.Domain.MbpUserPosition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("PositionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PositionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MbpUserPositions");
+                });
+
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpDept", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
+                    b.Property<string>("DeptCode")
+                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("DeptName")
+                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasMaxLength(256);
+
+                    b.Property<int>("DeptStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FullDeptCode")
+                        .HasColumnType("varchar(1024) CHARACTER SET utf8mb4")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("FullDeptName")
+                        .HasColumnType("varchar(1024) CHARACTER SET utf8mb4")
+                        .HasMaxLength(1024);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("ParentDeptCode")
+                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("ParentDeptName")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ParentFullDeptCode")
+                        .HasColumnType("varchar(1024) CHARACTER SET utf8mb4")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("ParentFullDeptName")
+                        .HasColumnType("varchar(1024) CHARACTER SET utf8mb4")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("SystemCode")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MbpDepts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DeptCode = "d000001",
+                            DeptName = "组织架构",
+                            DeptStatus = 1,
+                            FullDeptCode = "d000001",
+                            FullDeptName = "组织架构",
+                            IsDeleted = false,
+                            SystemCode = "Mbp"
+                        });
+                });
 
             modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpMenu", b =>
                 {
@@ -42,8 +269,17 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int>("Level")
                         .HasColumnType("int");
+
+                    b.Property<string>("MenuCompent")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("MenuIcon")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("MenuType")
                         .HasColumnType("int");
@@ -75,42 +311,13 @@ namespace EMS.EntityFrameworkCore.Migrations
                             CodePath = "root",
                             HasChildren = true,
                             IsDeleted = false,
+                            IsEnabled = false,
                             Level = 1,
                             MenuType = 0,
-                            Name = "医学大数据平台",
+                            Name = "Mbp平台",
                             Order = 1,
                             ParentId = 0,
                             Path = "/"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Code = "m10001",
-                            CodePath = "root/m10001",
-                            HasChildren = true,
-                            IsDeleted = false,
-                            Level = 2,
-                            MenuType = 0,
-                            Name = "数据建模系统",
-                            Order = 1,
-                            ParentId = 1,
-                            Path = "/",
-                            SystemCode = "mdp"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Code = "m20001",
-                            CodePath = "root/m20001",
-                            HasChildren = true,
-                            IsDeleted = false,
-                            Level = 2,
-                            MenuType = 0,
-                            Name = "大数据系统",
-                            Order = 1,
-                            ParentId = 1,
-                            Path = "/",
-                            SystemCode = "mbdp"
                         });
                 });
 
@@ -249,6 +456,9 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp(6)");
 
+                    b.Property<string>("Education")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<string>("Email")
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
                         .HasMaxLength(256);
@@ -262,6 +472,9 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.Property<string>("LoginName")
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
                         .HasMaxLength(256);
+
+                    b.Property<string>("Major")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Password")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -345,51 +558,26 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.ToTable("MbpUserRoles");
                 });
 
-            modelBuilder.Entity("EMS.Domain.DomainEntities.Demo.Blog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp(6)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Blogs");
-                });
-
             modelBuilder.Entity("EMS.Domain.DomainEntities.Demo.Post", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasOne("EMS.Domain.DomainEntities.Demo.Blog", null)
+                        .WithMany("Posts")
+                        .HasForeignKey("BlogId");
+                });
 
-                    b.Property<int?>("BlogId")
-                        .HasColumnType("int");
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.Domain.MbpUserPosition", b =>
+                {
+                    b.HasOne("Mbp.EntityFrameworkCore.Domain.MbpPosition", "Position")
+                        .WithMany()
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("Content")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BlogId");
-
-                    b.ToTable("Posts");
+                    b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpMenuClaim", b =>
@@ -444,13 +632,6 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("EMS.Domain.DomainEntities.Demo.Post", b =>
-                {
-                    b.HasOne("EMS.Domain.DomainEntities.Demo.Blog", null)
-                        .WithMany("Posts")
-                        .HasForeignKey("BlogId");
                 });
 #pragma warning restore 612, 618
         }

@@ -24,8 +24,8 @@ export default {
       type: Object,
       // eslint-disable-next-line vue/require-valid-default-prop
       default: {
-        value: 'Id', // ID字段名
-        label: 'Name', // 指定节点标签为节点对象的某个属性值
+        value: 'id', // ID字段名
+        label: 'name', // 指定节点标签为节点对象的某个属性值
         children: 'children' // 指定节点选择框是否禁用为节点对象的某个属性值
       }
     },

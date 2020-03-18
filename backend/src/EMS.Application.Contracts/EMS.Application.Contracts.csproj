@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Mbp.Authentication.JwtBearer\Mbp.Authentication.JwtBearer.csproj" />
     <ProjectReference Include="..\Mbp.Ddd.Application\Mbp.Ddd.Application.csproj" />
     <ProjectReference Include="..\EMS.DomainService\EMS.Domain.csproj" />

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mbp.EntityFrameworkCore.PermissionModel
+namespace Mbp.EntityFrameworkCore.PermissionModel.Enums
 {
     public enum EnumMenuType
     {

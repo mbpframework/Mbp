@@ -19,10 +19,11 @@ using Microsoft.Extensions.Configuration;
 using EMS.Application.Contracts.AccountService;
 using EMS.Application.Contracts.AccountService.Dto;
 using EMS.Application.Contracts.AccountService.DtoSearch;
+using Mbp.EntityFrameworkCore.PermissionModel.Enums;
 
 namespace EMS.Application.AccountService
 {
-    [Authorize(Roles = "admin")]
+    //[Authorize(Roles = "admin")]
     [AutoAop]
     [AutoWebApi]
     [Route("api/[controller]")]

@@ -15,5 +15,7 @@ namespace EMS.Application.Contracts.AccountService.Dto
         public string Code { get; set; }
 
         public string SystemCode { get; set; }
+
+        public byte[] ConcurrencyStamp { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Mbp.Ddd.Application.Mbp.Dto;
 using Mbp.EntityFrameworkCore.PermissionModel;
+using Mbp.EntityFrameworkCore.PermissionModel.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

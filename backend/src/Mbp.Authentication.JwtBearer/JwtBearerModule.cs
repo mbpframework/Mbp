@@ -62,7 +62,11 @@ namespace Mbp.Authentication.JwtBearer
                             context.Response.Headers.Add("action", "timeOut");
                         }
                         return Task.CompletedTask;
-                    }
+                    },
+                    OnTokenValidated = context =>
+                    {
+                        return Task.CompletedTask;
+                    }   
                 };
             });
 

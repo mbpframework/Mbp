@@ -45,6 +45,8 @@ namespace EMS.Application
                 cfg.CreateMap<LogInputDto, MbpOperationLog>();
                 cfg.CreateMap<MbpOperationLog, LogOutInputDto>();
 
+                // 路由映射
+                cfg.CreateMap<MbpMenu, RouteOutputDto>();
             });
 
             return config.CreateMapper();

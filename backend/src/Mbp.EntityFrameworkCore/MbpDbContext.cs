@@ -1,4 +1,6 @@
-﻿using Mbp.EntityFrameworkCore.PermissionModel;
+﻿using Mbp.EntityFrameworkCore.Domain;
+using Mbp.EntityFrameworkCore.PermissionModel;
+using Mbp.EntityFrameworkCore.PermissionModel.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -28,10 +30,19 @@ namespace Mbp.EntityFrameworkCore
 
         public DbSet<MbpUserClaim> MbpUserClaims { get; set; }
 
-        public DbSet<MbpOperationLog>  MbpOperationLogs { get; set; }
+        public DbSet<MbpOperationLog> MbpOperationLogs { get; set; }
+
+        public DbSet<MbpDept> MbpDepts { get; set; }
+
+        public DbSet<MbpCategory> MbpCategories { get; set; }
+
+        public DbSet<MbpPosition> MbpPositions { get; set; }
+
+        public DbSet<MbpUserPosition> MbpUserPositions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // 初始化系统管理员
             modelBuilder.Entity<MbpUser>().HasData(
                 new MbpUser
                 {
@@ -40,10 +51,11 @@ namespace Mbp.EntityFrameworkCore
                     LoginName = "admin",
                     UserName = "admin",
                     UserStatus = EnumUserStatus.Actived,
-                    Password= "94c5fb886bd3cf5f821d239056181a5e",
+                    Password = "94c5fb886bd3cf5f821d239056181a5e",
                     IsAdmin = true
                 });
 
+            // 初始化根菜单
             modelBuilder.Entity<MbpMenu>().HasData(
                 new MbpMenu
                 {
@@ -56,33 +68,44 @@ namespace Mbp.EntityFrameworkCore
                     ParentId = 0,
                     Path = "/",
                     CodePath = "root",
-                    HasChildren = true
-                }, new MbpMenu
+                    HasChildren = true,
+                    SystemCode = "Mbp"
+                });
+
+            // 初始化根部门
+            modelBuilder.Entity<MbpDept>().HasData(
+                new MbpDept
+                {
+                    Id = 1,
+                    DeptCode = "d000001",
+                    DeptName = "组织架构",
+                    DeptStatus = EnumDeptStatus.Actived,
+                    IsDeleted = false,
+                    SystemCode = "Mbp",
+                    FullDeptCode = "d000001",
+                    FullDeptName = "组织架构"
+                });
+
+            // 初始化根分类
+            modelBuilder.Entity<MbpCategory>().HasData(
+                new MbpCategory
+                {
+                    Id = 1,
+                    CategoryCode = "f000001",
+                    CategoryName = "系统分类",
+                    IsDeleted = false,
+                    SystemCode = "Mbp",
+                    CategoryType = Domain.Enums.EnumCategoryType.Root
+                }, new MbpCategory
                 {
                     Id = 2,
+                    CategoryCode = "f000002",
+                    CategoryName = "岗位分类",
                     IsDeleted = false,
-                    Code = "m10001",
-                    Level = 2,
-                    Name = "数据建模系统",
-                    Order = 1,
-                    ParentId = 1,
-                    Path = "/",
-                    CodePath = "root/m10001",
-                    SystemCode = "mdp",
-                    HasChildren = true
-                }, new MbpMenu
-                {
-                    Id = 3,
-                    IsDeleted = false,
-                    Code = "m20001",
-                    Level = 2,
-                    Name = "大数据系统",
-                    Order = 1,
-                    ParentId = 1,
-                    Path = "/",
-                    CodePath = "root/m20001",
-                    SystemCode = "mbdp",
-                    HasChildren = true
+                    SystemCode = "Mbp",
+                    CategoryType = Domain.Enums.EnumCategoryType.Position,
+                    ParentCategoryCode = "f000001",
+                    ParentCategoryName = "系统分类"
                 });
 
             base.OnModelCreating(modelBuilder);

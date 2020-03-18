@@ -28,6 +28,15 @@ export function GetMenus(data) {
   })
 }
 
+// 获取路由菜单
+export function GetMenusForRoute(params) {
+  return request({
+    url: '/MenuManage/GetMenusForRoute',
+    method: 'get',
+    params
+  })
+}
+
 // 配置功能操作权限
 export function AddMenuClaims(menuId, claims) {
   return request({

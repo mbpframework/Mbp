@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EMS.EntityFrameworkCore.Migrations
 {
-    public partial class InitDb : Migration
+    public partial class initdb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -25,6 +25,52 @@ namespace EMS.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MbpCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ConcurrencyStamp = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
+                    CategoryName = table.Column<string>(nullable: true),
+                    CategoryCode = table.Column<string>(nullable: true),
+                    ParentCategoryName = table.Column<string>(nullable: true),
+                    ParentCategoryCode = table.Column<string>(nullable: true),
+                    CategoryType = table.Column<int>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    SystemCode = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MbpCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MbpDepts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ConcurrencyStamp = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
+                    DeptName = table.Column<string>(maxLength: 256, nullable: true),
+                    FullDeptName = table.Column<string>(maxLength: 1024, nullable: true),
+                    DeptCode = table.Column<string>(maxLength: 256, nullable: true),
+                    FullDeptCode = table.Column<string>(maxLength: 1024, nullable: true),
+                    ParentDeptName = table.Column<string>(nullable: true),
+                    ParentFullDeptName = table.Column<string>(maxLength: 1024, nullable: true),
+                    ParentDeptCode = table.Column<string>(maxLength: 256, nullable: true),
+                    ParentFullDeptCode = table.Column<string>(maxLength: 1024, nullable: true),
+                    DeptStatus = table.Column<int>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    SystemCode = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MbpDepts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MbpMenus",
                 columns: table => new
                 {
@@ -42,6 +88,9 @@ namespace EMS.EntityFrameworkCore.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     SystemCode = table.Column<string>(nullable: true),
                     HasChildren = table.Column<bool>(nullable: false),
+                    MenuCompent = table.Column<string>(nullable: true),
+                    MenuIcon = table.Column<string>(nullable: true),
+                    IsEnabled = table.Column<bool>(nullable: false),
                     MenuType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -69,6 +118,24 @@ namespace EMS.EntityFrameworkCore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MbpOperationLogs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MbpPositions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ConcurrencyStamp = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
+                    PositionName = table.Column<string>(nullable: true),
+                    PositionCode = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    SystemCode = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MbpPositions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -104,6 +171,8 @@ namespace EMS.EntityFrameworkCore.Migrations
                     Password = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(maxLength: 256, nullable: true),
                     UserStatus = table.Column<int>(nullable: false),
+                    Education = table.Column<string>(nullable: true),
+                    Major = table.Column<string>(nullable: true),
                     IsAdmin = table.Column<bool>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
                     SystemCode = table.Column<string>(nullable: true)
@@ -185,6 +254,33 @@ namespace EMS.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MbpUserPositions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PositionId = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MbpUserPositions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MbpUserPositions_MbpPositions_PositionId",
+                        column: x => x.PositionId,
+                        principalTable: "MbpPositions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MbpUserPositions_MbpUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "MbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MbpUserRoles",
                 columns: table => new
                 {
@@ -239,19 +335,28 @@ namespace EMS.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "MbpMenus",
-                columns: new[] { "Id", "Code", "CodePath", "HasChildren", "IsDeleted", "Level", "MenuType", "Name", "Order", "ParentId", "Path", "SystemCode" },
+                table: "MbpCategories",
+                columns: new[] { "Id", "CategoryCode", "CategoryName", "CategoryType", "IsDeleted", "ParentCategoryCode", "ParentCategoryName", "SystemCode" },
                 values: new object[,]
                 {
-                    { 1, "root", "root", true, false, 1, 0, "医学大数据平台", 1, 0, "/", null },
-                    { 2, "m10001", "root/m10001", true, false, 2, 0, "数据建模系统", 1, 1, "/", "mdp" },
-                    { 3, "m20001", "root/m20001", true, false, 2, 0, "大数据系统", 1, 1, "/", "mbdp" }
+                    { 1, "f000001", "系统分类", 99, false, null, null, "Mbp" },
+                    { 2, "f000002", "岗位分类", 1, false, "f000001", "系统分类", "Mbp" }
                 });
 
             migrationBuilder.InsertData(
+                table: "MbpDepts",
+                columns: new[] { "Id", "DeptCode", "DeptName", "DeptStatus", "FullDeptCode", "FullDeptName", "IsDeleted", "ParentDeptCode", "ParentDeptName", "ParentFullDeptCode", "ParentFullDeptName", "SystemCode" },
+                values: new object[] { 1, "d000001", "组织架构", 1, "d000001", "组织架构", false, null, null, null, null, "Mbp" });
+
+            migrationBuilder.InsertData(
+                table: "MbpMenus",
+                columns: new[] { "Id", "Code", "CodePath", "HasChildren", "IsDeleted", "IsEnabled", "Level", "MenuCompent", "MenuIcon", "MenuType", "Name", "Order", "ParentId", "Path", "SystemCode" },
+                values: new object[] { 1, "root", "root", true, false, false, 1, null, null, 0, "Mbp平台", 1, 0, "/", null });
+
+            migrationBuilder.InsertData(
                 table: "MbpUsers",
-                columns: new[] { "Id", "Code", "Email", "IsAdmin", "IsDeleted", "LoginName", "Password", "PhoneNumber", "SystemCode", "UserName", "UserStatus" },
-                values: new object[] { 1, null, null, true, false, "admin", "94c5fb886bd3cf5f821d239056181a5e", null, null, "admin", 1 });
+                columns: new[] { "Id", "Code", "Education", "Email", "IsAdmin", "IsDeleted", "LoginName", "Major", "Password", "PhoneNumber", "SystemCode", "UserName", "UserStatus" },
+                values: new object[] { 1, null, null, null, true, false, "admin", null, "94c5fb886bd3cf5f821d239056181a5e", null, null, "admin", 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_MbpMenuClaims_MenuId",
@@ -279,6 +384,16 @@ namespace EMS.EntityFrameworkCore.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MbpUserPositions_PositionId",
+                table: "MbpUserPositions",
+                column: "PositionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MbpUserPositions_UserId",
+                table: "MbpUserPositions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MbpUserRoles_RoleId",
                 table: "MbpUserRoles",
                 column: "RoleId");
@@ -297,6 +412,12 @@ namespace EMS.EntityFrameworkCore.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "MbpCategories");
+
+            migrationBuilder.DropTable(
+                name: "MbpDepts");
+
+            migrationBuilder.DropTable(
                 name: "MbpOperationLogs");
 
             migrationBuilder.DropTable(
@@ -306,6 +427,9 @@ namespace EMS.EntityFrameworkCore.Migrations
                 name: "MbpUserClaims");
 
             migrationBuilder.DropTable(
+                name: "MbpUserPositions");
+
+            migrationBuilder.DropTable(
                 name: "MbpUserRoles");
 
             migrationBuilder.DropTable(
@@ -313,6 +437,9 @@ namespace EMS.EntityFrameworkCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "MbpMenuClaims");
+
+            migrationBuilder.DropTable(
+                name: "MbpPositions");
 
             migrationBuilder.DropTable(
                 name: "MbpRoles");

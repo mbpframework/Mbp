@@ -109,7 +109,7 @@
             v-if="row.status!='deleted'"
             size="mini"
             type="danger"
-            @click="handleModifyStatus(row,'deleted')"
+            @click="handleDelete(row)"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -144,21 +144,6 @@
           <el-col :span="12">
             <el-form-item label="编码" prop="Code">
               <el-input v-model="temp.Code" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="系统编码" prop="SystemCode">
-              <el-select v-model="temp.SystemCode" placeholder="请选择系统">
-                <el-option
-                  v-for="item in SystemEditCodeOptions"
-                  :key="item.key"
-                  :label="item.label"
-                  :value="item.key"
-                />
-              </el-select>
-              <!-- <el-input v-model="temp.SystemCode" /> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -198,7 +183,7 @@
 </template>
 
 <script>
-import { AddRole, UpdateRole, GetRoles, AddRoleMenus, GetRoleMenus } from '@/api/rolemanage'
+import { AddRole, UpdateRole, GetRoles, AddRoleMenus, GetRoleMenus, DeleteRole } from '@/api/rolemanage'
 import { GetMenus } from '@/api/menumanage'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -228,9 +213,8 @@ export default {
         { label: '大数据平台', key: 'mbdp' }
       ],
       SystemEditCodeOptions: [
-        { label: '全部', key: '' },
-        { label: '数据建模平台', key: 'mdp' },
-        { label: '大数据平台', key: 'mbdp' }
+        { label: '全部', key: 'all' },
+        { label: '表报系统', key: 'Mbp' }
       ],
       sortOptions: [
         { label: 'ID升序', key: '+Id' },
@@ -393,15 +377,17 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      DeleteRole(row.Id).then(() => {
+        this.$notify({
+          title: 'Success',
+          message: 'Delete Successfully',
+          type: 'success',
+          duration: 2000
+        })
+        this.handleFilter()
+        // const index = this.list.indexOf(row)
+        // this.list.splice(index, 1)
       })
-      this.handleFilter()
-      // const index = this.list.indexOf(row)
-      // this.list.splice(index, 1)
     },
     handleDownload() {
       this.downloadLoading = true

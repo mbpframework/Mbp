@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Mbp.EntityFrameworkCore.PermissionModel;
 using EMS.Application.Contracts.AccountService;
 using EMS.Application.Contracts.AccountService.Dto;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace EMS.Application.AccountService
 {
@@ -56,7 +57,9 @@ namespace EMS.Application.AccountService
                 // 如果是管理员权限就给管理员属性,如果是用户就给用户属性,这里只定义两种角色,一种是超管,一种是普通用户,这里的角色只做身份鉴定,不做鉴权用
                 var token = await _jwtBearerService.CreateJwt(loginInputDto.LoginName, loginInputDto.ClientID, new List<Claim>()
                     {
-                       new Claim(ClaimTypes.Role, user.IsAdmin?"admin":"user")
+                       new Claim(ClaimTypes.Role, user.IsAdmin?"admin":"user"),
+                       //new Claim(ClaimTypes.Email,user.Email),
+                       new Claim(JwtRegisteredClaimNames.Sub,user.LoginName)
                     });
 
                 // 取出用户的菜单权限

@@ -19,11 +19,11 @@ export function AddRole(data) {
 }
 
 // 删除角色
-export function DeleteRole(data) {
+export function DeleteRole(roleId) {
   return request({
     url: '/RoleManage/DeleteRole',
     method: 'delete',
-    data
+    params: { roleId }
   })
 }
 

@@ -1,5 +1,7 @@
 ﻿using Mbp.Ddd.Application.Mbp.Dto;
 using Mbp.EntityFrameworkCore.PermissionModel;
+using Mbp.EntityFrameworkCore.PermissionModel.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -36,5 +38,14 @@ namespace EMS.Application.Contracts.AccountService.Dto
 
         [Required]
         public EnumMenuType MenuType { get; set; }
+
+        [Required]
+        [JsonProperty("component")]
+        public string MenuCompent { get; set; }
+
+        [JsonProperty("icon")]
+        public string MenuIcon { get; set; }
+
+        public byte[] ConcurrencyStamp { get; set; }
     }
 }
