@@ -209,11 +209,10 @@ export default {
       },
       SystemCodeOptions: [
         { label: '全部', key: '' },
-        { label: '数据建模平台', key: 'mdp' },
-        { label: '大数据平台', key: 'mbdp' }
+        { label: '表报系统', key: 'Mbp' }
       ],
       SystemEditCodeOptions: [
-        { label: '全部', key: 'all' },
+        { label: '全部', key: '' },
         { label: '表报系统', key: 'Mbp' }
       ],
       sortOptions: [
@@ -313,7 +312,8 @@ export default {
       this.temp = {
         Id: 0,
         Name: '',
-        Code: ''
+        Code: '',
+        SystemCode: 'Mbp'
       }
     },
     handleCreate() {

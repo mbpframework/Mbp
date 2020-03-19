@@ -221,21 +221,12 @@
         style="width: 400px; margin-left:50px;"
       >
         <el-row>
-          <el-col :span="24">数据建模平台</el-col>
+          <el-col :span="24">表报系统</el-col>
           <el-col :span="24">
             <el-checkbox v-model="grantTemp.checkMdpAll" :indeterminate="grantTemp.isMdpIndeterminate" @change="handleCheckMdpAllChange">全选</el-checkbox>
             <div style="margin: 15px 0;" />
             <el-checkbox-group v-model="grantTemp.checkedMdpRoles" @change="handleCheckedMdpRolesChange">
               <el-checkbox v-for="role in grantTemp.userMdpRoles" :key="role.Id" :label="role.Id" border>{{ role.Name }}</el-checkbox>
-            </el-checkbox-group></el-col>
-        </el-row>
-        <el-row style="margin-top:50px;">
-          <el-col :span="24">大数据平台</el-col>
-          <el-col :span="24">
-            <el-checkbox v-model="grantTemp.checkMbdpAll" :indeterminate="grantTemp.isMbpdIndeterminate" @change="handleCheckMbdpAllChange">全选</el-checkbox>
-            <div style="margin: 15px 0;" />
-            <el-checkbox-group v-model="grantTemp.checkedMbdpRoles" @change="handleCheckedMbdpRolesChange">
-              <el-checkbox v-for="role in grantTemp.userMbdpRoles" :key="role.Id" :label="role.Id" border>{{ role.Name }}</el-checkbox>
             </el-checkbox-group></el-col>
         </el-row>
       </el-form>
@@ -530,24 +521,18 @@ export default {
       const that = this
       this.grantTemp.currentUserId = row.Id
       // 获取所有角色
-      GetRoles({ pageIndex: 1, pageSize: 999, SystemCode: 'mdp' }).then(response => {
+      GetRoles({ pageIndex: 1, pageSize: 999, SystemCode: 'Mbp' }).then(response => {
         this.grantTemp.userMdpRoles = response.Data.Content
       })
-      GetRoles({ pageIndex: 1, pageSize: 999, SystemCode: 'mbdp' }).then(response => {
-        this.grantTemp.userMbdpRoles = response.Data.Content
-      })
       // 获取选择中角色
-      GetUserRoles(row.Id, 'mdp').then((response) => {
+      GetUserRoles(row.Id, 'Mbp').then((response) => {
         that.grantTemp.checkedMdpRoles = response.Data.map(r => r.RoleId)
-      })
-      GetUserRoles(row.Id, 'mbdp').then((response) => {
-        this.grantTemp.checkedMbdpRoles = response.Data.map(r => r.RoleId)
       })
 
       this.dialogGrantFormVisible = true
     },
     GrantUserRole() {
-      const roleIds = this.grantTemp.checkedMdpRoles.concat(this.grantTemp.checkedMbdpRoles)
+      const roleIds = this.grantTemp.checkedMdpRoles
       const userId = this.grantTemp.currentUserId
       AddUserRoles(userId, roleIds).then(() => {
         this.dialogGrantFormVisible = false
@@ -568,15 +553,6 @@ export default {
       const checkedMdbCount = value.length
       this.grantTemp.checkMdpAll = checkedMdbCount === this.grantTemp.userMdpRoles.length
       this.grantTemp.isMdpIndeterminate = checkedMdbCount > 0 && checkedMdbCount < this.grantTemp.userMdpRoles.length
-    },
-    handleCheckMbdpAllChange(val) {
-      this.grantTemp.checkedMbdpRoles = val ? this.grantTemp.userMbdpRoles.map(r => r.Id) : []
-      this.grantTemp.isMbpdIndeterminate = false
-    },
-    handleCheckedMbdpRolesChange(value) {
-      const checkedMbdpCount = value.length
-      this.grantTemp.checkMbdpAll = checkedMbdpCount === this.grantTemp.userMbdpRoles.length
-      this.grantTemp.isMbpdIndeterminate = checkedMbdpCount > 0 && checkedMbdpCount < this.grantTemp.userMbdpRoles.length
     },
     handleDownload() {
       this.downloadLoading = true
