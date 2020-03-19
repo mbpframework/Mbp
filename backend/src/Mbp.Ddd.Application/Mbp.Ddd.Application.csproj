@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Mpb.AspNetCore\Mbp.AspNetCore.csproj" />
     <ProjectReference Include="..\Mpb.Core\Mbp.Core.csproj" />
   </ItemGroup>
 

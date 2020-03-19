@@ -25,5 +25,10 @@ namespace EMS.Application.Contracts.AccountService.Dto
         public EnumUserStatus UserStatus { get; set; }
 
         public bool IsAdmin { get; set; }
+
+        /// <summary>
+        /// 用户头像
+        /// </summary>
+        public string UserAvatar { get; set; }
     }
 }

@@ -13,6 +13,7 @@ using Mbp.Authentication;
 
 namespace EMS.Application.AuthenticatePolicyHanlder
 {
+    // TODO 暂时不对API进行权限控制.后面在考虑集成ids4时候重新规划 身份认证和授权的代码
     public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
     {
         public IAuthenticationSchemeProvider Schemes { get; set; }

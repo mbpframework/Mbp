@@ -9,9 +9,9 @@ export function login(data) {
 }
 
 // 暂时获取信息
-export function getInfo(token) {
+export function getInfo() {
   return request({
-    url: '/Account/LogOut',
+    url: '/Account/GetUserInfo',
     method: 'get'
   })
 }

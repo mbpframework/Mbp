@@ -169,7 +169,7 @@
             :props="defaultProps"
             show-checkbox
             default-expand-all
-            node-key="Id"
+            node-key="id"
             class="permission-tree"
           />
         </el-form-item>
@@ -251,9 +251,9 @@ export default {
       checkedMenus: [], // 已经选中的角色菜单
       dialogPermissionVisible: false,
       defaultProps: {
-        value: 'Id',
+        value: 'id',
         children: 'children',
-        label: 'Name'
+        label: 'name'
       }
     }
   },
@@ -446,12 +446,13 @@ export default {
     },
     handleRoleGrant(row) {
       this.resetroleGrantModel()
-      const me = this
+      // const me = this
       this.roleGrantModel = Object.assign({}, row) // copy obj
       // 查询菜单,根据systemcode,查询角色已有菜单,根据roleid
       GetMenus({ 'pageSize': 999, 'pageIndex': 1, 'SystemCode': this.roleGrantModel.SystemCode })
         .then(response => {
-          this.roleGrantModel.Menus = me.optionData(response.Data.Content)
+          // this.roleGrantModel.Menus = me.optionData(response.Data.Content)
+          this.roleGrantModel.Menus = response.Data.Content
           this.roleMenus = this.roleGrantModel.Menus
         })
         // 查询角色已有的菜单

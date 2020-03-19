@@ -31,7 +31,7 @@ export function GetMenus(data) {
 // 获取路由菜单
 export function GetMenusForRoute(params) {
   return request({
-    url: '/MenuManage/GetMenusForRoute',
+    url: '/Account/GetMenusForRoute',
     method: 'get',
     params
   })

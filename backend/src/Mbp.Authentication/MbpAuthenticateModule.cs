@@ -17,7 +17,7 @@ namespace Mbp.Authentication
             {
                 options.AddPolicy("GlobalPermission", policy => policy.Requirements.Add(new PermissionRequirement()));
             });
-            
+
             return base.AddServices(services);
         }
 

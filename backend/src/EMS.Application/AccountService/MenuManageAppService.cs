@@ -17,10 +17,12 @@ using Mbp.Ddd.Application.Mbp.UI;
 using EMS.Application.Contracts.AccountService;
 using EMS.Application.Contracts.AccountService.Dto;
 using EMS.Application.Contracts.AccountService.DtoSearch;
+using Mbp.AspNetCore.Http.Context;
+using Mbp.EntityFrameworkCore.PermissionModel.Enums;
 
 namespace EMS.Application.AccountService
 {
-    //[Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin")]
     [AutoAop]
     [AutoWebApi]
     [Route("api/[controller]")]
@@ -29,10 +31,12 @@ namespace EMS.Application.AccountService
         private readonly IMapper _mapper = AutofacService.Resolve<IMapper>();
 
         private readonly DefaultDbContext _defaultDbContext = null;
+        private readonly HttpUserContext _currentUser = null;
 
-        public MenuManageAppService(DefaultDbContext defaultDbContext)
+        public MenuManageAppService(DefaultDbContext defaultDbContext, HttpUserContext currentUser)
         {
             _defaultDbContext = defaultDbContext;
+            _currentUser = currentUser;
         }
 
         /// <summary>
@@ -119,53 +123,6 @@ namespace EMS.Application.AccountService
                 PageSize = searchOptions.PageSize,
                 Total = total
             };
-        }
-
-        /// <summary>
-        /// 获取左侧菜单栏的路由菜单
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("GetMenusForRoute")]
-        public async Task<List<RouteOutputDto>> GetMenusForRoute()
-        {
-            List<RouteOutputDto> routeOutputDtos = new List<RouteOutputDto>();
-
-            // 根据用户角色获取菜单
-            List<MbpMenu> menus = _defaultDbContext.MbpMenus.Where(m => m.MenuType == Mbp.EntityFrameworkCore.PermissionModel.Enums.EnumMenuType.Page).ToList();
-
-            List<RouteOutputDto> tempRoute = new List<RouteOutputDto>();
-
-            // 将菜单调整为路由表数据结构形式
-            foreach (var item in menus)
-            {
-                RouteOutputDto routeOutputDto = _mapper.Map<RouteOutputDto>(item);
-                routeOutputDto.Name = routeOutputDto.Code;
-                routeOutputDto.Component = item.MenuCompent;
-                routeOutputDto.Meta.Title = item.Name;
-                routeOutputDto.Meta.Icon = item.MenuIcon;
-
-                tempRoute.Add(routeOutputDto);
-            }
-
-            var dictNodes = tempRoute.ToDictionary(x => x.Id);
-            // 重组成vue-element-admin 路由表json
-            foreach (var item in dictNodes.Values)
-            {
-                if (item.ParentId == 1)
-                {
-                    item.Path = "/" + item.Path;
-                    routeOutputDtos.Add(item);
-                }
-                else
-                {
-                    if (dictNodes.ContainsKey(item.ParentId))
-                    {
-                        dictNodes[item.ParentId].Children.Add(item);
-                    }
-                }
-            }
-
-            return routeOutputDtos;
         }
 
         /// <summary>

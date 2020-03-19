@@ -10,7 +10,9 @@ const state = {
   name: '',
   avatar: '',
   roles: [],
-  isInitAdminMenu: false
+  isInitAdminMenu: false,
+  code: '',
+  phoneNumber: ''
 }
 
 const mutations = {
@@ -31,6 +33,12 @@ const mutations = {
   },
   SET_ADMINMENUS: (state, isInitAdminMenu) => {
     state.isInitAdminMenu = isInitAdminMenu
+  },
+  SET_CODE: (state, code) => {
+    state.code = code
+  },
+  SET_PHOTONUMBER: (state, phoneNumber) => {
+    state.phoneNumber = phoneNumber
   }
 }
 
@@ -53,13 +61,12 @@ const actions = {
           // 保存刷新token到cookies
           setRefreshToken(response.Data.AccessToken.RefreshToken)
 
-          const { Role, UserName } = response.Data
-          var roles = []
-          roles.push(Role)
+          // const { Role, UserName } = response.Data
+          // var roles = []
+          // roles.push(Role)
 
-          commit('SET_NAME', UserName)
-          commit('SET_AVATAR', 'avatar')
-          commit('SET_ROLES', roles)
+          // commit('SET_NAME', UserName)
+          // commit('SET_ROLES', roles)
 
           resolve({ 'IsPassPwdCheck': response.Data.IsPassPwdCheck })
         }).catch(error => {
@@ -82,9 +89,10 @@ const actions = {
         //   reject('getInfo: roles must be a non-null array!')
         // }
 
-        // commit('SET_NAME', name)
-        // commit('SET_AVATAR', avatar)
-        // commit('SET_ROLES', roles)
+        commit('SET_NAME', response.Data.UserName)
+        commit('SET_AVATAR', response.Data.UserAvatar)
+        commit('SET_CODE', response.Data.Code)
+        commit('SET_PHOTONUMBER', response.Data.PhoneNumber)
         resolve()
       }).catch(error => {
         reject(error)
@@ -100,6 +108,7 @@ const actions = {
         commit('SET_TOKEN', '')
         commit('SET_RRTOKEN', '')
         commit('SET_ROLES', [])
+        commit('SET_ADMINMENUS', false)
         removeToken()
         removeRefreshToken()
         resetRouter()
@@ -115,6 +124,7 @@ const actions = {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       commit('SET_RRTOKEN', '')
+
       removeToken()
       removeRefreshToken()
       resolve()

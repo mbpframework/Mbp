@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Castle.Core.Configuration;
+using Mbp.AspNetCore.Http.Context;
 using Mbp.Core.Core.Config;
 using Mbp.Core.Modularity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,9 +9,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -65,10 +69,17 @@ namespace Mbp.Authentication.JwtBearer
                     },
                     OnTokenValidated = context =>
                     {
+                        var userContext = context.HttpContext.RequestServices.GetService<HttpUserContext>();
+                        var claims = context.Principal.Claims;
+                        userContext.Id = int.Parse(claims.First(x => x.Type == ClaimTypes.Sid).Value);
+                        userContext.LoginName = claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+                        userContext.UserName = claims.First(x => x.Type == ClaimTypes.Name).Value;
                         return Task.CompletedTask;
                     }   
                 };
             });
+
+            services.AddScoped<HttpUserContext>();
 
             return base.AddServices(services);
         }

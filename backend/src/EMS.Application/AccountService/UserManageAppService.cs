@@ -23,7 +23,7 @@ using Mbp.EntityFrameworkCore.PermissionModel.Enums;
 
 namespace EMS.Application.AccountService
 {
-    //[Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin")]
     [AutoAop]
     [AutoWebApi]
     [Route("api/[controller]")]

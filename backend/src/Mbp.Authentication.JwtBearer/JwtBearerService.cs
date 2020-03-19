@@ -39,6 +39,7 @@ namespace Mbp.Authentication.JwtBearer
 
             if (string.IsNullOrEmpty(userName)) throw new ArgumentNullException(nameof(userName));
 
+            // 默认添加用户名和用户Id
             claims.Add(new Claim(ClaimTypes.Name, userName));
             claims.Add(new Claim(ClaimTypes.NameIdentifier, userId));
 

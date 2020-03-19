@@ -47,17 +47,6 @@ const mutations = {
     state.routes = constantRoutes.concat(routes)
   }
 }
-// const path = 'log'
-// const remoteRoutes = [{
-//   path: '/logmanage',
-//   component: Layout,
-//   children: [{
-//     path: 'loglist',
-//     name: 'loglist',
-//     component: () => import(`@/views/${path}/index`),
-//     meta: { title: '日志列表', icon: 'documentation' }
-//   }]
-// }]
 
 const actions = {
   generateRoutes({ commit }, roles) {
@@ -80,6 +69,7 @@ const actions = {
   }
 }
 
+// 路由组件替换
 function generateRoutes(menus) {
   const routes = menus.map(menu => {
     if (menu.component === 'Layout') {
