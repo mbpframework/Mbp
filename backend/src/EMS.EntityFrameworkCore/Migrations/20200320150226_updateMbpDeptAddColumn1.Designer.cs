@@ -3,14 +3,16 @@ using System;
 using EMS.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EMS.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    partial class DefaultDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200320150226_updateMbpDeptAddColumn1")]
+    partial class updateMbpDeptAddColumn1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,6 +199,10 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.Property<int>("DeptStatus")
                         .HasColumnType("int");
 
+                    b.Property<string>("FullDeptCode")
+                        .HasColumnType("varchar(1024) CHARACTER SET utf8mb4")
+                        .HasMaxLength(1024);
+
                     b.Property<string>("FullDeptName")
                         .HasColumnType("varchar(1024) CHARACTER SET utf8mb4")
                         .HasMaxLength(1024);
@@ -217,6 +223,14 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.Property<string>("ParentDeptName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<string>("ParentFullDeptCode")
+                        .HasColumnType("varchar(1024) CHARACTER SET utf8mb4")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("ParentFullDeptName")
+                        .HasColumnType("varchar(1024) CHARACTER SET utf8mb4")
+                        .HasMaxLength(1024);
+
                     b.Property<int>("ParentId")
                         .HasColumnType("int");
 
@@ -234,6 +248,7 @@ namespace EMS.EntityFrameworkCore.Migrations
                             DeptCode = "d000001",
                             DeptName = "组织架构",
                             DeptStatus = 1,
+                            FullDeptCode = "d000001",
                             FullDeptName = "组织架构",
                             IsDeleted = false,
                             Level = 0,

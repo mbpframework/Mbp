@@ -45,7 +45,7 @@ namespace Mbp.AspNetCore.Mvc.Middleware
 
                 context.Response.ContentType = "application/json";
 
-                await context.Response.WriteAsync(JsonConvert.SerializeObject(new { Code = 500, Message = "服务器异常", Version = "1", Data = new List<object>() }));
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(new { Code = 500, Message = ex.Message, Version = "1", Data = new List<object>() }));
             }
         }
     }

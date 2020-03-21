@@ -69,13 +69,18 @@ namespace Mbp.Authentication.JwtBearer
                     },
                     OnTokenValidated = context =>
                     {
+                        // todo 解析token自动续费时间
                         var userContext = context.HttpContext.RequestServices.GetService<HttpUserContext>();
                         var claims = context.Principal.Claims;
                         userContext.Id = int.Parse(claims.First(x => x.Type == ClaimTypes.Sid).Value);
                         userContext.LoginName = claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
                         userContext.UserName = claims.First(x => x.Type == ClaimTypes.Name).Value;
                         return Task.CompletedTask;
-                    }   
+                    },
+                    OnMessageReceived = context =>
+                    {
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

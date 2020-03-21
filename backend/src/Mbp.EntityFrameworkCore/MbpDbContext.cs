@@ -82,8 +82,8 @@ namespace Mbp.EntityFrameworkCore
                     DeptStatus = EnumDeptStatus.Actived,
                     IsDeleted = false,
                     SystemCode = "Mbp",
-                    FullDeptCode = "d000001",
-                    FullDeptName = "组织架构"
+                    FullDeptName= "组织架构",
+                    ParentId = 0
                 });
 
             // 初始化根分类

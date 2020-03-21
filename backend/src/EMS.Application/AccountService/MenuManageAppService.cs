@@ -70,10 +70,11 @@ namespace EMS.Application.AccountService
 
             _defaultDbContext.Attach(menu);
 
-            // 重新继承父级信息, to do优化
+            // 重新继承父级信息, todo优化
             var parentMenu = _defaultDbContext.MbpMenus.Where(m => m.Id == menuInputDto.ParentId).FirstOrDefault();
             menu.SystemCode = parentMenu.SystemCode;
             menu.CodePath = string.Concat(parentMenu.CodePath, "/", menuInputDto.Code);
+            menu.Level = parentMenu.Level + 1;
 
             _defaultDbContext.MbpMenus.Update(menu);
 

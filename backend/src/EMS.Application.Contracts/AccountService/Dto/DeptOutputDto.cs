@@ -1,31 +1,34 @@
-﻿using Mbp.Core.Entity;
-using Mbp.Core.Entity.Aggregate;
+﻿using Mbp.Ddd.Application.Mbp.Dto;
 using Mbp.EntityFrameworkCore.PermissionModel.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Mbp.EntityFrameworkCore.PermissionModel
+namespace EMS.Application.Contracts.AccountService.Dto
 {
-    public class MbpDept : AggregateBase<int>, ISoftDelete
+    public class DeptOutputDto : DtoBase
     {
+        /// <summary>
+        /// 部门编号
+        /// </summary>
+        [JsonProperty("id")]
+        public int Id { get; set; }
+
         /// <summary>
         /// 部门名称
         /// </summary>
-        [MaxLength(256)]
+        [JsonProperty("name")]
         public string DeptName { get; set; }
 
         /// <summary>
         /// 部门名称全称
         /// </summary>
-        [MaxLength(1024)]
         public string FullDeptName { get; set; }
 
         /// <summary>
         /// 部门编号
         /// </summary>
-        [MaxLength(256)]
         public string DeptCode { get; set; }
 
         /// <summary>
@@ -36,7 +39,6 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         /// <summary>
         /// 上级部门编号
         /// </summary>
-        [MaxLength(256)]
         public string ParentDeptCode { get; set; }
 
         /// <summary>
@@ -50,6 +52,12 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         public EnumDeptStatus DeptStatus { get; set; }
 
         /// <summary>
+        /// 下级部门
+        /// </summary>
+        [JsonProperty("children")]
+        public List<DeptOutputDto> Children { get; set; } = new List<DeptOutputDto>();
+
+        /// <summary>
         /// 层级
         /// </summary>
         public int Level { get; set; }
@@ -59,8 +67,6 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         /// </summary>
         public int Order { get; set; }
 
-        public bool IsDeleted { get; set; }
-
-        public string SystemCode { get; set; }
+        public byte[] ConcurrencyStamp { get; set; }
     }
 }

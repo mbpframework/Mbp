@@ -34,14 +34,7 @@
         style="width: 140px"
         class="filter-item"
         @change="handleFilter"
-      >
-        <el-option
-          v-for="item in sortOptions"
-          :key="item.key"
-          :label="item.label"
-          :value="item.key"
-        />
-      </el-select>
+      />
       <el-button
         v-waves
         class="filter-item"
@@ -71,7 +64,7 @@
       style="width: 100%;margin-bottom: 20px;"
       row-key="id"
       border
-      :expand-row-keys="expandrowkeys"
+      :expand-row-keys="['1']"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
       <el-table-column label="名称" align="center">
@@ -109,12 +102,6 @@
           <span>{{ row.Order }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="层级" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.Level }}</span>
-        </template>
-      </el-table-column> -->
-
       <el-table-column label="父级Id" align="center">
         <template slot-scope="{row}">
           <span>{{ row.ParentId }}</span>
@@ -152,7 +139,7 @@
             <el-form-item v-show="false" label="ID" prop="Id">
               <el-input v-model="temp.id" />
             </el-form-item>
-            <el-form-item label="名称" prop="Name">
+            <el-form-item label="名称" prop="name">
               <el-input v-model="temp.name" />
             </el-form-item>
           </el-col>
@@ -247,7 +234,7 @@ export default {
     }
     return {
       tableKey: 0,
-      list: null,
+      list: [],
       total: 0,
       listLoading: true,
       expandrowkeys: ['1'],
@@ -435,24 +422,24 @@ export default {
       })
     },
     handleDownload() {
-      this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-        const filterVal = [
-          'timestamp',
-          'title',
-          'type',
-          'importance',
-          'status'
-        ]
-        const data = this.formatJson(filterVal, this.list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'table-list'
-        })
-        this.downloadLoading = false
-      })
+      // this.downloadLoading = true
+      // import('@/vendor/Export2Excel').then(excel => {
+      //   const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
+      //   const filterVal = [
+      //     'timestamp',
+      //     'title',
+      //     'type',
+      //     'importance',
+      //     'status'
+      //   ]
+      //   const data = this.formatJson(filterVal, this.list)
+      //   excel.export_json_to_excel({
+      //     header: tHeader,
+      //     data,
+      //     filename: 'table-list'
+      //   })
+      //   this.downloadLoading = false
+      // })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>

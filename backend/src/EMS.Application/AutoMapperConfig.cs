@@ -47,6 +47,10 @@ namespace EMS.Application
 
                 // 路由映射
                 cfg.CreateMap<MbpMenu, RouteOutputDto>();
+
+                // 部门映射
+                cfg.CreateMap<DeptInputDto, MbpDept>();
+                cfg.CreateMap<MbpDept, DeptOutputDto>();
             });
 
             return config.CreateMapper();

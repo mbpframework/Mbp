@@ -53,6 +53,8 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
+      // 异常信息返回给调用程序
+      return res
     }
   },
   error => {

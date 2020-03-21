@@ -3,14 +3,16 @@ using System;
 using EMS.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EMS.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    partial class DefaultDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200321180406_updatetabledept111")]
+    partial class updatetabledept111
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,6 +209,9 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MbpDeptId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
@@ -224,6 +229,8 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MbpDeptId");
 
                     b.ToTable("MbpDepts");
 
@@ -576,6 +583,13 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpDept", b =>
+                {
+                    b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpDept", null)
+                        .WithMany("DownDepts")
+                        .HasForeignKey("MbpDeptId");
                 });
 
             modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpMenuClaim", b =>
