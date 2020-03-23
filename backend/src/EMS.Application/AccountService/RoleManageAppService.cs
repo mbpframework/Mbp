@@ -39,7 +39,7 @@ namespace EMS.Application.AccountService
         /// 添加角色
         /// </summary>
         [HttpPost("AddRole")]
-        public int AddRole(RoleInputDto roleInputDto)
+        public virtual int AddRole(RoleInputDto roleInputDto)
         {
             var role = _mapper.Map<MbpRole>(roleInputDto);
 
@@ -54,7 +54,7 @@ namespace EMS.Application.AccountService
         /// <param name="roleInputDto"></param>
         /// <returns></returns>
         [HttpPut("UpdateRole")]
-        public int UpdateRole(RoleInputDto roleInputDto)
+        public virtual int UpdateRole(RoleInputDto roleInputDto)
         {
             var role = _mapper.Map<MbpRole>(roleInputDto);
 
@@ -71,7 +71,7 @@ namespace EMS.Application.AccountService
         /// <param name="roleId"></param>
         /// <returns></returns>
         [HttpDelete("DeleteRole")]
-        public int DeleteRole(int roleId)
+        public virtual int DeleteRole(int roleId)
         {
             var role = _defaultDbContext.MbpRoles.Where(r => r.Id == roleId).Include(r => r.RoleMenus).FirstOrDefault();
             _defaultDbContext.MbpRoles.Remove(role);
@@ -84,7 +84,7 @@ namespace EMS.Application.AccountService
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetRoles")]
-        public async Task<PagedList<RoleOutputDto>> GetRoles(SearchOptions<RoleSearchOptions> searchOptions)
+        public virtual async Task<PagedList<RoleOutputDto>> GetRoles(SearchOptions<RoleSearchOptions> searchOptions)
         {
             int total = 0;
 
@@ -108,7 +108,7 @@ namespace EMS.Application.AccountService
         /// 配置角色功能
         /// </summary>
         [HttpPost("AddRoleMenus")]
-        public int AddRoleMenus(int roleId, List<int> menuIds)
+        public virtual int AddRoleMenus(int roleId, List<int> menuIds)
         {
             // 查询已有的用户角色
 
@@ -131,7 +131,7 @@ namespace EMS.Application.AccountService
         /// </summary>
         /// <param name="roleId"></param>
         [HttpDelete("DeleteRoleMenus")]
-        public int DeleteRoleMenus(int roleId)
+        public virtual int DeleteRoleMenus(int roleId)
         {
             var userRoles = _defaultDbContext.MbpRoleMenus
                 .Where(rm => rm.RoleId == roleId).ToList();
@@ -147,7 +147,7 @@ namespace EMS.Application.AccountService
         /// <param name="roleId"></param>
         /// <param name="menuId"></param>
         [HttpDelete("DeleteRoleMenu")]
-        public int DeleteRoleMenu(int roleId, int menuId)
+        public virtual int DeleteRoleMenu(int roleId, int menuId)
         {
             var roleMenu = _defaultDbContext.MbpRoleMenus
                 .Where(rm => rm.RoleId == roleId && rm.MenuId == menuId)
@@ -164,7 +164,7 @@ namespace EMS.Application.AccountService
         /// <param name="roleId"></param>
         /// <returns></returns>
         [HttpGet("GetRoleMenus")]
-        public List<RoleMenuOutputDto> GetRoleMenus(int roleId)
+        public virtual List<RoleMenuOutputDto> GetRoleMenus(int roleId)
         {
             var menuRoles = _defaultDbContext.MbpRoleMenus.Where(rm => rm.RoleId == roleId)
                 .Include(rm => rm.Menu)

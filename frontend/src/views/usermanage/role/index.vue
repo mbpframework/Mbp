@@ -130,7 +130,7 @@
         :model="temp"
         label-position="right"
         label-width="90px"
-        style="width: 400px; margin-left:50px;"
+        style="width: 500px; margin-left:50px;"
       >
         <el-row>
           <el-col :span="12">

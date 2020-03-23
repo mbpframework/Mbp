@@ -103,6 +103,36 @@
           <span>{{ row.Code }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="所属部门" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.DeptName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="性别" align="center">
+        <template slot-scope="{row}">
+          <span>{{ getUserSex(row.UserSex) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="人员类别" align="center">
+        <template slot-scope="{row}">
+          <span>{{ getUserType(row.UserType) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="岗位类别" align="center">
+        <template slot-scope="{row}">
+          <span>{{ getUserPositionType(row.PositionType) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="学历" align="center">
+        <template slot-scope="{row}">
+          <span>{{ getUserEducation(row.Education) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="专业" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.Major }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="电子邮箱" align="center">
         <template slot-scope="{row}">
           <span>{{ row.Email }}</span>
@@ -157,8 +187,8 @@
         :rules="rules"
         :model="temp"
         label-position="right"
-        label-width="70px"
-        style="width: 400px; margin-left:50px;"
+        label-width="90px"
+        style="width: 500px; margin-left:50px;"
       >
         <el-row>
           <el-col :span="12">
@@ -189,13 +219,84 @@
         </el-row>
         <el-row>
           <el-col :span="12">
+            <el-form-item v-if="!isUpdate" label="密码" prop="Password">
+              <el-input v-model="temp.Password" show-password />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="是否超管">
               <el-switch v-model="temp.IsAdmin" />
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12">
-            <el-form-item v-if="!isUpdate" label="密码" prop="Password">
-              <el-input v-model="temp.Password" show-password />
+            <el-form-item label="部门" prop="Email">
+              <SelectTree
+                :props="props"
+                :options="optionData"
+                :value="valueId"
+                :clearable="isClearable"
+                :accordion="isAccordion"
+                @getValue="getValue($event)"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="性别" prop="UserSex">
+              <el-select v-model="temp.UserSex" placeholder="请选择">
+                <el-option
+                  v-for="item in userSexOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="用户类别" prop="UserType">
+              <el-select v-model="temp.UserType" placeholder="请选择">
+                <el-option
+                  v-for="item in userTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="岗位类别" prop="PositionType">
+              <el-select v-model="temp.PositionType" placeholder="请选择">
+                <el-option
+                  v-for="item in positionTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="学历" prop="Education">
+              <el-select v-model="temp.Education" placeholder="请选择">
+                <el-option
+                  v-for="item in userEducationOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="专业" prop="Major">
+              <el-input v-model="temp.Major" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -273,10 +374,12 @@ import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import crypto from 'crypto'
+import SelectTree from '@/components/TreeSelect'
+import { GetDepts } from '@/api/deptmanage'
 
 export default {
   name: 'UserManage',
-  components: { Pagination },
+  components: { Pagination, SelectTree },
   directives: { waves },
   filters: {},
   data() {
@@ -298,6 +401,27 @@ export default {
         { label: '是', key: 'Y' },
         { label: '否', key: 'N' }
       ],
+      userSexOptions: [{ label: '全部', value: 0 },
+        { label: '男', value: 1 },
+        { label: '女', value: 2 },
+        { label: '未知', value: 3 }],
+      userTypeOptions: [{ label: '军官', value: 1 },
+        { label: '士官', value: 2 },
+        { label: '义务兵', value: 3 }],
+      positionTypeOptions: [{ label: '指挥军官', value: 1 },
+        { label: '技术军官', value: 2 },
+        { label: '技师', value: 3 },
+        { label: '领班员', value: 4 },
+        { label: '值机员', value: 5 },
+        { label: '通信员', value: 6 }],
+      userEducationOptions: [
+        { label: '博士', value: 1 },
+        { label: '硕士', value: 2 },
+        { label: '本科', value: 3 },
+        { label: '大专', value: 4 },
+        { label: '高中', value: 5 },
+        { label: '初中及以下', value: 6 }
+      ],
       sortOptions: [
         { label: 'ID Ascending', key: '+Id' },
         { label: 'ID Descending', key: '-Id' }
@@ -310,8 +434,23 @@ export default {
         Email: '',
         PhoneNumber: '',
         IsAdmin: false,
-        UserStatus: 1
+        UserStatus: 1,
+        UserSex: 1,
+        UserType: 1,
+        PositionType: 1,
+        Education: 3
       },
+      isClearable: false, // 可清空（可选）
+      isAccordion: true, // 可收起（可选）
+      valueId: 1, // 初始ID（可选）
+      props: {
+        // 配置项（必选）
+        value: 'id',
+        label: 'name',
+        children: 'children'
+      },
+      menuList: [
+      ],
       dialogFormVisible: false,
       dialogGrantFormVisible: false,
       dialogPwdResetFormVisible: false,
@@ -349,10 +488,83 @@ export default {
       }
     }
   },
+  computed: {
+    /* 转树形数据 */
+    optionData() {
+      const cloneData = JSON.parse(JSON.stringify(this.menuList)) // 对源数据深度克隆
+      return cloneData.filter(father => {
+        // 循环所有项，并添加children属性
+        const branchArr = cloneData.filter(
+          child => father.id === child.ParentId
+        ) // 返回每一项的子级数组
+        branchArr.length > 0 ? (father.children = branchArr) : '' // 给父级添加一个children属性，并赋值
+        return father.ParentId === 0 // 返回第一层
+      })
+    },
+    getIsAdmin() {
+      return function(isAdmin) { return isAdmin ? '是' : '否' }
+    },
+    getUserSex() {
+      return function(sex) {
+        switch (sex) {
+          case 1: return '男'
+          case 2: return '女'
+          case 3: return '未知'
+          default:return '未知'
+        }
+      }
+    },
+    getUserType() {
+      return function(type) {
+        switch (type) {
+          case 1: return '军官'
+          case 2: return '士官'
+          case 3: return '义务兵'
+          default:return '未知'
+        }
+      }
+    },
+    getUserPositionType() {
+      return function(position) {
+        switch (position) {
+          case 1: return '指挥军官'
+          case 2: return '技术军官'
+          case 3: return '技师'
+          case 4: return '领班员'
+          case 5: return '值机员'
+          case 6: return '通信员'
+          default:return '未知'
+        }
+      }
+    },
+    getUserEducation() {
+      return function(education) {
+        switch (education) {
+          case 1: return '博士'
+          case 2: return '硕士'
+          case 3: return '本科'
+          case 4: return '大专'
+          case 5: return '高中'
+          case 6: return '初中及以下'
+          default:return '未知'
+        }
+      }
+    }
+  },
   created() {
+    this.getDeptForSelectBox()
     this.getList()
   },
   methods: {
+    getDeptForSelectBox() {
+      GetDepts({ 'pageIndex': 1, 'pageSize': 999 }).then(response => {
+        this.menuList = response.Data.Content
+      })
+    },
+    getValue(value) {
+      this.valueId = value
+      this.temp.ParentId = value
+    },
     getList() {
       this.listLoading = true
       GetUser(this.listQuery).then(response => {
@@ -399,7 +611,11 @@ export default {
         Email: '',
         PhoneNumber: '',
         IsAdmin: false,
-        UserStatus: 1
+        UserStatus: 1,
+        UserSex: 1,
+        UserType: 1,
+        PositionType: 1,
+        Education: 3
       }
     },
     restGrantTemp() {
@@ -416,6 +632,7 @@ export default {
       }
     },
     handleCreate() {
+      this.getDeptForSelectBox()
       this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
@@ -430,6 +647,8 @@ export default {
           var md5 = crypto.createHash('md5')
           md5.update(this.temp.Password)
           this.temp.Password = md5.digest('hex')
+          console.log(this.valueId)
+          this.temp.DeptId = this.valueId
           AddUser(this.temp).then(() => {
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
@@ -596,9 +815,6 @@ export default {
         case 3: return '锁定'
         case 4: return '过期'
       }
-    },
-    getIsAdmin: function(isAdmin) {
-      return isAdmin ? '是' : '否'
     }
   }
 }

@@ -45,7 +45,7 @@ namespace EMS.Application.AccountService
         /// 添加用户
         /// </summary>
         [HttpPost("AddUser")]
-        public int AddUser(UserInputDto userInputDto)
+        public virtual int AddUser(UserInputDto userInputDto)
         {
             var user = _mapper.Map<MbpUser>(userInputDto);
             user.UserStatus = EnumUserStatus.Actived;
@@ -62,8 +62,9 @@ namespace EMS.Application.AccountService
         /// <param name="userInputDto"></param>
         /// <returns></returns>
         [HttpPut("UpdateUser")]
-        public int UpdateUser(UserInputDto userInputDto)
+        public virtual int UpdateUser(UserInputDto userInputDto)
         {
+            // todo 写入mbpuserdept表 mbpuser表冗余部门信息
             var user = _defaultDbContext.MbpUsers.Where(u => u.Id == userInputDto.Id).FirstOrDefault();
 
             user.IsAdmin = userInputDto.IsAdmin;
@@ -87,7 +88,7 @@ namespace EMS.Application.AccountService
         /// <param name="pwd"></param>
         /// <returns></returns>
         [HttpPut("RestPwd")]
-        public int RestPwd(string loginName, string pwd)
+        public virtual int RestPwd(string loginName, string pwd)
         {
             var user = _defaultDbContext.MbpUsers.Where(u => u.LoginName == loginName).FirstOrDefault();
             user.Password = ApplicationHelper.EncryptPwdMd5(pwd);
@@ -103,7 +104,7 @@ namespace EMS.Application.AccountService
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpDelete("DeleteUser")]
-        public int DeleteUser(int userId)
+        public virtual int DeleteUser(int userId)
         {
             var user = _defaultDbContext.MbpUsers.Where(u => u.Id == userId).Include(u => u.UserRoles).FirstOrDefault();
             _defaultDbContext.MbpUsers.Remove(user);
@@ -116,7 +117,7 @@ namespace EMS.Application.AccountService
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetUsers")]
-        public async Task<PagedList<UserOutputDto>> GetUsers(SearchOptions<UserSearchOptions> searchOptions)
+        public virtual async Task<PagedList<UserOutputDto>> GetUsers(SearchOptions<UserSearchOptions> searchOptions)
         {
             int total = 0;
 
@@ -141,7 +142,7 @@ namespace EMS.Application.AccountService
         /// <paramref name="roleIds"/>
         /// </summary>
         [HttpPost("AddUserRoles")]
-        public int AddUserRoles(int userId, List<int> roleIds)
+        public virtual int AddUserRoles(int userId, List<int> roleIds)
         {
             // 查询已有的用户角色
             var mbpUserRoles = _defaultDbContext.MbpUserRoles.Where(ur => roleIds.Contains(ur.RoleId));
@@ -163,7 +164,7 @@ namespace EMS.Application.AccountService
         /// </summary>
         /// <param name="userId"></param>
         [HttpDelete("DeleteUserRoles")]
-        public int DeleteUserRoles(int userId)
+        public virtual int DeleteUserRoles(int userId)
         {
             var userRoles = _defaultDbContext.MbpUserRoles.Where(ur => ur.UserId == userId).ToList();
 
@@ -178,7 +179,7 @@ namespace EMS.Application.AccountService
         /// <param name="userId"></param>
         /// <param name="RoleId"></param>
         [HttpDelete("DeleteUserRole")]
-        public int DeleteUserRole(int userId, int roleId)
+        public virtual int DeleteUserRole(int userId, int roleId)
         {
             var userRole = _defaultDbContext.MbpUserRoles.Where(ur => ur.UserId == userId && ur.RoleId == roleId).FirstOrDefault();
 
@@ -192,7 +193,7 @@ namespace EMS.Application.AccountService
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetUserRoles")]
-        public List<UserRoleOutputDto> GetUserRoles(int userId, string systemCode)
+        public virtual List<UserRoleOutputDto> GetUserRoles(int userId, string systemCode)
         {
             var userRoles = _defaultDbContext.MbpUserRoles.Where(ur => ur.UserId == userId && ur.Role.SystemCode == systemCode)
                 .Include(ur => ur.Role)

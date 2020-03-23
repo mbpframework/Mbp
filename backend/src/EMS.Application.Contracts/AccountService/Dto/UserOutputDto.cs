@@ -1,4 +1,5 @@
 ﻿using Mbp.Ddd.Application.Mbp.Dto;
+using Mbp.EntityFrameworkCore.Domain.Enums;
 using Mbp.EntityFrameworkCore.PermissionModel;
 using Mbp.EntityFrameworkCore.PermissionModel.Enums;
 using System;
@@ -25,6 +26,20 @@ namespace EMS.Application.Contracts.AccountService.Dto
         public EnumUserStatus UserStatus { get; set; }
 
         public bool IsAdmin { get; set; }
+
+        public string DeptName { get; set; }
+
+        public int DeptId { get; set; }
+
+        public EnumUserSex UserSex { get; set; }
+
+        public EnumUserType UserType { get; set; }
+
+        public EnumPositionType PositionType { get; set; }
+
+        public EnumUserEducation Education { get; set; }
+
+        public string Major { get; set; }
 
         /// <summary>
         /// 用户头像

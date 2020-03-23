@@ -43,7 +43,7 @@ namespace EMS.Application.AccountService
         /// 添加功能菜单
         /// </summary>
         [HttpPost("AddMenu")]
-        public int AddMenu(MenuInputDto menuInputDto)
+        public virtual int AddMenu(MenuInputDto menuInputDto)
         {
             var parentMenu = _defaultDbContext.MbpMenus.Where(m => m.Id == menuInputDto.ParentId).FirstOrDefault();
 
@@ -64,7 +64,7 @@ namespace EMS.Application.AccountService
         /// <param name="menuInputDto"></param>
         /// <returns></returns>
         [HttpPut("UpdateMenu")]
-        public int UpdateMenu(MenuInputDto menuInputDto)
+        public virtual int UpdateMenu(MenuInputDto menuInputDto)
         {
             var menu = _mapper.Map<MbpMenu>(menuInputDto);
 
@@ -86,7 +86,7 @@ namespace EMS.Application.AccountService
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetMenus")]
-        public async Task<PagedList<MenuOutputDto>> GetMenus(SearchOptions<MenuSearchOptions> searchOptions)
+        public virtual async Task<PagedList<MenuOutputDto>> GetMenus(SearchOptions<MenuSearchOptions> searchOptions)
         {
             int total = 0;
 
@@ -133,7 +133,7 @@ namespace EMS.Application.AccountService
         /// <param name="claims"></param>
         /// <returns></returns>
         [HttpPost("AddMenuClaims")]
-        public int AddMenuClaims(int menuId, List<MenuClaimInputDto> claims)
+        public virtual int AddMenuClaims(int menuId, List<MenuClaimInputDto> claims)
         {
             // 删除Claims
             DeleteMenuClaims(menuId);
@@ -161,7 +161,7 @@ namespace EMS.Application.AccountService
         /// <param name="menuId"></param>
         /// <returns></returns>
         [HttpDelete("DeleteMenu")]
-        public int DeleteMenu(int menuId)
+        public virtual int DeleteMenu(int menuId)
         {
             var menu = _defaultDbContext.MbpMenus.Where(m => m.Id == menuId).First();
 
@@ -178,7 +178,7 @@ namespace EMS.Application.AccountService
         /// <param name="menuIds"></param>
         /// <returns></returns>
         [HttpDelete("DeleteMenus")]
-        public int DeleteMenus(List<int> menuIds)
+        public virtual int DeleteMenus(List<int> menuIds)
         {
             var menus = _defaultDbContext.MbpMenus.Include(m => m.MenuClaims).Where(m => menuIds.Contains(m.Id));
             _defaultDbContext.MbpMenus.RemoveRange(menus);

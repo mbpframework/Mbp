@@ -1,4 +1,5 @@
 ﻿using Mbp.Ddd.Application.Mbp.Dto;
+using Mbp.EntityFrameworkCore.Domain.Enums;
 using Mbp.EntityFrameworkCore.PermissionModel;
 using Mbp.EntityFrameworkCore.PermissionModel.Enums;
 using System;
@@ -31,6 +32,24 @@ namespace EMS.Application.Contracts.AccountService.Dto
 
         [Required]
         public bool IsAdmin { get; set; }
+
+        [Required]
+        public int DeptId { get; set; }
+
+        [Required]
+        public EnumUserSex UserSex { get; set; }
+
+        [Required]
+        public EnumUserType UserType { get; set; }
+
+        [Required]
+        public EnumPositionType PositionType { get; set; }
+
+        [Required]
+        public EnumUserEducation Education { get; set; }
+
+        [Required]
+        public string Major { get; set; }
 
         public EnumUserStatus UserStatus { get; set; }
     }

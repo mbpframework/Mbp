@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMS.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    [Migration("20200321181101_updatetabledept1111")]
-    partial class updatetabledept1111
+    [Migration("20200323081622_update3231609")]
+    partial class update3231609
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -219,13 +219,15 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.Property<string>("ParentDeptName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("ParentId")
+                    b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
                     b.Property<string>("SystemCode")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
 
                     b.ToTable("MbpDepts");
 
@@ -240,7 +242,6 @@ namespace EMS.EntityFrameworkCore.Migrations
                             IsDeleted = false,
                             Level = 0,
                             Order = 0,
-                            ParentId = 0,
                             SystemCode = "Mbp"
                         });
                 });
@@ -456,8 +457,14 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp(6)");
 
-                    b.Property<string>("Education")
+                    b.Property<int>("DeptId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DeptName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("Education")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
@@ -483,6 +490,9 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
                         .HasMaxLength(256);
 
+                    b.Property<int>("PositionType")
+                        .HasColumnType("int");
+
                     b.Property<string>("SystemCode")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
@@ -490,7 +500,13 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
                         .HasMaxLength(256);
 
+                    b.Property<int>("UserSex")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserType")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -501,12 +517,17 @@ namespace EMS.EntityFrameworkCore.Migrations
                         new
                         {
                             Id = 1,
+                            DeptId = 0,
+                            Education = 0,
                             IsAdmin = true,
                             IsDeleted = false,
                             LoginName = "admin",
                             Password = "94c5fb886bd3cf5f821d239056181a5e",
+                            PositionType = 0,
                             UserName = "admin",
-                            UserStatus = 1
+                            UserSex = 0,
+                            UserStatus = 1,
+                            UserType = 0
                         });
                 });
 
@@ -532,6 +553,30 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("MbpUserClaims");
+                });
+
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpUserDept", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("DeptId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeptId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MbpUserDept");
                 });
 
             modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpUserRole", b =>
@@ -580,6 +625,13 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpDept", b =>
+                {
+                    b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpDept", "ParentDept")
+                        .WithMany("ChildrenDept")
+                        .HasForeignKey("ParentId");
+                });
+
             modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpMenuClaim", b =>
                 {
                     b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpMenu", "Menu")
@@ -614,6 +666,21 @@ namespace EMS.EntityFrameworkCore.Migrations
 
                     b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpUser", "User")
                         .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpUserDept", b =>
+                {
+                    b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpDept", "Dept")
+                        .WithMany()
+                        .HasForeignKey("DeptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpUser", "User")
+                        .WithMany("UserDepts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

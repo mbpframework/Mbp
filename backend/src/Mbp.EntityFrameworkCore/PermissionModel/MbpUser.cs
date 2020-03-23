@@ -1,5 +1,6 @@
 ﻿using Mbp.Core.Entity;
 using Mbp.Core.Entity.Aggregate;
+using Mbp.EntityFrameworkCore.Domain.Enums;
 using Mbp.EntityFrameworkCore.PermissionModel.Enums;
 using System;
 using System.Collections.Generic;
@@ -39,10 +40,19 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
 
         public EnumUserStatus UserStatus { get; set; }
 
+        public int DeptId { get; set; }
+
+        public string DeptName { get; set; }
+
+        /// <summary>
+        /// 性别
+        /// </summary>
+        public EnumUserSex UserSex { get; set; }
+
         /// <summary>
         /// 学历
         /// </summary>
-        public string Education { get; set; }
+        public EnumUserEducation Education { get; set; }
 
         /// <summary>
         /// 专业
@@ -50,9 +60,24 @@ namespace Mbp.EntityFrameworkCore.PermissionModel
         public string Major { get; set; }
 
         /// <summary>
+        /// 人员类别
+        /// </summary>
+        public EnumUserType UserType { get; set; }
+
+        /// <summary>
+        /// 岗位类别
+        /// </summary>
+        public EnumPositionType PositionType { get; set; }
+
+        /// <summary>
         /// 一个用户,有多个角色
         /// </summary>
         public List<MbpUserRole> UserRoles { get; set; }
+
+        /// <summary>
+        /// 一个用户,可支持多个部门
+        /// </summary>
+        public List<MbpUserDept> UserDepts { get; set; }
 
         /// <summary>
         /// 是不是超级管理员
