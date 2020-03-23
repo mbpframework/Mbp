@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mbp.EntityFrameworkCore.Domain;
 
 namespace EMS.Application
 {
@@ -51,6 +52,10 @@ namespace EMS.Application
                 // 部门映射
                 cfg.CreateMap<DeptInputDto, MbpDept>();
                 cfg.CreateMap<MbpDept, DeptOutputDto>();
+
+                // 岗位映射
+                cfg.CreateMap<PositionInputDto, MbpPosition>();
+                cfg.CreateMap<MbpPosition, PositionOutputDto>();
             });
 
             return config.CreateMapper();

@@ -74,21 +74,26 @@ namespace EMS.Application.AccountService
             if (parentDept.FullDeptName.StartsWith(dept.FullDeptName))
                 throw new Exception("不能使用当前下级部门作为父级部门");
 
-            // 刷新当前节点
-            dept.SystemCode = parentDept.SystemCode;
-            dept.FullDeptName = string.Concat(parentDept.FullDeptName, "/", dept.DeptName);
-            dept.Level = parentDept.Level + 1;
-            dept.ParentDeptCode = parentDept.DeptCode;
-            dept.ParentDeptName = parentDept.DeptName;
+            // 刷新节点信息
+            {
+                // 刷新当前节点
+                dept.SystemCode = parentDept.SystemCode;
+                dept.FullDeptName = string.Concat(parentDept.FullDeptName, "/", dept.DeptName);
+                dept.Level = parentDept.Level + 1;
+                dept.ParentDeptCode = parentDept.DeptCode;
+                dept.ParentDeptName = parentDept.DeptName;
 
-            _defaultDbContext.Attach(dept);
+                _defaultDbContext.Attach(dept);
 
-            // 刷新下级节点
-            var current = _defaultDbContext.MbpDepts.Include("ChildrenDept.ChildrenDept.ChildrenDept.ChildrenDept.ChildrenDept")
-                .First(m => m.Id == dept.Id);
-            RefreshChildrenInfo(dept, current.ChildrenDept);
+                // 刷新下级节点
+                var current = _defaultDbContext.MbpDepts.Include("ChildrenDept.ChildrenDept.ChildrenDept.ChildrenDept.ChildrenDept")
+                    .First(m => m.Id == dept.Id);
+                RefreshChildrenInfo(dept, current.ChildrenDept);
 
-            _defaultDbContext.Update(current);
+                _defaultDbContext.Attach(current);
+            }
+
+            _defaultDbContext.Update(dept);
             // 提交所有修改
             return _defaultDbContext.SaveChanges();
         }

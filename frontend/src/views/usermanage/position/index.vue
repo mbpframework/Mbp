@@ -3,14 +3,14 @@
     <div class="filter-container" style="padding-bottom:10px;">
       <el-input
         v-model="listQuery.Name"
-        placeholder="部门名称"
+        placeholder="岗位名称"
         style="width: 150px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <el-input
         v-model="listQuery.Code"
-        placeholder="部门编码"
+        placeholder="岗位编码"
         style="width: 150px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -28,7 +28,7 @@
         type="primary"
         icon="el-icon-edit"
         @click="handleCreate"
-      >新增部门</el-button>
+      >新增岗位</el-button>
       <el-button
         v-waves
         :loading="downloadLoading"
@@ -36,7 +36,7 @@
         type="primary"
         icon="el-icon-download"
         @click="handleDownload"
-      >导出部门</el-button>
+      >导出岗位</el-button>
     </div>
 
     <el-table
@@ -54,22 +54,27 @@
       </el-table-column>
       <el-table-column label="编码">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.DeptCode }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.PositionCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上级部门" align="center">
+      <el-table-column label="上级岗位" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.ParentDeptName }}</span>
+          <span>{{ row.ParentPositionName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="岗位类型" align="center">
+        <template slot-scope="{row}">
+          <span>{{ getUserPositionType(row.PositionType) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.DeptStatus==1?"激活":"禁用" }}</span>
+          <span>{{ row.PositionStatus==1?"激活":"禁用" }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="部门全称" align="center">
+      <el-table-column label="岗位全称" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.FullDeptName }}</span>
+          <span>{{ row.FullPositionName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="顺序" align="center">
@@ -114,8 +119,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="编码" prop="DeptCode">
-              <el-input v-model="temp.DeptCode" />
+            <el-form-item label="编码" prop="PositionCode">
+              <el-input v-model="temp.PositionCode" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -126,10 +131,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="状态" prop="DeptStatus">
-              <el-select v-model="temp.DeptStatus" placeholder="请选择">
+            <el-form-item label="状态" prop="PositionStatus">
+              <el-select v-model="temp.PositionStatus" placeholder="请选择">
                 <el-option
-                  v-for="item in DeptStatusOptions"
+                  v-for="item in PositionStatusOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -140,7 +145,7 @@
         </el-row>
         <el-row>
           <el-col v-show="temp.id!=1" :span="12">
-            <el-form-item label="父级部门" prop="ParentId">
+            <el-form-item label="父级岗位" prop="ParentId">
               <SelectTree
                 :props="props"
                 :options="optionData"
@@ -151,12 +156,23 @@
               />
             </el-form-item>
           </el-col>
-
+          <el-col :span="12">
+            <el-form-item label="岗位类型" prop="PositionType">
+              <el-select v-model="temp.PositionType" placeholder="请选择">
+                <el-option
+                  v-for="item in PositionTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row v-if="dialogStatus==='update'">
           <el-col :span="24">
-            <el-form-item label="部门全称" prop="FullDeptName">
-              <el-input v-model="temp.FullDeptName" readonly="readonly" />
+            <el-form-item label="岗位全称" prop="FullPositionName">
+              <el-input v-model="temp.FullPositionName" readonly="readonly" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -170,14 +186,14 @@
 </template>
 
 <script>
-import { AddDept, UpdateDept, GetDepts, DeleteDept } from '@/api/deptmanage'
+import { AddPosition, UpdatePosition, GetPositions, DeletePosition } from '@/api/positionmanage'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import SelectTree from '@/components/TreeSelect'
 
 export default {
-  name: 'DeptManage',
+  name: 'PositionManage',
   components: { /* Pagination,*/ SelectTree },
   directives: { waves },
   filters: {},
@@ -206,15 +222,23 @@ export default {
       SystemCodeOptions: [
         { label: '全部', key: '' }
       ],
-      DeptStatusOptions: [{ label: '激活', value: 1 }, { label: '禁用', value: 2 }],
+      PositionStatusOptions: [{ label: '激活', value: 1 }, { label: '禁用', value: 2 }],
+      PositionTypeOptions: [
+        { label: '指挥军官', value: 1 },
+        { label: '技术军官', value: 2 },
+        { label: '技师', value: 3 },
+        { label: '领班员', value: 4 },
+        { label: '值机员', value: 5 },
+        { label: '通信员', value: 6 }
+      ],
       LevelOptions: [1, 2, 3],
       temp: {
         id: 0,
         name: '',
-        DeptCode: '',
+        PositionCode: '',
         Order: 1,
         ParentId: 0,
-        DeptStatus: 0
+        PositionStatus: 0
       },
       isClearable: false, // 可清空（可选）
       isAccordion: true, // 可收起（可选）
@@ -230,14 +254,14 @@ export default {
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        update: '编辑部门',
-        create: '新增部门'
+        update: '编辑岗位',
+        create: '新增岗位'
       },
       rules: {
         name: [{ required: true, message: '名称必填', trigger: 'change' }],
-        DeptCode: [{ required: true, message: '编码必填', trigger: 'change' }],
+        PositionCode: [{ required: true, message: '编码必填', trigger: 'change' }],
         ParentId: [{ required: true, message: '父级必填', validator: validateParentId, trigger: 'change' }],
-        DeptStatus: [{ required: true, message: '状态必填', trigger: 'change' }]
+        PositionStatus: [{ required: true, message: '状态必填', trigger: 'change' }]
       },
       downloadLoading: false,
       isUpdate: false
@@ -255,15 +279,27 @@ export default {
         branchArr.length > 0 ? (father.children = branchArr) : '' // 给父级添加一个children属性，并赋值
         return father.ParentId === 0 // 返回第一层
       })
+    }, getUserPositionType() {
+      return function(position) {
+        switch (position) {
+          case 1: return '指挥军官'
+          case 2: return '技术军官'
+          case 3: return '技师'
+          case 4: return '领班员'
+          case 5: return '值机员'
+          case 6: return '通信员'
+          default:return '岗位管理'
+        }
+      }
     }
   },
   created() {
     this.getList()
-    this.getDeptForSelectBox()
+    this.getPositionForSelectBox()
   },
   methods: {
-    getDeptForSelectBox() {
-      GetDepts({ 'pageIndex': 1, 'pageSize': 999 }).then(response => {
+    getPositionForSelectBox() {
+      GetPositions({ 'pageIndex': 1, 'pageSize': 999 }).then(response => {
         this.menuList = response.Data.Content
       })
     },
@@ -273,7 +309,7 @@ export default {
     },
     getList() {
       this.listLoading = true
-      GetDepts(this.listQuery).then(response => {
+      GetPositions(this.listQuery).then(response => {
         this.list = response.Data.Content
         this.total = response.Data.Total
 
@@ -298,17 +334,17 @@ export default {
       this.temp = {
         id: 0,
         name: '',
-        DeptCode: '',
+        PositionCode: '',
         Order: 1,
         ParentId: 0,
-        DeptStatus: 1
+        PositionStatus: 1
       }
     },
     handleCreate() {
-      this.getDeptForSelectBox()
+      this.getPositionForSelectBox()
       this.resetTemp()
       this.valueId = 1 // 清空给下拉选择框的值
-      this.temp.DeptStatus = 1
+      this.temp.PositionStatus = 1
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.isUpdate = false
@@ -320,7 +356,7 @@ export default {
       this.temp.ParentId = this.valueId
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          AddDept(this.temp).then(response => {
+          AddPosition(this.temp).then(response => {
             if (response.Code === 500) return
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
@@ -337,7 +373,7 @@ export default {
       })
     },
     handleUpdate(row) {
-      this.getDeptForSelectBox()
+      this.getPositionForSelectBox()
       this.temp = Object.assign({}, row) // copy obj
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.valueId = row.ParentId
@@ -352,7 +388,7 @@ export default {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          UpdateDept(tempData).then((response) => {
+          UpdatePosition(tempData).then((response) => {
             if (response.Code === 500) return
             this.dialogFormVisible = false
             this.$notify({
@@ -367,7 +403,7 @@ export default {
       })
     },
     handleDelete(row) {
-      DeleteDept(row.id).then(() => {
+      DeletePosition(row.id).then(() => {
         this.$notify({
           title: 'Success',
           message: 'Delete Successfully',

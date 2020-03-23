@@ -21,7 +21,7 @@ namespace Mbp.EntityFrameworkCore.Domain
         /// 岗位全称
         /// </summary>
         [MaxLength(1024)]
-        public string FullDeptName { get; set; }
+        public string FullPositionName { get; set; }
 
         /// <summary>
         /// 岗位编码
@@ -38,13 +38,13 @@ namespace Mbp.EntityFrameworkCore.Domain
         /// 上级岗位名称
         /// </summary>
         [MaxLength(256)]
-        public string ParentPostionName { get; set; }
+        public string ParentPositionName { get; set; }
 
         /// <summary>
         /// 上级岗位编号
         /// </summary>
         [MaxLength(256)]
-        public string ParentPostionCode { get; set; }
+        public string ParentPositionCode { get; set; }
 
         /// <summary>
         /// 上级部门Id
@@ -55,17 +55,17 @@ namespace Mbp.EntityFrameworkCore.Domain
         /// 上级岗位
         /// </summary>
         [ForeignKey("ParentId")]
-        public MbpPosition ParentPostion { get; set; }
+        public MbpPosition ParentPosition { get; set; }
 
         /// <summary>
         /// 下级岗位
         /// </summary>
-        public List<MbpPosition> ChildrenPostion { get; set; } = new List<MbpPosition>();
+        public List<MbpPosition> ChildrenPosition { get; set; } = new List<MbpPosition>();
 
         /// <summary>
         /// 岗位状态
         /// </summary>
-        public EnumPostionStatus DeptStatus { get; set; }
+        public EnumPositionStatus PositionStatus { get; set; }
 
         /// <summary>
         /// 层级

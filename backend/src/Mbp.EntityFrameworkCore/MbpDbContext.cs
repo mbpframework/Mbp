@@ -1,4 +1,5 @@
 ﻿using Mbp.EntityFrameworkCore.Domain;
+using Mbp.EntityFrameworkCore.Domain.Enums;
 using Mbp.EntityFrameworkCore.PermissionModel;
 using Mbp.EntityFrameworkCore.PermissionModel.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -83,6 +84,20 @@ namespace Mbp.EntityFrameworkCore
                     IsDeleted = false,
                     SystemCode = "Mbp",
                     FullDeptName = "组织架构",
+                    ParentId = null
+                });
+
+            // 初始化根岗位
+            modelBuilder.Entity<MbpPosition>().HasData(
+                new MbpPosition
+                {
+                    Id = 1,
+                    PositionCode = "p000001",
+                    PositionName = "岗位管理",
+                    PositionStatus = EnumPositionStatus.Actived,
+                    IsDeleted = false,
+                    SystemCode = "Mbp",
+                    FullPositionName = "岗位管理",
                     ParentId = null
                 });
 

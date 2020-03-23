@@ -52,5 +52,7 @@ namespace EMS.Application.Contracts.AccountService.Dto
         public string Major { get; set; }
 
         public EnumUserStatus UserStatus { get; set; }
+
+        public byte[] ConcurrencyStamp { get; set; }
     }
 }

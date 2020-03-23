@@ -45,5 +45,7 @@ namespace EMS.Application.Contracts.AccountService.Dto
         /// 用户头像
         /// </summary>
         public string UserAvatar { get; set; }
+
+        public byte[] ConcurrencyStamp { get; set; }
     }
 }

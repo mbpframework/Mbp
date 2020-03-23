@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mbp.EntityFrameworkCore.Domain.Enums
 {
-    public enum EnumPostionStatus
+    public enum EnumPositionStatus
     {
         Actived = 1,
         Disabled = 2

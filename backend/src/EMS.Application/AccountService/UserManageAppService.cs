@@ -65,13 +65,14 @@ namespace EMS.Application.AccountService
         public virtual int UpdateUser(UserInputDto userInputDto)
         {
             // todo 写入mbpuserdept表 mbpuser表冗余部门信息
-            var user = _defaultDbContext.MbpUsers.Where(u => u.Id == userInputDto.Id).FirstOrDefault();
+            //var user = _defaultDbContext.MbpUsers.Where(u => u.Id == userInputDto.Id).FirstOrDefault();
+            var user = _mapper.Map<MbpUser>(userInputDto);
 
-            user.IsAdmin = userInputDto.IsAdmin;
-            user.PhoneNumber = userInputDto.PhoneNumber;
-            user.UserName = userInputDto.UserName;
-            user.Code = userInputDto.Code;
-            user.Email = userInputDto.Email;
+            //user.IsAdmin = userInputDto.IsAdmin;
+            //user.PhoneNumber = userInputDto.PhoneNumber;
+            //user.UserName = userInputDto.UserName;
+            //user.Code = userInputDto.Code;
+            //user.Email = userInputDto.Email;
             
 
             _defaultDbContext.Attach(user);

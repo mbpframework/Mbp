@@ -1,59 +1,64 @@
-﻿using Newtonsoft.Json;
+﻿using Mbp.EntityFrameworkCore.Domain.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace EMS.Application.Contracts.AccountService.Dto
 {
-    public class PostionOutputDto
+    public class PositionOutputDto
     {
         /// <summary>
-        /// 部门编号
+        /// 岗位编号
         /// </summary>
         [JsonProperty("id")]
         public int Id { get; set; }
 
         /// <summary>
-        /// 部门名称
+        /// 岗位名称
         /// </summary>
         [JsonProperty("name")]
-        public string DeptName { get; set; }
-
+        public string PositionName { get; set; }
         /// <summary>
-        /// 部门名称全称
+        /// 岗位名称全称
         /// </summary>
-        public string FullDeptName { get; set; }
+        public string FullPositionName { get; set; }
 
         /// <summary>
         /// 部门编号
         /// </summary>
-        public string DeptCode { get; set; }
+        public string PositionCode { get; set; }
 
         /// <summary>
-        /// 上级部门名称
+        /// 岗位类别
         /// </summary>
-        public string ParentDeptName { get; set; }
+        public EnumPositionType PositionType { get; set; }
 
         /// <summary>
-        /// 上级部门编号
+        /// 上级岗位名称
         /// </summary>
-        public string ParentDeptCode { get; set; }
+        public string ParentPositionName { get; set; }
 
         /// <summary>
-        /// 上级部门Id
+        /// 上级岗位编号
+        /// </summary>
+        public string ParentPositionCode { get; set; }
+
+        /// <summary>
+        /// 上级岗位Id
         /// </summary>
         public int ParentId { get; set; }
 
         /// <summary>
-        /// 部门状态
+        /// 岗位状态
         /// </summary>
-        public EnumDeptStatus DeptStatus { get; set; }
+        public EnumPositionStatus PositionStatus { get; set; }
 
         /// <summary>
-        /// 下级部门
+        /// 下级岗位
         /// </summary>
         [JsonProperty("children")]
-        public List<DeptOutputDto> Children { get; set; } = new List<DeptOutputDto>();
+        public List<PositionOutputDto> Children { get; set; } = new List<PositionOutputDto>();
 
         /// <summary>
         /// 层级

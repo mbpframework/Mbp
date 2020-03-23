@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 添加部门
+// 添加岗位
 export function AddPosition(data) {
   return request({
     url: '/PositionManage/AddPosition',
@@ -9,7 +9,7 @@ export function AddPosition(data) {
   })
 }
 
-// 更新部门
+// 更新岗位
 export function UpdatePosition(data) {
   return request({
     url: '/PositionManage/UpdatePosition',
@@ -18,7 +18,7 @@ export function UpdatePosition(data) {
   })
 }
 
-// 获取部门列表
+// 获取岗位列表
 export function GetPositions(data) {
   return request({
     url: '/PositionManage/GetPositions',
@@ -28,7 +28,7 @@ export function GetPositions(data) {
   })
 }
 
-// 删除部门,单条
+// 删除岗位,单条
 export function DeletePosition(PositionId) {
   return request({
     url: '/PositionManage/DeletePosition',
@@ -37,7 +37,7 @@ export function DeletePosition(PositionId) {
   })
 }
 
-// 删除部门,单条
+// 删除岗位,单条
 export function DeletePositions(PositionIds) {
   return request({
     url: '/PositionManage/DeletePositions',
