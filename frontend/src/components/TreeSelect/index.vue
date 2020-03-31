@@ -87,6 +87,8 @@ export default {
       this.valueTitle = node[this.props.label]
       this.valueId = node[this.props.value]
       this.$emit('getValue', this.valueId)
+      // 触发回调事件,用来做其他业务扩展动作
+      this.$emit('treeSelectCallback', this.valueId)
       this.defaultExpandedKey = []
     },
 

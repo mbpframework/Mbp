@@ -53,9 +53,17 @@ namespace EMS.Application
                 cfg.CreateMap<DeptInputDto, MbpDept>();
                 cfg.CreateMap<MbpDept, DeptOutputDto>();
 
+                // 用户部门映射
+                cfg.CreateMap<UserDeptInputDto, MbpUserDept>();
+                cfg.CreateMap<MbpUserDept, UserDeptOutputDto>();
+
                 // 岗位映射
                 cfg.CreateMap<PositionInputDto, MbpPosition>();
                 cfg.CreateMap<MbpPosition, PositionOutputDto>();
+
+                // 用户岗位映射
+                cfg.CreateMap<UserPositionInputDto, MbpUserPosition>();
+                cfg.CreateMap<MbpUserPosition, UserPositionOutputDto>();
             });
 
             return config.CreateMapper();

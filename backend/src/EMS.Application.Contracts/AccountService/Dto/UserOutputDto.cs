@@ -29,11 +29,18 @@ namespace EMS.Application.Contracts.AccountService.Dto
 
         public string DeptName { get; set; }
 
-        public int DeptId { get; set; }
+        public UserDeptOutputDto UserDept { get; set; }
+
+        //public int DeptId { get; set; }
 
         public EnumUserSex UserSex { get; set; }
 
         public EnumUserType UserType { get; set; }
+
+        //public int PositionId { get; set; }
+        public UserPositionOutputDto UserPosition { get; set; }
+
+        public string PositionName { get; set; }
 
         public EnumPositionType PositionType { get; set; }
 

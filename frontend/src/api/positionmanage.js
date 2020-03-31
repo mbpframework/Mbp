@@ -24,7 +24,16 @@ export function GetPositions(data) {
     url: '/PositionManage/GetPositions',
     method: 'get',
     params: { 'pageSize': data.pageSize, 'pageIndex': data.pageIndex,
-      'Search.Name': data.Name, 'Search.Code': data.Code, 'Search.SystemCode': data.SystemCode }
+      'Search.Name': data.Name, 'Search.Code': data.Code, 'Search.SystemCode': data.SystemCode, 'Search.PositionType': data.PositionType }
+  })
+}
+
+// 获取岗位
+export function GetPosition(data) {
+  return request({
+    url: '/PositionManage/GetPosition',
+    method: 'get',
+    params: { 'positionId': data }
   })
 }
 

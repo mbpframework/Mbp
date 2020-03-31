@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMS.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    [Migration("20200323081622_update3231609")]
-    partial class update3231609
+    [Migration("20200331031347_update202003310014")]
+    partial class update202003310014
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -136,21 +136,68 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp(6)");
 
+                    b.Property<string>("FullPositionName")
+                        .HasColumnType("varchar(1024) CHARACTER SET utf8mb4")
+                        .HasMaxLength(1024);
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ParentPositionCode")
+                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("ParentPositionName")
+                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasMaxLength(256);
+
                     b.Property<string>("PositionCode")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasMaxLength(256);
 
                     b.Property<string>("PositionName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasMaxLength(256);
+
+                    b.Property<int>("PositionStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PositionType")
+                        .HasColumnType("int");
 
                     b.Property<string>("SystemCode")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(128) CHARACTER SET utf8mb4")
+                        .HasMaxLength(128);
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ParentId");
+
                     b.ToTable("MbpPositions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FullPositionName = "岗位管理",
+                            IsDeleted = false,
+                            Level = 0,
+                            Order = 0,
+                            PositionCode = "p000001",
+                            PositionName = "岗位管理",
+                            PositionStatus = 1,
+                            PositionType = 0,
+                            SystemCode = "Mbp"
+                        });
                 });
 
             modelBuilder.Entity("Mbp.EntityFrameworkCore.Domain.MbpUserPosition", b =>
@@ -172,9 +219,19 @@ namespace EMS.EntityFrameworkCore.Migrations
 
                     b.HasIndex("PositionId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("MbpUserPositions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsDeleted = false,
+                            PositionId = 1,
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpDept", b =>
@@ -457,12 +514,6 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp(6)");
 
-                    b.Property<int>("DeptId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DeptName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<int>("Education")
                         .HasColumnType("int");
 
@@ -517,7 +568,6 @@ namespace EMS.EntityFrameworkCore.Migrations
                         new
                         {
                             Id = 1,
-                            DeptId = 0,
                             Education = 0,
                             IsAdmin = true,
                             IsDeleted = false,
@@ -574,9 +624,19 @@ namespace EMS.EntityFrameworkCore.Migrations
 
                     b.HasIndex("DeptId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("MbpUserDept");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DeptId = 1,
+                            IsDeleted = false,
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpUserRole", b =>
@@ -610,6 +670,13 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .HasForeignKey("BlogId");
                 });
 
+            modelBuilder.Entity("Mbp.EntityFrameworkCore.Domain.MbpPosition", b =>
+                {
+                    b.HasOne("Mbp.EntityFrameworkCore.Domain.MbpPosition", "ParentPosition")
+                        .WithMany("ChildrenPosition")
+                        .HasForeignKey("ParentId");
+                });
+
             modelBuilder.Entity("Mbp.EntityFrameworkCore.Domain.MbpUserPosition", b =>
                 {
                     b.HasOne("Mbp.EntityFrameworkCore.Domain.MbpPosition", "Position")
@@ -619,8 +686,8 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .IsRequired();
 
                     b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("UserPosition")
+                        .HasForeignKey("Mbp.EntityFrameworkCore.Domain.MbpUserPosition", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -680,8 +747,8 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .IsRequired();
 
                     b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpUser", "User")
-                        .WithMany("UserDepts")
-                        .HasForeignKey("UserId")
+                        .WithOne("UserDept")
+                        .HasForeignKey("Mbp.EntityFrameworkCore.PermissionModel.MbpUserDept", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

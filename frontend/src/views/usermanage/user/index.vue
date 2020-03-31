@@ -231,8 +231,9 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="部门" prop="Email">
+            <el-form-item label="部门" prop="DeptId">
               <SelectTree
+                v-model="temp.UserDept.DeptId"
                 :props="props"
                 :options="optionData"
                 :value="valueId"
@@ -257,6 +258,33 @@
         </el-row>
         <el-row>
           <el-col :span="12">
+            <el-form-item label="岗位类别" prop="PositionType">
+              <el-select v-model="temp.PositionType" placeholder="请选择" @change="positionTypeChange">
+                <el-option
+                  v-for="item in positionTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="岗位" prop="PositionId">
+              <SelectTree
+                :props="props"
+                :options="optionPositionData"
+                :value="positionValueId"
+                :clearable="isClearable"
+                :accordion="isAccordion"
+                @getValue="getPositionValue($event)"
+                @treeSelectCallback="positionSelectCallback($event)"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
             <el-form-item label="用户类别" prop="UserType">
               <el-select v-model="temp.UserType" placeholder="请选择">
                 <el-option
@@ -269,20 +297,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="岗位类别" prop="PositionType">
-              <el-select v-model="temp.PositionType" placeholder="请选择">
-                <el-option
-                  v-for="item in positionTypeOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
             <el-form-item label="学历" prop="Education">
               <el-select v-model="temp.Education" placeholder="请选择">
                 <el-option
@@ -294,11 +308,15 @@
               </el-select>
             </el-form-item>
           </el-col>
+
+        </el-row>
+        <el-row>
           <el-col :span="12">
             <el-form-item label="专业" prop="Major">
               <el-input v-model="temp.Major" />
             </el-form-item>
           </el-col>
+
         </el-row>
         <el-row>
           <el-col :span="24">
@@ -376,6 +394,7 @@ import Pagination from '@/components/Pagination' // secondary package based on e
 import crypto from 'crypto'
 import SelectTree from '@/components/TreeSelect'
 import { GetDepts } from '@/api/deptmanage'
+import { GetPositions } from '@/api/positionmanage'
 
 export default {
   name: 'UserManage',
@@ -438,11 +457,16 @@ export default {
         UserSex: 1,
         UserType: 1,
         PositionType: 1,
-        Education: 3
+        Education: 3,
+        DeptId: 1,
+        PositionId: 1,
+        UserDept: { DeptId: 1 },
+        UserPosition: { PositionId: 1 }
       },
       isClearable: false, // 可清空（可选）
       isAccordion: true, // 可收起（可选）
       valueId: 1, // 初始ID（可选）
+      positionValueId: 1, // 岗位初始ID
       props: {
         // 配置项（必选）
         value: 'id',
@@ -451,6 +475,7 @@ export default {
       },
       menuList: [
       ],
+      positionList: [],
       dialogFormVisible: false,
       dialogGrantFormVisible: false,
       dialogPwdResetFormVisible: false,
@@ -492,6 +517,18 @@ export default {
     /* 转树形数据 */
     optionData() {
       const cloneData = JSON.parse(JSON.stringify(this.menuList)) // 对源数据深度克隆
+      return cloneData.filter(father => {
+        // 循环所有项，并添加children属性
+        const branchArr = cloneData.filter(
+          child => father.id === child.ParentId
+        ) // 返回每一项的子级数组
+        branchArr.length > 0 ? (father.children = branchArr) : '' // 给父级添加一个children属性，并赋值
+        return father.ParentId === 0 // 返回第一层
+      })
+    },
+    /* 转树形数据 */
+    optionPositionData() {
+      const cloneData = JSON.parse(JSON.stringify(this.positionList)) // 对源数据深度克隆
       return cloneData.filter(father => {
         // 循环所有项，并添加children属性
         const branchArr = cloneData.filter(
@@ -553,17 +590,35 @@ export default {
   },
   created() {
     this.getDeptForSelectBox()
+    this.getPositionForSelectBox()
     this.getList()
   },
   methods: {
+    positionTypeChange(value) {
+      GetPositions({ 'pageIndex': 1, 'pageSize': 999, 'PositionType': value }).then(response => {
+        this.positionList = response.Data.Content
+      })
+    },
     getDeptForSelectBox() {
       GetDepts({ 'pageIndex': 1, 'pageSize': 999 }).then(response => {
         this.menuList = response.Data.Content
       })
     },
+    getPositionForSelectBox() {
+      GetPositions({ 'pageIndex': 1, 'pageSize': 999, 'PositionType': 1 }).then(response => {
+        this.positionList = response.Data.Content
+      })
+    },
     getValue(value) {
       this.valueId = value
-      this.temp.ParentId = value
+      this.temp.DeptId = value
+    },
+    getPositionValue(value) {
+      this.positionValueId = value
+      this.temp.PositionId = value
+    },
+    positionSelectCallback(value) {
+      console.log(value)
     },
     getList() {
       this.listLoading = true
@@ -615,7 +670,11 @@ export default {
         UserSex: 1,
         UserType: 1,
         PositionType: 1,
-        Education: 3
+        Education: 3,
+        DeptId: 1,
+        PositionId: 1,
+        UserDept: { DeptId: 1 },
+        UserPosition: { PositionId: 1 }
       }
     },
     restGrantTemp() {
@@ -632,6 +691,7 @@ export default {
       }
     },
     handleCreate() {
+      this.getPositionForSelectBox()
       this.getDeptForSelectBox()
       this.resetTemp()
       this.dialogStatus = 'create'
@@ -647,8 +707,8 @@ export default {
           var md5 = crypto.createHash('md5')
           md5.update(this.temp.Password)
           this.temp.Password = md5.digest('hex')
-          console.log(this.valueId)
-          this.temp.DeptId = this.valueId
+          this.temp.UserDept = { DeptId: this.valueId }
+          this.temp.UserPosition = { PositionId: this.positionValueId }
           AddUser(this.temp).then(() => {
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
@@ -666,6 +726,8 @@ export default {
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
       this.temp.timestamp = new Date(this.temp.timestamp)
+      // this.valueId = row.UserDept.DeptId
+      // this.positionValueId = row.UserPosition.PositionId
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.isUpdate = true

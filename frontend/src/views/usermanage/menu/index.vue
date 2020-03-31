@@ -225,7 +225,6 @@ export default {
   filters: {},
   data() {
     const validateParentId = (rule, value, callback) => {
-      console.log(this.valueId)
       if (this.valueId <= 0) {
         callback(new Error('父级必选'))
       } else {

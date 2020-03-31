@@ -217,9 +217,19 @@ namespace EMS.EntityFrameworkCore.Migrations
 
                     b.HasIndex("PositionId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("MbpUserPositions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsDeleted = false,
+                            PositionId = 1,
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpDept", b =>
@@ -502,12 +512,6 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp(6)");
 
-                    b.Property<int>("DeptId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DeptName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<int>("Education")
                         .HasColumnType("int");
 
@@ -562,7 +566,6 @@ namespace EMS.EntityFrameworkCore.Migrations
                         new
                         {
                             Id = 1,
-                            DeptId = 0,
                             Education = 0,
                             IsAdmin = true,
                             IsDeleted = false,
@@ -619,9 +622,19 @@ namespace EMS.EntityFrameworkCore.Migrations
 
                     b.HasIndex("DeptId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("MbpUserDept");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DeptId = 1,
+                            IsDeleted = false,
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("Mbp.EntityFrameworkCore.PermissionModel.MbpUserRole", b =>
@@ -671,8 +684,8 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .IsRequired();
 
                     b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("UserPosition")
+                        .HasForeignKey("Mbp.EntityFrameworkCore.Domain.MbpUserPosition", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -732,8 +745,8 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .IsRequired();
 
                     b.HasOne("Mbp.EntityFrameworkCore.PermissionModel.MbpUser", "User")
-                        .WithMany("UserDepts")
-                        .HasForeignKey("UserId")
+                        .WithOne("UserDept")
+                        .HasForeignKey("Mbp.EntityFrameworkCore.PermissionModel.MbpUserDept", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

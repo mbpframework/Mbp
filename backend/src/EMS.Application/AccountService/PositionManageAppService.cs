@@ -10,6 +10,7 @@ using Mbp.Core.Modularity;
 using Mbp.Ddd.Application.Mbp.UI;
 using Mbp.Ddd.Application.System.Linq;
 using Mbp.EntityFrameworkCore.Domain;
+using Mbp.EntityFrameworkCore.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -131,7 +132,9 @@ namespace EMS.Application.AccountService
 
             List<MbpPosition> Positions = _defaultDbContext.MbpPositions.PageByAscending(searchOptions.PageSize, searchOptions.PageIndex, out total, (c) =>
             c.PositionName.Contains(searchOptions.Search.Name == null ? "" : searchOptions.Search.Name) &&
-            c.PositionCode.Contains(searchOptions.Search.Code == null ? "" : searchOptions.Search.Code),
+            c.PositionCode.Contains(searchOptions.Search.Code == null ? "" : searchOptions.Search.Code) &&
+            searchOptions.Search.PositionType == 0 ? true : (c.PositionType == searchOptions.Search.PositionType) ||
+            c.Id == 1,
             (c => c.Id)).ToList();
 
             var content = _mapper.Map<List<PositionOutputDto>>(Positions);
@@ -162,6 +165,14 @@ namespace EMS.Application.AccountService
                 PageSize = searchOptions.PageSize,
                 Total = total
             };
+        }
+
+        [HttpGet("GetPosition")]
+        public virtual PositionOutputDto GetPosition(int positionId)
+        {
+            var position = _defaultDbContext.MbpPositions.Where(p => p.Id == positionId).FirstOrDefault();
+            var dto = _mapper.Map<PositionOutputDto>(position);
+            return dto;
         }
     }
 }

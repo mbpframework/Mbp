@@ -56,6 +56,22 @@ namespace Mbp.EntityFrameworkCore
                     IsAdmin = true
                 });
 
+            modelBuilder.Entity<MbpUserDept>().HasData(
+                new MbpUserDept
+                {
+                    Id = 1,
+                    DeptId = 1,
+                    UserId = 1
+                });
+
+            modelBuilder.Entity<MbpUserPosition>().HasData(
+                new MbpUserPosition
+                {
+                    Id = 1,
+                    UserId = 1,
+                    PositionId = 1
+                });
+
             // 初始化根菜单
             modelBuilder.Entity<MbpMenu>().HasData(
                 new MbpMenu
@@ -98,7 +114,8 @@ namespace Mbp.EntityFrameworkCore
                     IsDeleted = false,
                     SystemCode = "Mbp",
                     FullPositionName = "岗位管理",
-                    ParentId = null
+                    ParentId = null,
+                    PositionType=EnumPositionType.Commanders
                 });
 
             // 初始化根分类

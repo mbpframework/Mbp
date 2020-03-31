@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EMS.EntityFrameworkCore.Migrations
 {
-    public partial class update3231609 : Migration
+    public partial class update202003310014 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -134,14 +134,28 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ConcurrencyStamp = table.Column<DateTime>(rowVersion: true, nullable: true)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
-                    PositionName = table.Column<string>(nullable: true),
-                    PositionCode = table.Column<string>(nullable: true),
+                    PositionName = table.Column<string>(maxLength: 256, nullable: true),
+                    FullPositionName = table.Column<string>(maxLength: 1024, nullable: true),
+                    PositionCode = table.Column<string>(maxLength: 256, nullable: true),
+                    PositionType = table.Column<int>(nullable: false),
+                    ParentPositionName = table.Column<string>(maxLength: 256, nullable: true),
+                    ParentPositionCode = table.Column<string>(maxLength: 256, nullable: true),
+                    ParentId = table.Column<int>(nullable: true),
+                    PositionStatus = table.Column<int>(nullable: false),
+                    Level = table.Column<int>(nullable: false),
+                    Order = table.Column<int>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    SystemCode = table.Column<string>(nullable: true)
+                    SystemCode = table.Column<string>(maxLength: 128, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MbpPositions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MbpPositions_MbpPositions_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "MbpPositions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -177,8 +191,6 @@ namespace EMS.EntityFrameworkCore.Migrations
                     Password = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(maxLength: 256, nullable: true),
                     UserStatus = table.Column<int>(nullable: false),
-                    DeptId = table.Column<int>(nullable: false),
-                    DeptName = table.Column<string>(nullable: true),
                     UserSex = table.Column<int>(nullable: false),
                     Education = table.Column<int>(nullable: false),
                     Major = table.Column<string>(nullable: true),
@@ -392,9 +404,24 @@ namespace EMS.EntityFrameworkCore.Migrations
                 values: new object[] { 1, "root", "root", true, false, false, 1, null, null, 0, "Mbp平台", 1, 0, "/", "Mbp" });
 
             migrationBuilder.InsertData(
+                table: "MbpPositions",
+                columns: new[] { "Id", "FullPositionName", "IsDeleted", "Level", "Order", "ParentId", "ParentPositionCode", "ParentPositionName", "PositionCode", "PositionName", "PositionStatus", "PositionType", "SystemCode" },
+                values: new object[] { 1, "岗位管理", false, 0, 0, null, null, null, "p000001", "岗位管理", 1, 0, "Mbp" });
+
+            migrationBuilder.InsertData(
                 table: "MbpUsers",
-                columns: new[] { "Id", "Code", "DeptId", "DeptName", "Education", "Email", "IsAdmin", "IsDeleted", "LoginName", "Major", "Password", "PhoneNumber", "PositionType", "SystemCode", "UserName", "UserSex", "UserStatus", "UserType" },
-                values: new object[] { 1, null, 0, null, 0, null, true, false, "admin", null, "94c5fb886bd3cf5f821d239056181a5e", null, 0, null, "admin", 0, 1, 0 });
+                columns: new[] { "Id", "Code", "Education", "Email", "IsAdmin", "IsDeleted", "LoginName", "Major", "Password", "PhoneNumber", "PositionType", "SystemCode", "UserName", "UserSex", "UserStatus", "UserType" },
+                values: new object[] { 1, null, 0, null, true, false, "admin", null, "94c5fb886bd3cf5f821d239056181a5e", null, 0, null, "admin", 0, 1, 0 });
+
+            migrationBuilder.InsertData(
+                table: "MbpUserDept",
+                columns: new[] { "Id", "DeptId", "IsDeleted", "UserId" },
+                values: new object[] { 1, 1, false, 1 });
+
+            migrationBuilder.InsertData(
+                table: "MbpUserPositions",
+                columns: new[] { "Id", "IsDeleted", "PositionId", "UserId" },
+                values: new object[] { 1, false, 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_MbpDepts_ParentId",
@@ -405,6 +432,11 @@ namespace EMS.EntityFrameworkCore.Migrations
                 name: "IX_MbpMenuClaims_MenuId",
                 table: "MbpMenuClaims",
                 column: "MenuId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MbpPositions_ParentId",
+                table: "MbpPositions",
+                column: "ParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MbpRoleMenus_MenuId",
@@ -434,7 +466,8 @@ namespace EMS.EntityFrameworkCore.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_MbpUserDept_UserId",
                 table: "MbpUserDept",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MbpUserPositions_PositionId",
@@ -444,7 +477,8 @@ namespace EMS.EntityFrameworkCore.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_MbpUserPositions_UserId",
                 table: "MbpUserPositions",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MbpUserRoles_RoleId",

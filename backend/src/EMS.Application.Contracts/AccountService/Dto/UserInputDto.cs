@@ -33,14 +33,21 @@ namespace EMS.Application.Contracts.AccountService.Dto
         [Required]
         public bool IsAdmin { get; set; }
 
+        //[Required]
+        //public int DeptId { get; set; }
         [Required]
-        public int DeptId { get; set; }
+        public UserDeptInputDto UserDept { get; set; }
 
         [Required]
         public EnumUserSex UserSex { get; set; }
 
         [Required]
         public EnumUserType UserType { get; set; }
+
+        //[Required]
+        //public int PositionId { get; set; }
+        [Required]
+        public UserPositionInputDto UserPosition { get; set; }
 
         [Required]
         public EnumPositionType PositionType { get; set; }

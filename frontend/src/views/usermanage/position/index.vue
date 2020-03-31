@@ -153,12 +153,13 @@
                 :clearable="isClearable"
                 :accordion="isAccordion"
                 @getValue="getValue($event)"
+                @treeSelectCallback="treeSelectCallback($event)"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="岗位类型" prop="PositionType">
-              <el-select v-model="temp.PositionType" placeholder="请选择">
+              <el-select v-model="temp.PositionType" :disabled="temp.Level!=1" placeholder="请选择">
                 <el-option
                   v-for="item in PositionTypeOptions"
                   :key="item.value"
@@ -186,7 +187,7 @@
 </template>
 
 <script>
-import { AddPosition, UpdatePosition, GetPositions, DeletePosition } from '@/api/positionmanage'
+import { AddPosition, UpdatePosition, GetPositions, DeletePosition, GetPosition } from '@/api/positionmanage'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -199,7 +200,6 @@ export default {
   filters: {},
   data() {
     const validateParentId = (rule, value, callback) => {
-      console.log(this.valueId)
       if (this.valueId <= 0) {
         callback(new Error('父级必选'))
       } else {
@@ -238,7 +238,9 @@ export default {
         PositionCode: '',
         Order: 1,
         ParentId: 0,
-        PositionStatus: 0
+        PositionStatus: 0,
+        PositionType: 1,
+        Level: 1
       },
       isClearable: false, // 可清空（可选）
       isAccordion: true, // 可收起（可选）
@@ -307,6 +309,16 @@ export default {
       this.valueId = value
       this.temp.ParentId = value
     },
+    treeSelectCallback(value) {
+      if (value === 1) {
+        this.temp.Level = 1
+      }
+      // todo 选择父级岗位的时候,默认填充父级的岗位类别
+      GetPosition(value).then(response => {
+        this.temp.PositionType = response.Data.PositionType
+        this.temp.Level = response.Data.Level + 1
+      })
+    },
     getList() {
       this.listLoading = true
       GetPositions(this.listQuery).then(response => {
@@ -337,7 +349,9 @@ export default {
         PositionCode: '',
         Order: 1,
         ParentId: 0,
-        PositionStatus: 1
+        PositionStatus: 1,
+        PositionType: 1,
+        Level: 1
       }
     },
     handleCreate() {

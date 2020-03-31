@@ -65,17 +65,18 @@ namespace EMS.Application.AccountService
         public virtual int UpdateUser(UserInputDto userInputDto)
         {
             // todo 写入mbpuserdept表 mbpuser表冗余部门信息
-            //var user = _defaultDbContext.MbpUsers.Where(u => u.Id == userInputDto.Id).FirstOrDefault();
-            var user = _mapper.Map<MbpUser>(userInputDto);
+            var user = _defaultDbContext.MbpUsers.Include(u => u.UserDept).Include(u => u.UserPosition).Where(u => u.Id == userInputDto.Id).FirstOrDefault();
 
-            //user.IsAdmin = userInputDto.IsAdmin;
-            //user.PhoneNumber = userInputDto.PhoneNumber;
-            //user.UserName = userInputDto.UserName;
-            //user.Code = userInputDto.Code;
-            //user.Email = userInputDto.Email;
-            
-
-            _defaultDbContext.Attach(user);
+            user.IsAdmin = userInputDto.IsAdmin;
+            user.PhoneNumber = userInputDto.PhoneNumber;
+            user.UserName = userInputDto.UserName;
+            user.Code = userInputDto.Code;
+            user.Email = userInputDto.Email;
+            user.UserType = userInputDto.UserType;
+            user.UserSex = userInputDto.UserSex;
+            user.Education = userInputDto.Education;
+            user.Major = userInputDto.Major;
+            user.PositionType = userInputDto.PositionType;
 
             _defaultDbContext.MbpUsers.Update(user);
 
@@ -122,15 +123,26 @@ namespace EMS.Application.AccountService
         {
             int total = 0;
 
-            var users = _defaultDbContext.MbpUsers.Include(u => u.UserRoles).PageByAscending(searchOptions.PageSize, searchOptions.PageIndex, out total,
+            var users = _defaultDbContext.MbpUsers
+                .Include(u => u.UserRoles)
+                .Include(u => u.UserPosition).ThenInclude(u => u.Position)
+                .Include(u => u.UserDept).ThenInclude(u => u.Dept)
+                .PageByAscending(searchOptions.PageSize, searchOptions.PageIndex, out total,
                 (c) =>
             c.UserName.Contains(searchOptions.Search.UserName == null ? "" : searchOptions.Search.UserName) &&
             c.LoginName.Contains(searchOptions.Search.LoginName == null ? "" : searchOptions.Search.LoginName) &&
            (!string.IsNullOrEmpty(searchOptions.Search.IsAdmin) ? c.IsAdmin == (searchOptions.Search.IsAdmin == "Y" ? true : false) : true), (c => c.Id)).ToList();
 
+            var userOut = _mapper.Map<List<UserOutputDto>>(users);
+            userOut.ForEach(u =>
+            {
+                u.DeptName = users.Find(user => user.Id == u.Id).UserDept.Dept.DeptName;
+                u.PositionName = users.Find(user => user.Id == u.Id).UserPosition.Position.PositionName;
+            });
+
             return new PagedList<UserOutputDto>()
             {
-                Content = _mapper.Map<List<UserOutputDto>>(users),
+                Content = userOut,
                 PageIndex = searchOptions.PageIndex,
                 PageSize = searchOptions.PageSize,
                 Total = total
