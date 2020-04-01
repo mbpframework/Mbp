@@ -3,14 +3,16 @@ using System;
 using EMS.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EMS.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    partial class DefaultDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200401101429_update04011813")]
+    partial class update04011813
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,6 +43,8 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PositionId");
 
                     b.ToTable("EmsTrainSubjects");
                 });
@@ -769,6 +773,15 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("MbpUserRoles");
+                });
+
+            modelBuilder.Entity("EMS.Domain.DomainEntities.Base.EmsTrainSubject", b =>
+                {
+                    b.HasOne("Mbp.EntityFrameworkCore.Domain.MbpPosition", "Position")
+                        .WithMany()
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EMS.Domain.DomainEntities.Demo.Post", b =>

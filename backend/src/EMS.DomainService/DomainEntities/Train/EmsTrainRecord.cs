@@ -8,7 +8,7 @@ namespace EMS.Domain.DomainEntities.Train
     /// <summary>
     /// 训练登记
     /// </summary>
-    public class EmsTrainRecored : EntityBase<int>, ISoftDelete
+    public class EmsTrainRecord : EntityBase<int>, ISoftDelete
     {
         public bool IsDeleted { get; set; }
     }

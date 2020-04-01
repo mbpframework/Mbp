@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mbp.EntityFrameworkCore.Domain;
+using EMS.Application.Contracts.Base.Dto;
+using EMS.Domain.DomainEntities.Base;
 
 namespace EMS.Application
 {
@@ -64,6 +66,10 @@ namespace EMS.Application
                 // 用户岗位映射
                 cfg.CreateMap<UserPositionInputDto, MbpUserPosition>();
                 cfg.CreateMap<MbpUserPosition, UserPositionOutputDto>();
+
+                // 训练科目映射
+                cfg.CreateMap<TrainSubjectInputDto, EmsTrainSubject>();
+                cfg.CreateMap<EmsTrainSubject, TrainSubjectOutputDto>();
             });
 
             return config.CreateMapper();

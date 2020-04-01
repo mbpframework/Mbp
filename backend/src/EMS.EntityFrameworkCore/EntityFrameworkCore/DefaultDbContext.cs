@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using EMS.Domain.DomainEntities.Base;
+using EMS.Domain.DomainEntities.Train;
 
 namespace EMS.EntityFrameworkCore.EntityFrameworkCore
 {
@@ -20,6 +22,17 @@ namespace EMS.EntityFrameworkCore.EntityFrameworkCore
 
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Post> Posts { get; set; }
+
+        public DbSet<EmsTrainSubject> EmsTrainSubjects { get; set; }
+
+        public DbSet<EmsTrainPlan> TrainSubjects { get; set; }
+
+        public DbSet<EmsTrainRecord> EmsTrainRecords { get; set; }
+        public DbSet<EmsTrainReport> EmsTrainReports { get; set; }
+
+        public DbSet<EmsTrainScore> EmsTrainScores { get; set; }
+
+        public DbSet<EmsTrainStatistics> EmsTrainStatistics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
