@@ -1,3 +1,3 @@
 <template>
-  <div>训练计划导入</div>
+  <router-view />
 </template>

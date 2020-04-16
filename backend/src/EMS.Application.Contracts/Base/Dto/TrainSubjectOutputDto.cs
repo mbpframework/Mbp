@@ -1,4 +1,5 @@
-﻿using Mbp.Ddd.Application.Mbp.Dto;
+﻿using EMS.Domain.DomainEntities.Base;
+using Mbp.Ddd.Application.Mbp.Dto;
 using Mbp.EntityFrameworkCore.Domain;
 using System;
 using System.Collections.Generic;
@@ -11,16 +12,6 @@ namespace EMS.Application.Contracts.Base.Dto
         public int Id { get; set; }
 
         /// <summary>
-        /// 岗位Id
-        /// </summary>
-        public int PositionId { get; set; }
-
-        /// <summary>
-        /// 岗位名称
-        /// </summary>
-        public string PositionName { get; set; }
-
-        /// <summary>
         /// 科目名称
         /// </summary>
         public string SubjectName { get; set; }
@@ -29,6 +20,21 @@ namespace EMS.Application.Contracts.Base.Dto
         /// 科目编码
         /// </summary>
         public string SubjectCode { get; set; }
+
+        /// <summary>
+        /// 训练类型
+        /// </summary>
+        public EnumTrainType TrainType { get; set; }
+
+        /// <summary>
+        /// 训练课时(小时)
+        /// </summary>
+        public decimal TrainHour { get; set; }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
 
         public byte[] ConcurrencyStamp { get; set; }
     }

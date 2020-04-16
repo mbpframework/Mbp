@@ -4,16 +4,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EMS.EntityFrameworkCore.Migrations
 {
-    public partial class update04011920 : Migration
+    public partial class update202004101659 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_EmsTrainSubjects_MbpPositions_PositionId",
-                table: "EmsTrainSubjects");
-
-            migrationBuilder.DropIndex(
-                name: "IX_EmsTrainSubjects_PositionId",
+            migrationBuilder.DropColumn(
+                name: "PositionId",
                 table: "EmsTrainSubjects");
 
             migrationBuilder.AlterColumn<DateTime>(
@@ -79,6 +75,33 @@ namespace EMS.EntityFrameworkCore.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "ConcurrencyStamp",
                 table: "EmsTrainSubjects",
+                rowVersion: true,
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "timestamp(6)",
+                oldNullable: true)
+                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Remark",
+                table: "EmsTrainSubjects",
+                nullable: true);
+
+            migrationBuilder.AddColumn<decimal>(
+                name: "TrainHour",
+                table: "EmsTrainSubjects",
+                nullable: false,
+                defaultValue: 0m);
+
+            migrationBuilder.AddColumn<int>(
+                name: "TrainType",
+                table: "EmsTrainSubjects",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "ConcurrencyStamp",
+                table: "EmsTrainPlanWeeks",
                 rowVersion: true,
                 nullable: true,
                 oldClrType: typeof(DateTime),
@@ -99,6 +122,18 @@ namespace EMS.EntityFrameworkCore.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "Remark",
+                table: "EmsTrainSubjects");
+
+            migrationBuilder.DropColumn(
+                name: "TrainHour",
+                table: "EmsTrainSubjects");
+
+            migrationBuilder.DropColumn(
+                name: "TrainType",
+                table: "EmsTrainSubjects");
+
             migrationBuilder.AlterColumn<DateTime>(
                 name: "ConcurrencyStamp",
                 table: "MbpUsers",
@@ -169,6 +204,23 @@ namespace EMS.EntityFrameworkCore.Migrations
                 oldNullable: true)
                 .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn);
 
+            migrationBuilder.AddColumn<int>(
+                name: "PositionId",
+                table: "EmsTrainSubjects",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "ConcurrencyStamp",
+                table: "EmsTrainPlanWeeks",
+                type: "timestamp(6)",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldRowVersion: true,
+                oldNullable: true)
+                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn);
+
             migrationBuilder.AlterColumn<DateTime>(
                 name: "ConcurrencyStamp",
                 table: "Blogs",
@@ -178,19 +230,6 @@ namespace EMS.EntityFrameworkCore.Migrations
                 oldRowVersion: true,
                 oldNullable: true)
                 .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EmsTrainSubjects_PositionId",
-                table: "EmsTrainSubjects",
-                column: "PositionId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_EmsTrainSubjects_MbpPositions_PositionId",
-                table: "EmsTrainSubjects",
-                column: "PositionId",
-                principalTable: "MbpPositions",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
     }
 }

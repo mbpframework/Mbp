@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EMS.Domain.DomainEntities.Base;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,6 +13,6 @@ namespace EMS.Application.Contracts.Base.DtoSearch
 
         public string SystemCode { get; set; }
 
-        public int PositionId { get; set; }
+        public EnumTrainType TrainType { get; set; }
     }
 }

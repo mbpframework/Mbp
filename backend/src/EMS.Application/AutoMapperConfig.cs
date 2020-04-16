@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using Mbp.EntityFrameworkCore.Domain;
 using EMS.Application.Contracts.Base.Dto;
 using EMS.Domain.DomainEntities.Base;
+using EMS.Domain.DomainEntities.Train.Plan;
+using EMS.Application.Contracts.Train.Dto;
 
 namespace EMS.Application
 {
@@ -70,6 +72,12 @@ namespace EMS.Application
                 // 训练科目映射
                 cfg.CreateMap<TrainSubjectInputDto, EmsTrainSubject>();
                 cfg.CreateMap<EmsTrainSubject, TrainSubjectOutputDto>();
+
+                // 训练周计划映射
+                cfg.CreateMap<TrainPlanWeekInputDto, EmsTrainPlanWeek>();
+                cfg.CreateMap<EmsTrainPlanWeek, TrainPlanWeekOutputDto>();
+                cfg.CreateMap<TrainPlanWeekDetailInputDto, EmsTrainPlanWeekDetail>();
+                cfg.CreateMap<EmsTrainPlanWeekDetail, TrainPlanWeekDetailOutputDto>();
             });
 
             return config.CreateMapper();

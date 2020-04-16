@@ -72,19 +72,18 @@ namespace EMS.Application.Base
             int total = 0;
 
             var subs = from subject in _defaultDbContext.EmsTrainSubjects
-                       join position in _defaultDbContext.MbpPositions
-                       on subject.PositionId equals position.Id
                        where subject.SubjectName.Contains(searchOptions.Search.Name == null ? "" : searchOptions.Search.Name) &&
-           (!string.IsNullOrEmpty(searchOptions.Search.Code) ? subject.SubjectCode == searchOptions.Search.Code : true) &&
-           (searchOptions.Search.PositionId == 0 ? true : subject.PositionId == searchOptions.Search.PositionId)
+           (!string.IsNullOrEmpty(searchOptions.Search.Code) ? subject.SubjectCode == searchOptions.Search.Code : true)&&
+           (searchOptions.Search.TrainType == 0 ? true : subject.TrainType == searchOptions.Search.TrainType)
                        select new TrainSubjectOutputDto
                        {
                            Id = subject.Id,
-                           PositionId = subject.PositionId,
                            ConcurrencyStamp = subject.ConcurrencyStamp,
-                           PositionName = position.PositionName,
                            SubjectCode = subject.SubjectCode,
-                           SubjectName = subject.SubjectName
+                           SubjectName = subject.SubjectName,
+                           TrainHour = subject.TrainHour,
+                           TrainType = subject.TrainType,
+                           Remark = subject.Remark
                        };
             // 分页
             var subjects = subs.PageByAscending(searchOptions.PageSize, searchOptions.PageIndex, out total, c => true, (c => c.Id)).ToList();

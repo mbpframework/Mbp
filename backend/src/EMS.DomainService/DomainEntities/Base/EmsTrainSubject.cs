@@ -11,11 +11,6 @@ namespace EMS.Domain.DomainEntities.Base
     public class EmsTrainSubject : AggregateBase<int>, ISoftDelete
     {
         /// <summary>
-        /// 岗位Id
-        /// </summary>
-        public int PositionId { get; set; }
-
-        /// <summary>
         /// 科目名称
         /// </summary>
         public string SubjectName { get; set; }
@@ -24,6 +19,21 @@ namespace EMS.Domain.DomainEntities.Base
         /// 科目编码
         /// </summary>
         public string SubjectCode { get; set; }
+
+        /// <summary>
+        /// 训练类型
+        /// </summary>
+        public EnumTrainType TrainType { get; set; }
+
+        /// <summary>
+        /// 训练课时(小时)
+        /// </summary>
+        public decimal TrainHour { get; set; }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
 
         public bool IsDeleted { get; set; }
     }

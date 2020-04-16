@@ -1,42 +1,6 @@
 <template>
   <div class="app-container">
     <div class="filter-container" style="padding-bottom:10px;">
-      <el-input
-        v-model="listQuery.SubjectName"
-        placeholder="科目名称"
-        style="width: 150px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-      <el-input
-        v-model="listQuery.SubjectCode"
-        placeholder="科目编码"
-        style="width: 150px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-      <el-select v-model="listQuery.TrainType" placeholder="训练类型" @change="handleFilter">
-        <el-option
-          v-for="item in trainTypeOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >查询</el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="primary"
-        icon="el-icon-edit"
-        @click="handleCreate"
-      >新增科目</el-button>
       <el-button
         v-waves
         :loading="downloadLoading"
@@ -44,7 +8,7 @@
         type="primary"
         icon="el-icon-download"
         @click="handleDownload"
-      >导出科目</el-button>
+      >导出周计划</el-button>
     </div>
 
     <el-table
@@ -67,45 +31,69 @@
           <span>{{ row.Id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="科目名" align="center">
+      <el-table-column label="训练日期" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.SubjectName }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.TrainDate| moment("YYYY-MM-DD") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="科目编码" align="center">
+      <el-table-column label="周几" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.SubjectCode }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.DayOfWeek }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="训练类型" align="center">
+      <el-table-column label="时间段" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ getTrainType(row.TrainType) }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.AmPm }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="训练课时" align="center">
+      <el-table-column label="训练内容" align="center">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.SubjectContent }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="参训对象" align="center">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.AttendOject }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="训练方法" align="center">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.TrainMethod }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="组织者" align="center">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.Organizer }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="质量指标" align="center">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.QualityIndex }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="保障措施" align="center">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.Safeguards }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="课时" align="center">
         <template slot-scope="{row}">
           <span class="link-type" @click="handleUpdate(row)">{{ row.TrainHour }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center">
+      <el-table-column label="地址" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.Remark }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.Address }}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="操作"
         align="center"
-        width="270"
+        width="100"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
-          <el-button
-            v-if="row.status!='deleted'"
-            size="mini"
-            type="danger"
-            @click="handleDelete(row)"
-          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -132,39 +120,77 @@
             <el-form-item v-show="false" label="ID" prop="Id">
               <el-input v-model="temp.Id" />
             </el-form-item>
-            <el-form-item label="科目名" prop="SubjectName">
-              <el-input v-model="temp.SubjectName" />
+            <el-form-item label="训练日期" prop="TrainDate">
+              <el-date-picker
+                v-model="temp.TrainDate"
+                type="date"
+                placeholder="选择日期"
+                value-format="yyyy-MM-dd"
+                style="width:160px"
+                readonly="true"
+                @change="beginDateChange"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="科目编码" prop="SubjectCode">
-              <el-input v-model="temp.SubjectCode" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="训练类型" prop="TrainType">
-              <el-select v-model="temp.TrainType" placeholder="请选择">
-                <el-option
-                  v-for="item in trainTypeOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="训练课时" prop="TrainHour">
+            <el-form-item label="课时" prop="TrainHour">
               <el-input v-model="temp.TrainHour" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="24">
-            <el-form-item label="备注" prop="Remark">
-              <el-input v-model="temp.Remark" />
+          <el-col :span="12">
+            <el-form-item label="周几" prop="DayOfWeek">
+              <el-input v-model="temp.DayOfWeek" readonly="true" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="时间段" prop="AmPm">
+              <el-input v-model="temp.AmPm" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="训练内容" prop="SubjectContent">
+              <el-input v-model="temp.SubjectContent" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="参训对象" prop="AttendOject">
+              <el-input v-model="temp.AttendOject" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="训练方法" prop="TrainMethod">
+              <el-input v-model="temp.TrainMethod" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="组织者" prop="Organizer">
+              <el-input v-model="temp.Organizer" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="质量指标" prop="QualityIndex">
+              <el-input v-model="temp.QualityIndex" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="保障措施" prop="Safeguards">
+              <el-input v-model="temp.Safeguards" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+
+          <el-col :span="12">
+            <el-form-item label="地址" prop="Address">
+              <el-input v-model="temp.Address" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -178,17 +204,17 @@
 </template>
 
 <script>
-import { AddSubject, UpdateSubject, GetSubjects, DeleteSubject } from '@/api/subjectmanage'
+import { GetTrainPlanWeekDetails, UpdateTrainPlanWeekDetail } from '@/api/bll/plan/weekplan'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import { GetPositions } from '@/api/positionmanage'
+import { GetDepts } from '@/api/deptmanage'
 
 export default {
-  name: 'SubjectManage',
-  components: { Pagination },
+  name: 'WeekPlan',
+  components: { },
   directives: { waves },
-  filters: {},
+  filters: {
+  },
   data() {
     const isNum = (rule, value, callback) => {
       const numberReg = /^\d+$|^\d+[.]?\d+$/
@@ -210,63 +236,64 @@ export default {
       listQuery: {
         pageIndex: 1,
         pageSize: 20,
-        SystemCode: undefined,
-        SubjectName: undefined,
-        SubjectCode: undefined,
-        PositionId: 0,
+        DeptName: undefined,
+        Title: undefined,
+        BeginTime: undefined,
+        EndTime: undefined,
         sort: '+Id'
       },
-      trainTypeOptions: [{ label: '军官共同训练', value: 1 },
-        { label: '士兵共同训练', value: 2 },
-        { label: '光端专业训练', value: 3 },
-        { label: '军官专业训练', value: 4 },
-        { label: '通信员专业训练', value: 5 },
-        { label: '光端战术训练', value: 6 },
-        { label: '营连战术训练', value: 7 },
-        { label: '部队训练', value: 8 }],
       temp: {
         Id: 0,
-        SubjectName: '',
-        SubjectCode: '',
-        TrainType: 1,
+        TrainDate: '',
+        DayOfWeek: 1,
+        AmPm: '上午',
+        SubjectContent: 1,
+        AttendOject: '',
+        TrainMethod: '',
+        Organizer: '',
+        QualityIndex: '',
+        Safeguards: '',
         TrainHour: 0,
-        Remark: ''
+        Address: '',
+        EmsTrainPlanWeekId: 0
       },
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        update: '编辑科目',
-        create: '新增科目'
+        update: '编辑周计划明细',
+        create: '新增周计划'
       },
       rules: {
-        SubjectName: [
-          { required: true, message: '科目名必填', trigger: 'change' }
+        AmPm: [
+          { required: true, message: '时间段必填', trigger: 'change' }
         ],
-        SubjectCode: [{ required: true, message: '科目编码必填', trigger: 'change' }],
-        PositionId: [{ required: true, message: '岗位必填', trigger: 'change' }],
-        TrainType: [{ required: true, message: '训练类型', trigger: 'change' }],
-        TrainHour: [{ required: true, validator: isNum, trigger: 'change' }]
+        SubjectContent: [{ required: true, message: '训练内容必填', trigger: 'change' }],
+        AttendOject: [{ required: true, message: '参加对象必填', trigger: 'change' }],
+        TrainMethod: [{ required: true, message: '训练方法必填', trigger: 'change' }],
+        QualityIndex: [{ required: true, message: '质量指标必填', trigger: 'change' }],
+        Safeguards: [{ required: true, message: '保障措施必填', trigger: 'change' }],
+        TrainHour: [{ required: true, validator: isNum, trigger: 'change' }],
+        Address: [{ required: true, message: '训练地址必填', trigger: 'change' }]
       },
       downloadLoading: false,
       isUpdate: false,
       isClearable: false, // 可清空（可选）
       isAccordion: true, // 可收起（可选）
       valueId: 1, // 初始ID（可选）
-      valueSearchId: 1,
-      placeholder: '请选择岗位',
+      placeholder: '请选择部门',
       props: {
         // 配置项（必选）
         value: 'id',
         label: 'name',
         children: 'children'
       },
-      positionList: [
+      deptList: [
       ]
     }
   },
   computed: {
     optionData() {
-      const cloneData = JSON.parse(JSON.stringify(this.positionList)) // 对源数据深度克隆
+      const cloneData = JSON.parse(JSON.stringify(this.deptList)) // 对源数据深度克隆
       return cloneData.filter(father => {
         // 循环所有项，并添加children属性
         const branchArr = cloneData.filter(
@@ -275,36 +302,25 @@ export default {
         branchArr.length > 0 ? (father.children = branchArr) : '' // 给父级添加一个children属性，并赋值
         return father.ParentId === 0 // 返回第一层
       })
-    },
-    getTrainType() {
-      return function(position) {
-        switch (position) {
-          case 1: return '军官共同训练'
-          case 2: return '士兵共同训练'
-          case 3: return '光端专业训练'
-          case 4: return '军官专业训练'
-          case 5: return '通信员专业训练'
-          case 6: return '光端战术训练'
-          case 7: return '营连战术训练'
-          case 8: return '部队训练'
-          default:return '未知'
-        }
-      }
     }
   },
   created() {
-    this.getPositionForSelectBox()
+    this.getDeptForSelectBox()
     this.getList()
   },
   methods: {
-    getPositionForSelectBox() {
-      GetPositions({ 'pageIndex': 1, 'pageSize': 999 }).then(response => {
-        this.positionList = response.Data.Content
+    beginDateChange(date) {
+      // 结束时间联动5天
+      var tempdate = new Date(this.temp.BeginTime)
+      this.temp.EndTime = new Date(tempdate.setDate(tempdate.getDate() + 4))
+    },
+    getDeptForSelectBox() {
+      GetDepts({ 'pageIndex': 1, 'pageSize': 999 }).then(response => {
+        this.deptList = response.Data.Content
       })
     },
     getValue(value) {
       this.valueId = value
-      this.temp.PositionId = value
     },
     getSearchValue(value) {
       this.valueSearchId = value
@@ -315,9 +331,9 @@ export default {
     },
     getList() {
       this.listLoading = true
-      GetSubjects(this.listQuery).then(response => {
-        this.list = response.Data.Content
-        this.total = response.Data.Total
+      const id = this.$route.params && this.$route.params.id
+      GetTrainPlanWeekDetails(id).then(response => {
+        this.list = response.Data
 
         // Just to simulate the time of the request
         setTimeout(() => {
@@ -353,41 +369,19 @@ export default {
     resetTemp() {
       this.temp = {
         Id: 0,
-        SubjectName: '',
-        SubjectCode: '',
-        TrainType: 1,
+        TrainDate: '',
+        DayOfWeek: 1,
+        AmPm: '上午',
+        SubjectContent: 1,
+        AttendOject: '',
+        TrainMethod: '',
+        Organizer: '',
+        QualityIndex: '',
+        Safeguards: '',
         TrainHour: 0,
-        Remark: ''
+        Address: '',
+        EmsTrainPlanWeekId: 0
       }
-    },
-    handleCreate() {
-      this.getPositionForSelectBox()
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.isUpdate = false
-      this.valueId = 1
-      this.temp.TrainType = 1
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    createData() {
-      this.$refs['dataForm'].validate(valid => {
-        if (valid) {
-          AddSubject(this.temp).then(() => {
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: '新增成功',
-              type: 'success',
-              duration: 2000
-            })
-            this.handleFilter()
-          })
-        }
-      })
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
@@ -395,16 +389,19 @@ export default {
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.isUpdate = true
-      this.valueId = row.PositionId
+      this.valueId = row.DeptId
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
     },
     updateData() {
+      this.temp.DeptId = this.valueId
+      const id = this.$route.params && this.$route.params.id
+      this.temp.EmsTrainPlanWeekId = id
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          UpdateSubject(tempData).then(() => {
+          UpdateTrainPlanWeekDetail(tempData).then(() => {
             for (const v of this.list) {
               if (v.Id === this.temp.Id) {
                 const index = this.list.indexOf(v)
@@ -422,19 +419,6 @@ export default {
             this.handleFilter()
           })
         }
-      })
-    },
-    handleDelete(row) {
-      DeleteSubject(row.Id).then(() => {
-        this.$notify({
-          title: 'Success',
-          message: 'Delete Successfully',
-          type: 'success',
-          duration: 2000
-        })
-        this.handleFilter()
-        // const index = this.list.indexOf(row)
-        // this.list.splice(index, 1)
       })
     },
     handleDownload() {

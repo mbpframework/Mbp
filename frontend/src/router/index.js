@@ -63,6 +63,17 @@ export const constantRoutes = [{
     component: () => import('@/views/dashboard/index'),
     meta: { title: '首页', icon: 'dashboard', affix: true }
   }]
+},
+{
+  path: '/bussiness/plan/week/list',
+  component: Layout,
+  children: [{
+    path: ':id(\\d+)',
+    name: 'weekList',
+    component: () => import('@/views/bussiness/plan/week/list'),
+    meta: { title: '周计划明细', noCache: true, activeMenu: '/bussiness/plan/week/list' },
+    hidden: true
+  }]
 }
 ]
 

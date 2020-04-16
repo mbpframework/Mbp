@@ -2,27 +2,33 @@
   <div class="app-container">
     <div class="filter-container" style="padding-bottom:10px;">
       <el-input
-        v-model="listQuery.SubjectName"
-        placeholder="科目名称"
+        v-model="listQuery.DeptName"
+        placeholder="部门名称"
         style="width: 150px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <el-input
-        v-model="listQuery.SubjectCode"
-        placeholder="科目编码"
+        v-model="listQuery.Title"
+        placeholder="周训练标题"
         style="width: 150px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
-      <el-select v-model="listQuery.TrainType" placeholder="训练类型" @change="handleFilter">
-        <el-option
-          v-for="item in trainTypeOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
+      <el-date-picker
+        v-model="listQuery.BeginTime"
+        type="date"
+        placeholder="开始日期"
+        value-format="yyyy-MM-dd"
+        style="width:160px"
+      />
+      <el-date-picker
+        v-model="listQuery.EndTime"
+        type="date"
+        placeholder="结束日期"
+        value-format="yyyy-MM-dd"
+        style="width:160px"
+      />
       <el-button
         v-waves
         class="filter-item"
@@ -36,7 +42,7 @@
         type="primary"
         icon="el-icon-edit"
         @click="handleCreate"
-      >新增科目</el-button>
+      >新增周计划</el-button>
       <el-button
         v-waves
         :loading="downloadLoading"
@@ -44,7 +50,7 @@
         type="primary"
         icon="el-icon-download"
         @click="handleDownload"
-      >导出科目</el-button>
+      >导出周计划</el-button>
     </div>
 
     <el-table
@@ -67,29 +73,24 @@
           <span>{{ row.Id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="科目名" align="center">
+      <el-table-column label="标题" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.SubjectName }}</span>
+          <span>{{ row.Title }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="科目编码" align="center">
+      <el-table-column label="部门" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.SubjectCode }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.DeptName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="训练类型" align="center">
+      <el-table-column label="开始时间" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ getTrainType(row.TrainType) }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.BeginTime| moment("YYYY-MM-DD") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="训练课时" align="center">
+      <el-table-column label="结束时间" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.TrainHour }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="备注" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.Remark }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.EndTime| moment("YYYY-MM-DD") }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -100,6 +101,11 @@
       >
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
+          <router-link :to="'/bussiness/plan/week/list/'+row.Id">
+            <el-button type="primary" size="mini">
+              明细
+            </el-button>
+          </router-link>
           <el-button
             v-if="row.status!='deleted'"
             size="mini"
@@ -132,39 +138,45 @@
             <el-form-item v-show="false" label="ID" prop="Id">
               <el-input v-model="temp.Id" />
             </el-form-item>
-            <el-form-item label="科目名" prop="SubjectName">
-              <el-input v-model="temp.SubjectName" />
+            <el-form-item label="标题" prop="Title">
+              <el-input v-model="temp.Title" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="科目编码" prop="SubjectCode">
-              <el-input v-model="temp.SubjectCode" />
+            <el-form-item label="部门" prop="DeptId">
+              <SelectTree
+                :props="props"
+                :options="optionData"
+                :value="valueId"
+                :clearable="isClearable"
+                :accordion="isAccordion"
+                @getValue="getValue($event)"
+              />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="训练类型" prop="TrainType">
-              <el-select v-model="temp.TrainType" placeholder="请选择">
-                <el-option
-                  v-for="item in trainTypeOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
+            <el-form-item label="开始时间" prop="BeginTime">
+              <el-date-picker
+                v-model="temp.BeginTime"
+                type="date"
+                placeholder="选择日期"
+                value-format="yyyy-MM-dd"
+                style="width:160px"
+                @change="beginDateChange"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="训练课时" prop="TrainHour">
-              <el-input v-model="temp.TrainHour" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="备注" prop="Remark">
-              <el-input v-model="temp.Remark" />
+            <el-form-item label="结束时间" prop="EndTime">
+              <el-date-picker
+                v-model="temp.EndTime"
+                type="date"
+                placeholder="选择日期"
+                value-format="yyyy-MM-dd"
+                style="width:160px"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -178,28 +190,25 @@
 </template>
 
 <script>
-import { AddSubject, UpdateSubject, GetSubjects, DeleteSubject } from '@/api/subjectmanage'
+import { AddTrainPlanWeek, UpdateTrainPlanWeek, GetTrainPlanWeeks, DeleteTrainPlanWeek } from '@/api/bll/plan/weekplan'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import { GetPositions } from '@/api/positionmanage'
+import { GetDepts } from '@/api/deptmanage'
+import SelectTree from '@/components/TreeSelect'
 
 export default {
-  name: 'SubjectManage',
-  components: { Pagination },
+  name: 'WeekPlan',
+  components: { Pagination, SelectTree },
   directives: { waves },
-  filters: {},
+  filters: {
+  },
   data() {
-    const isNum = (rule, value, callback) => {
-      const numberReg = /^\d+$|^\d+[.]?\d+$/
-      if (value !== '') {
-        if (!numberReg.test(value)) {
-          callback(new Error('必须为数字'))
-        } else {
-          callback()
-        }
+    const validateDept = (rule, value, callback) => {
+      if (this.valueId <= 0) {
+        callback(new Error('部门必选'))
       } else {
-        callback('课时必填')
+        callback()
       }
     }
     return {
@@ -210,10 +219,10 @@ export default {
       listQuery: {
         pageIndex: 1,
         pageSize: 20,
-        SystemCode: undefined,
-        SubjectName: undefined,
-        SubjectCode: undefined,
-        PositionId: 0,
+        DeptName: undefined,
+        Title: undefined,
+        BeginTime: undefined,
+        EndTime: undefined,
         sort: '+Id'
       },
       trainTypeOptions: [{ label: '军官共同训练', value: 1 },
@@ -226,47 +235,44 @@ export default {
         { label: '部队训练', value: 8 }],
       temp: {
         Id: 0,
-        SubjectName: '',
-        SubjectCode: '',
-        TrainType: 1,
-        TrainHour: 0,
-        Remark: ''
+        Title: '',
+        BeginTime: undefined,
+        EndTime: undefined,
+        DeptId: 1
       },
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        update: '编辑科目',
-        create: '新增科目'
+        update: '编辑周计划',
+        create: '新增周计划'
       },
       rules: {
-        SubjectName: [
-          { required: true, message: '科目名必填', trigger: 'change' }
+        DeptId: [
+          { required: true, message: '部门必选', validator: validateDept, trigger: 'change' }
         ],
-        SubjectCode: [{ required: true, message: '科目编码必填', trigger: 'change' }],
-        PositionId: [{ required: true, message: '岗位必填', trigger: 'change' }],
-        TrainType: [{ required: true, message: '训练类型', trigger: 'change' }],
-        TrainHour: [{ required: true, validator: isNum, trigger: 'change' }]
+        BeginTime: [{ required: true, message: '开始时间必填', trigger: 'change' }],
+        EndTime: [{ required: true, message: '结束时间必填', trigger: 'change' }],
+        Title: [{ required: true, message: '标题', trigger: 'change' }]
       },
       downloadLoading: false,
       isUpdate: false,
       isClearable: false, // 可清空（可选）
       isAccordion: true, // 可收起（可选）
       valueId: 1, // 初始ID（可选）
-      valueSearchId: 1,
-      placeholder: '请选择岗位',
+      placeholder: '请选择部门',
       props: {
         // 配置项（必选）
         value: 'id',
         label: 'name',
         children: 'children'
       },
-      positionList: [
+      deptList: [
       ]
     }
   },
   computed: {
     optionData() {
-      const cloneData = JSON.parse(JSON.stringify(this.positionList)) // 对源数据深度克隆
+      const cloneData = JSON.parse(JSON.stringify(this.deptList)) // 对源数据深度克隆
       return cloneData.filter(father => {
         // 循环所有项，并添加children属性
         const branchArr = cloneData.filter(
@@ -275,36 +281,25 @@ export default {
         branchArr.length > 0 ? (father.children = branchArr) : '' // 给父级添加一个children属性，并赋值
         return father.ParentId === 0 // 返回第一层
       })
-    },
-    getTrainType() {
-      return function(position) {
-        switch (position) {
-          case 1: return '军官共同训练'
-          case 2: return '士兵共同训练'
-          case 3: return '光端专业训练'
-          case 4: return '军官专业训练'
-          case 5: return '通信员专业训练'
-          case 6: return '光端战术训练'
-          case 7: return '营连战术训练'
-          case 8: return '部队训练'
-          default:return '未知'
-        }
-      }
     }
   },
   created() {
-    this.getPositionForSelectBox()
+    this.getDeptForSelectBox()
     this.getList()
   },
   methods: {
-    getPositionForSelectBox() {
-      GetPositions({ 'pageIndex': 1, 'pageSize': 999 }).then(response => {
-        this.positionList = response.Data.Content
+    beginDateChange(date) {
+      // 结束时间联动5天
+      var tempdate = new Date(this.temp.BeginTime)
+      this.temp.EndTime = new Date(tempdate.setDate(tempdate.getDate() + 4))
+    },
+    getDeptForSelectBox() {
+      GetDepts({ 'pageIndex': 1, 'pageSize': 999 }).then(response => {
+        this.deptList = response.Data.Content
       })
     },
     getValue(value) {
       this.valueId = value
-      this.temp.PositionId = value
     },
     getSearchValue(value) {
       this.valueSearchId = value
@@ -315,7 +310,7 @@ export default {
     },
     getList() {
       this.listLoading = true
-      GetSubjects(this.listQuery).then(response => {
+      GetTrainPlanWeeks(this.listQuery).then(response => {
         this.list = response.Data.Content
         this.total = response.Data.Total
 
@@ -353,29 +348,28 @@ export default {
     resetTemp() {
       this.temp = {
         Id: 0,
-        SubjectName: '',
-        SubjectCode: '',
-        TrainType: 1,
-        TrainHour: 0,
-        Remark: ''
+        Title: '',
+        BeginTime: undefined,
+        EndTime: undefined,
+        DeptId: 1
       }
     },
     handleCreate() {
-      this.getPositionForSelectBox()
+      this.getDeptForSelectBox()
       this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.isUpdate = false
       this.valueId = 1
-      this.temp.TrainType = 1
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
     },
     createData() {
+      this.temp.DeptId = this.valueId
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          AddSubject(this.temp).then(() => {
+          AddTrainPlanWeek(this.temp).then(() => {
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({
@@ -395,16 +389,17 @@ export default {
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.isUpdate = true
-      this.valueId = row.PositionId
+      this.valueId = row.DeptId
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
     },
     updateData() {
+      this.temp.DeptId = this.valueId
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          UpdateSubject(tempData).then(() => {
+          UpdateTrainPlanWeek(tempData).then(() => {
             for (const v of this.list) {
               if (v.Id === this.temp.Id) {
                 const index = this.list.indexOf(v)
@@ -425,7 +420,7 @@ export default {
       })
     },
     handleDelete(row) {
-      DeleteSubject(row.Id).then(() => {
+      DeleteTrainPlanWeek(row.Id).then(() => {
         this.$notify({
           title: 'Success',
           message: 'Delete Successfully',

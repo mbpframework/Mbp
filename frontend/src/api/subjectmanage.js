@@ -6,7 +6,7 @@ export function GetSubjects(data) {
     url: '/TrainSubject/GetSubjects',
     method: 'get',
     params: { 'pageSize': data.pageSize, 'pageIndex': data.pageIndex, 'Search.Name': data.SubjectName, 'Search.Code': data.SubjectCode,
-      'Search.PositionId': data.PositionId, 'Search.SystemCode': data.SystemCode }
+      'Search.TrainType': data.TrainType, 'Search.SystemCode': data.SystemCode }
   })
 }
 

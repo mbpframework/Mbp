@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EMS.EntityFrameworkCore.Migrations
 {
-    public partial class update202003310014 : Migration
+    public partial class update04012304 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,6 +22,76 @@ namespace EMS.EntityFrameworkCore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Blogs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmsTrainRecords",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    IsDeleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmsTrainRecords", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmsTrainReports",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    IsDeleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmsTrainReports", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmsTrainScores",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    IsDeleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmsTrainScores", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmsTrainStatistics",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    IsDeleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmsTrainStatistics", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmsTrainSubjects",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ConcurrencyStamp = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
+                    PositionId = table.Column<int>(nullable: false),
+                    SubjectName = table.Column<string>(nullable: true),
+                    SubjectCode = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmsTrainSubjects", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -358,6 +428,28 @@ namespace EMS.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TrainSubjects",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Major = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrainSubjects", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TrainSubjects_MbpUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "MbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MbpUserClaims",
                 columns: table => new
                 {
@@ -406,7 +498,7 @@ namespace EMS.EntityFrameworkCore.Migrations
             migrationBuilder.InsertData(
                 table: "MbpPositions",
                 columns: new[] { "Id", "FullPositionName", "IsDeleted", "Level", "Order", "ParentId", "ParentPositionCode", "ParentPositionName", "PositionCode", "PositionName", "PositionStatus", "PositionType", "SystemCode" },
-                values: new object[] { 1, "岗位管理", false, 0, 0, null, null, null, "p000001", "岗位管理", 1, 0, "Mbp" });
+                values: new object[] { 1, "岗位管理", false, 0, 0, null, null, null, "p000001", "岗位管理", 1, 1, "Mbp" });
 
             migrationBuilder.InsertData(
                 table: "MbpUsers",
@@ -494,10 +586,30 @@ namespace EMS.EntityFrameworkCore.Migrations
                 name: "IX_Posts_BlogId",
                 table: "Posts",
                 column: "BlogId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TrainSubjects_UserId",
+                table: "TrainSubjects",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "EmsTrainRecords");
+
+            migrationBuilder.DropTable(
+                name: "EmsTrainReports");
+
+            migrationBuilder.DropTable(
+                name: "EmsTrainScores");
+
+            migrationBuilder.DropTable(
+                name: "EmsTrainStatistics");
+
+            migrationBuilder.DropTable(
+                name: "EmsTrainSubjects");
+
             migrationBuilder.DropTable(
                 name: "MbpCategories");
 
@@ -523,6 +635,9 @@ namespace EMS.EntityFrameworkCore.Migrations
                 name: "Posts");
 
             migrationBuilder.DropTable(
+                name: "TrainSubjects");
+
+            migrationBuilder.DropTable(
                 name: "MbpMenuClaims");
 
             migrationBuilder.DropTable(
@@ -535,10 +650,10 @@ namespace EMS.EntityFrameworkCore.Migrations
                 name: "MbpRoles");
 
             migrationBuilder.DropTable(
-                name: "MbpUsers");
+                name: "Blogs");
 
             migrationBuilder.DropTable(
-                name: "Blogs");
+                name: "MbpUsers");
 
             migrationBuilder.DropTable(
                 name: "MbpMenus");

@@ -1,5 +1,5 @@
 <template>
-  <el-select :value="valueTitle" :clearable="clearable" @clear="clearHandle">
+  <el-select :value="valueTitle" :placeholder="placeholder" :clearable="clearable" @clear="clearHandle">
     <el-option :value="valueTitle" :label="valueTitle" class="options">
       <el-tree
         id="tree-option"
@@ -41,7 +41,8 @@ export default {
     clearable: { type: Boolean, default: true },
 
     // 自动收起
-    accordion: { type: Boolean, default: false }
+    accordion: { type: Boolean, default: false },
+    placeholder: { type: String, default: '请选择' }
   },
   data() {
     return {

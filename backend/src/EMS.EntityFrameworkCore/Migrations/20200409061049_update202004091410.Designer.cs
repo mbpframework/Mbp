@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMS.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    [Migration("20200331031347_update202003310014")]
-    partial class update202003310014
+    [Migration("20200409061049_update202004091410")]
+    partial class update202004091410
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,6 +18,34 @@ namespace EMS.EntityFrameworkCore.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("EMS.Domain.DomainEntities.Base.EmsTrainSubject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("PositionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SubjectCode")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("SubjectName")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmsTrainSubjects");
+                });
 
             modelBuilder.Entity("EMS.Domain.DomainEntities.Demo.Blog", b =>
                 {
@@ -64,6 +92,151 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.HasIndex("BlogId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("EMS.Domain.DomainEntities.Train.EmsTrainRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmsTrainRecords");
+                });
+
+            modelBuilder.Entity("EMS.Domain.DomainEntities.Train.EmsTrainReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmsTrainReports");
+                });
+
+            modelBuilder.Entity("EMS.Domain.DomainEntities.Train.EmsTrainScore", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmsTrainScores");
+                });
+
+            modelBuilder.Entity("EMS.Domain.DomainEntities.Train.EmsTrainStatistics", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmsTrainStatistics");
+                });
+
+            modelBuilder.Entity("EMS.Domain.DomainEntities.Train.Plan.EmsTrainPlanWeek", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("BeginTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
+                    b.Property<int>("DeptId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DeptName")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("WeekNum")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmsTrainPlanWeeks");
+                });
+
+            modelBuilder.Entity("EMS.Domain.DomainEntities.Train.Plan.EmsTrainPlanWeekDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("AmPm")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("AttendOject")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmsTrainPlanWeekId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Organizer")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("QualityIndex")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Safeguards")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("SubjectContent")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("TrainDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("TrainHour")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("TrainMethod")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmsTrainPlanWeekId");
+
+                    b.ToTable("EmsTrainPlanWeekDetails");
                 });
 
             modelBuilder.Entity("Mbp.EntityFrameworkCore.Domain.MbpCategory", b =>
@@ -195,7 +368,7 @@ namespace EMS.EntityFrameworkCore.Migrations
                             PositionCode = "p000001",
                             PositionName = "岗位管理",
                             PositionStatus = 1,
-                            PositionType = 0,
+                            PositionType = 1,
                             SystemCode = "Mbp"
                         });
                 });
@@ -668,6 +841,15 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.HasOne("EMS.Domain.DomainEntities.Demo.Blog", null)
                         .WithMany("Posts")
                         .HasForeignKey("BlogId");
+                });
+
+            modelBuilder.Entity("EMS.Domain.DomainEntities.Train.Plan.EmsTrainPlanWeekDetail", b =>
+                {
+                    b.HasOne("EMS.Domain.DomainEntities.Train.Plan.EmsTrainPlanWeek", "TrainPlanWeek")
+                        .WithMany("TrainPlanWeekDetails")
+                        .HasForeignKey("EmsTrainPlanWeekId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Mbp.EntityFrameworkCore.Domain.MbpPosition", b =>

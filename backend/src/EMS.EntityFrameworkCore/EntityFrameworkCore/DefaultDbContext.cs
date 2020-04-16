@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using EMS.Domain.DomainEntities.Base;
 using EMS.Domain.DomainEntities.Train;
+using EMS.Domain.DomainEntities.Train.Plan;
 
 namespace EMS.EntityFrameworkCore.EntityFrameworkCore
 {
@@ -25,9 +26,12 @@ namespace EMS.EntityFrameworkCore.EntityFrameworkCore
 
         public DbSet<EmsTrainSubject> EmsTrainSubjects { get; set; }
 
-        public DbSet<EmsTrainPlan> TrainSubjects { get; set; }
+        public DbSet<EmsTrainPlanWeek>  EmsTrainPlanWeeks { get; set; }
+
+        public DbSet<EmsTrainPlanWeekDetail> EmsTrainPlanWeekDetails { get; set; }
 
         public DbSet<EmsTrainRecord> EmsTrainRecords { get; set; }
+
         public DbSet<EmsTrainReport> EmsTrainReports { get; set; }
 
         public DbSet<EmsTrainScore> EmsTrainScores { get; set; }
