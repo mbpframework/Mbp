@@ -98,14 +98,6 @@
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="listQuery.pageIndex"
-      :limit.sync="listQuery.pageSize"
-      @pagination="getList"
-    />
-
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
@@ -127,7 +119,7 @@
                 placeholder="选择日期"
                 value-format="yyyy-MM-dd"
                 style="width:160px"
-                readonly="true"
+                readonly
                 @change="beginDateChange"
               />
             </el-form-item>
@@ -141,7 +133,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="周几" prop="DayOfWeek">
-              <el-input v-model="temp.DayOfWeek" readonly="true" />
+              <el-input v-model="temp.DayOfWeek" readonly />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -151,14 +143,34 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
-            <el-form-item label="训练内容" prop="SubjectContent">
-              <el-input v-model="temp.SubjectContent" />
+          <el-col :span="24">
+            <el-form-item label="训练内容" prop="SubjectIds">
+              <el-select
+                v-model="temp.SubjectIds"
+                multiple
+                filterable
+                remote
+                style="width:410px"
+                reserve-keyword
+                placeholder="请输入关键词"
+                :remote-method="SelectSubjects"
+                :loading="loading"
+                @change="changeSubjectValue"
+              >
+                <el-option
+                  v-for="item in subjectOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+        </el-row>
+        <el-row>
+          <el-col :span="24">
             <el-form-item label="参训对象" prop="AttendOject">
-              <el-input v-model="temp.AttendOject" />
+              <el-input v-model="temp.AttendOject" type="textarea" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -175,20 +187,21 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="质量指标" prop="QualityIndex">
               <el-input v-model="temp.QualityIndex" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+        </el-row>
+        <el-row>
+          <el-col :span="24">
             <el-form-item label="保障措施" prop="Safeguards">
               <el-input v-model="temp.Safeguards" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="地址" prop="Address">
               <el-input v-model="temp.Address" />
             </el-form-item>
@@ -208,6 +221,7 @@ import { GetTrainPlanWeekDetails, UpdateTrainPlanWeekDetail } from '@/api/bll/pl
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import { GetDepts } from '@/api/deptmanage'
+import { GetSubjects } from '@/api/subjectmanage'
 
 export default {
   name: 'WeekPlan',
@@ -233,6 +247,7 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      loading: true,
       listQuery: {
         pageIndex: 1,
         pageSize: 20,
@@ -247,7 +262,8 @@ export default {
         TrainDate: '',
         DayOfWeek: 1,
         AmPm: '上午',
-        SubjectContent: 1,
+        SubjectContent: '',
+        SubjectIds: [],
         AttendOject: '',
         TrainMethod: '',
         Organizer: '',
@@ -267,7 +283,7 @@ export default {
         AmPm: [
           { required: true, message: '时间段必填', trigger: 'change' }
         ],
-        SubjectContent: [{ required: true, message: '训练内容必填', trigger: 'change' }],
+        SubjectIds: [{ required: true, message: '训练内容必填', trigger: 'change' }],
         AttendOject: [{ required: true, message: '参加对象必填', trigger: 'change' }],
         TrainMethod: [{ required: true, message: '训练方法必填', trigger: 'change' }],
         QualityIndex: [{ required: true, message: '质量指标必填', trigger: 'change' }],
@@ -288,7 +304,10 @@ export default {
         children: 'children'
       },
       deptList: [
-      ]
+      ],
+      subjectOptions: [],
+      subjectList: [],
+      subjectContents: []
     }
   },
   computed: {
@@ -308,7 +327,52 @@ export default {
     this.getDeptForSelectBox()
     this.getList()
   },
+  mounted() {
+    this.GetAllSubject()
+  },
   methods: {
+    initSubjectContent(subjectIds) {
+      this.subjectContents = []
+      for (let i = 0; i <= subjectIds.length - 1; i++) {
+        this.subjectOptions.find((item) => {
+          if (item.value === subjectIds[i]) {
+            this.subjectContents.push(item.label)
+          }
+        })
+      }
+    },
+    changeSubjectValue(val) {
+      this.subjectContents = []
+      for (let i = 0; i <= val.length - 1; i++) {
+        this.subjectOptions.find((item) => {
+          if (item.value === val[i]) {
+            this.subjectContents.push(item.label)
+          }
+        })
+      }
+    },
+    GetAllSubject() {
+      GetSubjects({ 'pageIndex': 1, 'pageSize': 99999 }).then(response => {
+        this.subjectList = response.Data.Content.map(item => {
+          return { value: item.Id, label: item.SubjectName }
+        })
+        this.subjectOptions = this.subjectList
+      })
+    },
+    SelectSubjects(query) {
+      this.loading = true
+      GetSubjects({ 'pageIndex': 1, 'pageSize': 10, SubjectName: query }).then(response => {
+        this.subjectOptions = response.Data.Content.map(item => {
+          return { value: item.Id, label: item.SubjectName }
+        })
+        this.total = response.Data.Total
+
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.loading = false
+        }, 100)
+      })
+    },
     beginDateChange(date) {
       // 结束时间联动5天
       var tempdate = new Date(this.temp.BeginTime)
@@ -372,7 +436,8 @@ export default {
         TrainDate: '',
         DayOfWeek: 1,
         AmPm: '上午',
-        SubjectContent: 1,
+        SubjectContent: '',
+        SubjectIds: [],
         AttendOject: '',
         TrainMethod: '',
         Organizer: '',
@@ -384,6 +449,8 @@ export default {
       }
     },
     handleUpdate(row) {
+      this.subjectOptions = this.subjectList
+      this.initSubjectContent(row.SubjectIds)
       this.temp = Object.assign({}, row) // copy obj
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
@@ -398,6 +465,7 @@ export default {
       this.temp.DeptId = this.valueId
       const id = this.$route.params && this.$route.params.id
       this.temp.EmsTrainPlanWeekId = id
+      this.temp.SubjectContent = this.subjectContents.toString()
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)

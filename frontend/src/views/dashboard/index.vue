@@ -1,7 +1,8 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
-    <div class="dashboard-text">role: {{ roles }}</div>
+    <!-- <div class="dashboard-text">name: {{ name }}</div>
+    <div class="dashboard-text">role: {{ roles }}</div> -->
+    <h1>欢迎使用表报系统</h1>
   </div>
 </template>
 

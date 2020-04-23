@@ -15,6 +15,7 @@ using EMS.Application.Contracts.Base.Dto;
 using EMS.Domain.DomainEntities.Base;
 using EMS.Domain.DomainEntities.Train.Plan;
 using EMS.Application.Contracts.Train.Dto;
+using EMS.Domain.DomainEntities.Train;
 
 namespace EMS.Application
 {
@@ -78,6 +79,10 @@ namespace EMS.Application
                 cfg.CreateMap<EmsTrainPlanWeek, TrainPlanWeekOutputDto>();
                 cfg.CreateMap<TrainPlanWeekDetailInputDto, EmsTrainPlanWeekDetail>();
                 cfg.CreateMap<EmsTrainPlanWeekDetail, TrainPlanWeekDetailOutputDto>();
+
+                // 训练成绩映射
+                cfg.CreateMap<TrainScoreInputDto, EmsTrainScore>();
+                cfg.CreateMap<EmsTrainScore, TrainScoreOutputDto>();
             });
 
             return config.CreateMapper();

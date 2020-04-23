@@ -32,6 +32,11 @@ namespace EMS.Application.Contracts.Train.Dto
         public string SubjectContent { get; set; }
 
         /// <summary>
+        /// 训练内容科目id
+        /// </summary>
+        public List<int> SubjectIds { get; set; }
+
+        /// <summary>
         /// 参训对象,字符串
         /// </summary>
         public string AttendOject { get; set; }

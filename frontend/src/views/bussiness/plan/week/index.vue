@@ -83,6 +83,16 @@
           <span class="link-type" @click="handleUpdate(row)">{{ row.DeptName }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="月份" align="center">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.Month }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="周数" align="center">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.WeekNum }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="开始时间" align="center">
         <template slot-scope="{row}">
           <span class="link-type" @click="handleUpdate(row)">{{ row.BeginTime| moment("YYYY-MM-DD") }}</span>
@@ -176,7 +186,20 @@
                 placeholder="选择日期"
                 value-format="yyyy-MM-dd"
                 style="width:160px"
+                @change="EndTimeSure"
               />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="月份" prop="Month">
+              <el-input v-model="temp.Month" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="周数" prop="WeekNum">
+              <el-input v-model="temp.WeekNum" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -238,7 +261,9 @@ export default {
         Title: '',
         BeginTime: undefined,
         EndTime: undefined,
-        DeptId: 1
+        DeptId: 1,
+        WeekNum: 1,
+        Month: 1
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -292,6 +317,10 @@ export default {
       // 结束时间联动5天
       var tempdate = new Date(this.temp.BeginTime)
       this.temp.EndTime = new Date(tempdate.setDate(tempdate.getDate() + 4))
+    },
+    EndTimeSure(date) {
+      // 默认给定第几月
+      this.temp.Month = new Date(date).getMonth() + 1
     },
     getDeptForSelectBox() {
       GetDepts({ 'pageIndex': 1, 'pageSize': 999 }).then(response => {
@@ -351,7 +380,9 @@ export default {
         Title: '',
         BeginTime: undefined,
         EndTime: undefined,
-        DeptId: 1
+        DeptId: 1,
+        WeekNum: 1,
+        Month: 1
       }
     },
     handleCreate() {

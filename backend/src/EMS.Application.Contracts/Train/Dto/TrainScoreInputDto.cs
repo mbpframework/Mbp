@@ -1,15 +1,14 @@
-﻿using Mbp.Core.Entity;
+﻿using Mbp.Ddd.Application.Mbp.Dto;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EMS.Domain.DomainEntities.Train
+namespace EMS.Application.Contracts.Train.Dto
 {
-    /// <summary>
-    /// 训练成绩
-    /// </summary>
-    public class EmsTrainScore : EntityBase<int>, ISoftDelete
+    public class TrainScoreInputDto : DtoBase
     {
+        public int Id { get; set; }
+
         public int UserId { get; set; }
 
         public string LoginName { get; set; }

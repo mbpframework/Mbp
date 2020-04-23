@@ -3,14 +3,16 @@ using System;
 using EMS.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EMS.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    partial class DefaultDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200420023319_update20200420")]
+    partial class update20200420
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -263,7 +265,7 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.Property<string>("SubjectContent")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("SubjectIdsStr")
+                    b.Property<string>("SubjectIds")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("TrainDate")

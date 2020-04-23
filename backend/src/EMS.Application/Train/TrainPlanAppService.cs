@@ -2,6 +2,7 @@
 using EMS.Application.Contracts.Train;
 using EMS.Application.Contracts.Train.Dto;
 using EMS.Application.Contracts.Train.DtoSearch;
+using EMS.Application.Utility;
 using EMS.Domain.DomainEntities.Train.Plan;
 using EMS.EntityFrameworkCore.EntityFrameworkCore;
 using Mbp.AspNetCore.Mvc.Convention;
@@ -119,13 +120,24 @@ namespace EMS.Application.Train
         [HttpGet("GetTrainPlanWeekDetails")]
         public virtual async Task<List<TrainPlanWeekDetailOutputDto>> GetTrainPlanWeekDetails(int trainPlanWeekId)
         {
-            return _mapper.Map<List<TrainPlanWeekDetailOutputDto>>(_defaultDbContext.EmsTrainPlanWeekDetails.Where(wd => wd.EmsTrainPlanWeekId == trainPlanWeekId).ToList());
+            var entityList = _defaultDbContext.EmsTrainPlanWeekDetails.Where(wd => wd.EmsTrainPlanWeekId == trainPlanWeekId).ToList();
+            // subjectids字符串转列表
+            var dtoList = _mapper.Map<List<TrainPlanWeekDetailOutputDto>>(entityList);
+            dtoList.ForEach(e =>
+            {
+                e.SubjectIds = entityList.Find(entity => entity.Id == e.Id).SubjectIdsStr.StrToListByComma<int>();
+            });
+
+            return dtoList;
         }
 
         [HttpPut("UpdateTrainPlanWeekDetail")]
         public virtual int UpdateTrainPlanWeekDetail(TrainPlanWeekDetailInputDto trainPlanWeekDetailInputDto)
         {
             var trainPlanWeekDetail = _mapper.Map<EmsTrainPlanWeekDetail>(trainPlanWeekDetailInputDto);
+
+            // subjectids列表转字符串
+            trainPlanWeekDetail.SubjectIdsStr = trainPlanWeekDetailInputDto.SubjectIds.ListToStrByComma();
 
             _defaultDbContext.Attach(trainPlanWeekDetail);
 

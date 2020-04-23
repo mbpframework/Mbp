@@ -94,7 +94,7 @@ namespace EMS.Application.AccountService
             c.Name.Contains(searchOptions.Search.Name == null ? "" : searchOptions.Search.Name) &&
             c.Code.Contains(searchOptions.Search.Code == null ? "" : searchOptions.Search.Code) &&
            (!string.IsNullOrEmpty(searchOptions.Search.SystemCode) ? (c.SystemCode == searchOptions.Search.SystemCode || c.Id == 1) : true),
-            (c => c.Id)).ToList();
+            (c => c.Order)).ToList();
 
             var content = _mapper.Map<List<MenuOutputDto>>(menus);
 

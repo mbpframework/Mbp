@@ -34,6 +34,11 @@ namespace EMS.Domain.DomainEntities.Train.Plan
         public string SubjectContent { get; set; }
 
         /// <summary>
+        /// 训练内容科目id
+        /// </summary>
+        public string SubjectIdsStr { get; set; }
+
+        /// <summary>
         /// 参训对象,字符串
         /// </summary>
         public string AttendOject { get; set; }

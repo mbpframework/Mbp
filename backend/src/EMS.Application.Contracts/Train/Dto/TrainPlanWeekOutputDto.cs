@@ -40,6 +40,11 @@ namespace EMS.Application.Contracts.Train.Dto
         public int WeekNum { get; set; }
 
         /// <summary>
+        /// 月份
+        /// </summary>
+        public short Month { get; set; }
+
+        /// <summary>
         /// 训练详情
         /// </summary>
         public List<TrainPlanWeekDetailOutputDto> TrainPlanWeekDetails { get; set; }

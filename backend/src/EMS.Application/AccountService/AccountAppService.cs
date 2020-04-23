@@ -110,7 +110,7 @@ namespace EMS.Application.AccountService
             // 过滤超管,如果是超管admin账号则忽略,为了防止菜单被其他管理员误操作导致不好复原
             if (_currentUser.LoginName == "admin")
             {
-                menus = _defaultDbContext.MbpMenus.Where(m => m.MenuType == EnumMenuType.Page).ToList();
+                menus = _defaultDbContext.MbpMenus.Where(m => m.MenuType == EnumMenuType.Page).OrderBy(m => m.Order).ToList();
             }
             else
             {
@@ -125,6 +125,7 @@ namespace EMS.Application.AccountService
                          join tmenu in _defaultDbContext.Set<MbpMenu>()
                              on trolemenu.MenuId equals tmenu.Id
                          where tmenu.MenuType == EnumMenuType.Page && tuser.Id == _currentUser.Id
+                         orderby tmenu.Order ascending
                          select tmenu).ToList();
             }
             List<RouteOutputDto> tempRoute = new List<RouteOutputDto>();

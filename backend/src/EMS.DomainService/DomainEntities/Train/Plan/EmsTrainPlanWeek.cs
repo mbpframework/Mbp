@@ -45,6 +45,11 @@ namespace EMS.Domain.DomainEntities.Train.Plan
         public int WeekNum { get; set; }
 
         /// <summary>
+        /// 月份
+        /// </summary>
+        public short Month { get; set; }
+
+        /// <summary>
         /// 训练详情
         /// </summary>
         public List<EmsTrainPlanWeekDetail> TrainPlanWeekDetails { get; set; }
