@@ -44,7 +44,9 @@ namespace Mbp.AspNetCore.Mvc.Filter
                 return;
             }
 
-            using (var scope = new TransactionScope(TransactionScopeOption.Required))
+            // todo 分场景来指定是否要支持跨线程持续事务
+
+            using (var scope = new TransactionScope(TransactionScopeOption.Required, TransactionScopeAsyncFlowOption.Enabled))
             {
                 var result = await next();
 

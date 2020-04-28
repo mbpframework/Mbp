@@ -7,6 +7,7 @@ using System.Text;
 using EMS.Domain.DomainEntities.Base;
 using EMS.Domain.DomainEntities.Train;
 using EMS.Domain.DomainEntities.Train.Plan;
+using EMS.Domain.DomainEntities.Operation;
 
 namespace EMS.EntityFrameworkCore.EntityFrameworkCore
 {
@@ -37,6 +38,10 @@ namespace EMS.EntityFrameworkCore.EntityFrameworkCore
         public DbSet<EmsTrainScore> EmsTrainScores { get; set; }
 
         public DbSet<EmsTrainStatistics> EmsTrainStatistics { get; set; }
+
+        public DbSet<EmsTrainNotice> EmsTrainNotices { get; set; }
+
+        public DbSet<EmsAttachment>  EmsAttachments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

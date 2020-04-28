@@ -8,7 +8,7 @@ namespace EMS.Application.Contracts.LogService
     /// <summary>
     ///  对外接口
     /// </summary>
-    public interface ILogManageAppService: IAppService
+    public interface ILogManageAppService : IAppService
     {
     }
 }

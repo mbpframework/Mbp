@@ -35,7 +35,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="FileRoot\" />
+    <Folder Include="FileRoot\Attach\Notice\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="FileRoot\Attach\UserTemp\ReadMe.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="FileRoot\ReadMe.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

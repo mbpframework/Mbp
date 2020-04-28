@@ -3,14 +3,16 @@ using System;
 using EMS.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EMS.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    partial class DefaultDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200427092552_update2020042701")]
+    partial class update2020042701
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,8 +30,8 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
                         .HasMaxLength(256);
 
-                    b.Property<Guid>("BussinessId")
-                        .HasColumnType("char(36)");
+                    b.Property<int>("BussinessId")
+                        .HasColumnType("int");
 
                     b.Property<string>("BussinessTypeElementCode")
                         .IsRequired()
@@ -141,9 +143,6 @@ namespace EMS.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<Guid>("AttachmentRelative")
-                        .HasColumnType("char(36)");
-
                     b.Property<DateTime?>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -154,9 +153,6 @@ namespace EMS.EntityFrameworkCore.Migrations
 
                     b.Property<string>("NoticeContent")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<int>("NoticeStatus")
-                        .HasColumnType("int");
 
                     b.Property<string>("NoticeTitle")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");

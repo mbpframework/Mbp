@@ -36,7 +36,15 @@
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
-      >查询</el-button></div>
+      >查询</el-button>
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-edit"
+        @click="handleCreate"
+      >新增公告
+      </el-button></div>
 
     <el-table
       :key="tableKey"
@@ -90,7 +98,19 @@
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">详情</el-button>
+          <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
+          <el-button v-if="row.NoticeStatus!=2" size="mini" type="success" @click="handleModifyStatus(row,2)">
+            发布
+          </el-button>
+          <el-button v-if="row.NoticeStatus!=1" size="mini" @click="handleModifyStatus(row,1)">
+            草稿
+          </el-button>
+          <el-button
+            v-if="row.status!='deleted'"
+            size="mini"
+            type="danger"
+            @click="handleDelete(row)"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -106,6 +126,7 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
+        :rules="rules"
         :model="temp"
         label-position="right"
         label-width="90px"
@@ -156,9 +177,13 @@
             <el-form-item label="附件" prop="AttacheLink">
               <el-upload
                 class="upload-demo"
+                :data="uploadData"
                 :action="uploadUrl"
+                :before-upload="handleBeforeUpload"
+                :headers="uploadHeads"
                 multiple
                 :limit="1"
+                :on-exceed="handleExceed"
                 :on-preview="fileOnclick"
                 :file-list="attachList"
               >
@@ -178,17 +203,20 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { GetNotices, DeleteNotice } from '@/api/bll/notice/noticemanage'
+import { AddNotice, UpdateNotice, GetNotices, DeleteNotice } from '@/api/bll/notice/noticemanage'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { GetFiles } from '@/api/fileupload'
+import store from '@/store'
+import { getToken } from '@/utils/auth'
 import { guid } from '@/utils/uuid'
 
 export default {
@@ -197,6 +225,18 @@ export default {
   directives: { waves },
   filters: {},
   data() {
+    const isNum = (rule, value, callback) => {
+      const numberReg = /^\d+$|^\d+[.]?\d+$/
+      if (value !== '') {
+        if (!numberReg.test(value)) {
+          callback(new Error('必须为数字'))
+        } else {
+          callback()
+        }
+      } else {
+        callback('课时必填')
+      }
+    }
     return {
       tableKey: 0,
       list: [],
@@ -232,8 +272,17 @@ export default {
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        update: '查看文件信息',
+        update: '编辑文件信息',
         create: '新增文件信息'
+      },
+      rules: {
+        SubjectName: [
+          { required: true, message: '科目名必填', trigger: 'change' }
+        ],
+        SubjectCode: [{ required: true, message: '科目编码必填', trigger: 'change' }],
+        PositionId: [{ required: true, message: '岗位必填', trigger: 'change' }],
+        TrainType: [{ required: true, message: '训练类型', trigger: 'change' }],
+        TrainHour: [{ required: true, validator: isNum, trigger: 'change' }]
       },
       downloadLoading: false,
       isUpdate: false,
@@ -273,9 +322,26 @@ export default {
   },
   methods: {
     fileOnclick(file) {
-      // 下载文件
-      const url = process.env.VUE_APP_BASE_API + '/Attachment/FetchAttachment?fileName=' + file.name + '&url=' + file.url
-      window.open(url, '_blank')
+      console.log(file)
+    },
+    handleBeforeUpload(file) {
+      const isLt10M = file.size / 1024 / (1024 * 10) < 1
+
+      if (!isLt10M) {
+        this.$message.error('上传文件大小不能超过 10MB!')
+      }
+
+      this.uploadData.AttachmentTypeElementCode = 'document'
+      this.uploadData.BussinessTypeElementCode = 'Notice'
+      this.uploadData.BussinessId = this.temp.AttachmentRelative
+      // 设置上传图片请求的token 以通过验证
+      if (store.getters.token) {
+        this.uploadHeads.Authorization = 'Bearer ' + getToken()
+      }
+      return true
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 1 个文件`)
     },
     getAttachmentList() {
       this.listLoading = true
@@ -338,6 +404,35 @@ export default {
         Remark: ''
       }
     },
+    handleCreate() {
+      this.resetTemp()
+      this.attachList = []
+      // 新增时生成附件关联GUID
+      this.temp.AttachmentRelative = guid()
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.isUpdate = false
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    createData() {
+      this.$refs['dataForm'].validate(valid => {
+        if (valid) {
+          AddNotice(this.temp).then(() => {
+            this.list.unshift(this.temp)
+            this.dialogFormVisible = false
+            this.$notify({
+              title: 'Success',
+              message: '新增成功',
+              type: 'success',
+              duration: 2000
+            })
+            this.handleFilter()
+          })
+        }
+      })
+    },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
       this.temp.timestamp = new Date(this.temp.timestamp)
@@ -347,6 +442,30 @@ export default {
       this.getAttachmentList()
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
+      })
+    },
+    updateData() {
+      this.$refs['dataForm'].validate(valid => {
+        if (valid) {
+          const tempData = Object.assign({}, this.temp)
+          UpdateNotice(tempData).then(() => {
+            for (const v of this.list) {
+              if (v.Id === this.temp.Id) {
+                const index = this.list.indexOf(v)
+                this.list.splice(index, 1, this.temp)
+                break
+              }
+            }
+            this.dialogFormVisible = false
+            this.$notify({
+              title: 'Success',
+              message: 'Update Successfully',
+              type: 'success',
+              duration: 2000
+            })
+            this.handleFilter()
+          })
+        }
       })
     },
     handleDelete(row) {

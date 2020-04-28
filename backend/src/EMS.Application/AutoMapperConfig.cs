@@ -16,6 +16,9 @@ using EMS.Domain.DomainEntities.Base;
 using EMS.Domain.DomainEntities.Train.Plan;
 using EMS.Application.Contracts.Train.Dto;
 using EMS.Domain.DomainEntities.Train;
+using EMS.Application.Contracts.Operation.Dto;
+using EMS.Domain.DomainEntities.Operation;
+using EMS.Application.Contracts.FileServer.Dto;
 
 namespace EMS.Application
 {
@@ -83,6 +86,14 @@ namespace EMS.Application
                 // 训练成绩映射
                 cfg.CreateMap<TrainScoreInputDto, EmsTrainScore>();
                 cfg.CreateMap<EmsTrainScore, TrainScoreOutputDto>();
+
+                // 文件信息映射
+                cfg.CreateMap<NoticeInputDto, EmsTrainNotice>();
+                cfg.CreateMap<EmsTrainNotice, NoticeOutputDto>();
+
+                // 附件映射
+                cfg.CreateMap<AttachmentInputDto, EmsAttachment>();
+                cfg.CreateMap<EmsAttachment, AttachmentOutputDto>();
             });
 
             return config.CreateMapper();
