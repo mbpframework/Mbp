@@ -37,3 +37,11 @@ export function UpdateNotice(data) {
   })
 }
 
+// 更新状态
+export function ChangeNoticeStatus(data) {
+  return request({
+    url: '/Notice/ChangeNoticeStatus?noticeId=' + data.noticeId + '&noticeStatus=' + data.noticeStatus,
+    method: 'put'
+  })
+}
+

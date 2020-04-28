@@ -22,14 +22,6 @@
           :value="item.value"
         />
       </el-select>
-      <el-select v-model="listQuery.NoticeStatus" placeholder="发布状态" @change="handleFilter">
-        <el-option
-          v-for="item in noticeStatusOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
       <el-button
         v-waves
         class="filter-item"
@@ -208,7 +200,7 @@ export default {
         Title: undefined,
         PublishTime: undefined,
         NoticeType: undefined,
-        NoticeStatus: undefined
+        NoticeStatus: 2
       },
       noticeTypeOptions: [{ label: '公告', value: 1 },
         { label: '通告', value: 2 },

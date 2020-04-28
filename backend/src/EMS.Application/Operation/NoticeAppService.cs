@@ -66,7 +66,7 @@ namespace EMS.Application.Operation
         }
 
         [HttpPut("ChangeNoticeStatus")]
-        public virtual int ChangeNoticeStatus(int noticeId, EnumNoticeStatus noticeStatus)
+        public virtual int ChangeNoticeStatus([FromQuery]int noticeId, [FromQuery] EnumNoticeStatus noticeStatus)
         {
             var notice = _defaultDbContext.EmsTrainNotices.Where(r => r.Id == noticeId).FirstOrDefault();
 

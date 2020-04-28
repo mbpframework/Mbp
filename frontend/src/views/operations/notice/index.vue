@@ -210,7 +210,7 @@
 </template>
 
 <script>
-import { AddNotice, UpdateNotice, GetNotices, DeleteNotice } from '@/api/bll/notice/noticemanage'
+import { AddNotice, UpdateNotice, GetNotices, DeleteNotice, ChangeNoticeStatus } from '@/api/bll/notice/noticemanage'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -372,11 +372,13 @@ export default {
       this.getList()
     },
     handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作Success',
-        type: 'success'
-      })
       row.NoticeStatus = status
+      ChangeNoticeStatus({ noticeId: row.Id, noticeStatus: row.NoticeStatus }).then(response => {
+        this.$message({
+          message: '操作Success',
+          type: 'success'
+        })
+      })
     },
     sortChange(data) {
       const { prop, order } = data
