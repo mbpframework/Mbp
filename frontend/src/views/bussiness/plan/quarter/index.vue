@@ -69,27 +69,27 @@
       </el-table-column>
       <el-table-column label="标题" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.Title }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.Title }}</span>
         </template>
       </el-table-column>
       <el-table-column label="部门" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.DeptName }}</span>
+          <span>{{ row.DeptName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="季度" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ getQuarterName(row.Quarter) }}</span>
+          <span>{{ getQuarterName(row.Quarter) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.Remark }}</span>
+          <span>{{ row.Remark }}</span>
         </template>
       </el-table-column>
       <el-table-column label="附件" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.Month }}</span>
+          <span class="link-type" @click="fileOnclick(row)">{{ row.AttachmentName }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -100,11 +100,6 @@
       >
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
-          <router-link :to="'/bussiness/plan/week/list/'+row.Id">
-            <el-button type="primary" size="mini">
-              明细
-            </el-button>
-          </router-link>
           <el-button
             v-if="row.status!='deleted'"
             size="mini"
@@ -313,6 +308,11 @@ export default {
     this.getList()
   },
   methods: {
+    fileOnclick(row) {
+      // 下载文件
+      const url = process.env.VUE_APP_BASE_API + '/Attachment/FetchAttachment?fileName=' + row.AttachmentName + '&url=' + row.AttachementUrl
+      window.open(url, '_blank')
+    },
     handleBeforeUpload(file) {
       const isLt10M = file.size / 1024 / (1024 * 10) < 1
 

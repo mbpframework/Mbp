@@ -1,9 +1,18 @@
 import request from '@/utils/request'
 
-// 获取附件
+// 获取附件(多个)
 export function GetFiles(bussinessId) {
   return request({
     url: '/Attachment/GetAttachments',
+    method: 'get',
+    params: { 'bussinessId': bussinessId }
+  })
+}
+
+// 获取附件(单个)
+export function GetFile(bussinessId) {
+  return request({
+    url: '/Attachment/GetAttachment',
     method: 'get',
     params: { 'bussinessId': bussinessId }
   })

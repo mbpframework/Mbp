@@ -93,7 +93,7 @@
       </el-table-column>
       <el-table-column label="姓名" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.UserName }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.UserName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="登录名" align="center">
@@ -103,32 +103,32 @@
       </el-table-column>
       <el-table-column label="专业" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.Major }}</span>
+          <span>{{ row.Major }}</span>
         </template>
       </el-table-column>
       <el-table-column label="科目" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.SubjectName }}</span>
+          <span>{{ row.SubjectName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="训练日期" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.TrainDate| moment("YYYY-MM-DD") }}</span>
+          <span>{{ row.TrainDate| moment("YYYY-MM-DD") }}</span>
         </template>
       </el-table-column>
       <el-table-column label="训练课时" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.TrainHour }}</span>
+          <span>{{ row.TrainHour }}</span>
         </template>
       </el-table-column>
       <el-table-column label="分数" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.Score }}</span>
+          <span>{{ row.Score }}</span>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.Remark }}</span>
+          <span>{{ row.Remark }}</span>
         </template>
       </el-table-column>
       <el-table-column

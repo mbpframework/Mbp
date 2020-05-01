@@ -75,32 +75,32 @@
       </el-table-column>
       <el-table-column label="标题" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.Title }}</span>
+          <span class="link-type" @click="handleUpdate(row)"> {{ row.Title }}</span>
         </template>
       </el-table-column>
       <el-table-column label="部门" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.DeptName }}</span>
+          <span>{{ row.DeptName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="月份" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.Month }}</span>
+          <span>{{ row.Month }}</span>
         </template>
       </el-table-column>
       <el-table-column label="周数" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.WeekNum }}</span>
+          <span>{{ row.WeekNum }}</span>
         </template>
       </el-table-column>
       <el-table-column label="开始时间" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.BeginTime| moment("YYYY-MM-DD") }}</span>
+          <span>{{ row.BeginTime| moment("YYYY-MM-DD") }}</span>
         </template>
       </el-table-column>
       <el-table-column label="结束时间" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.EndTime| moment("YYYY-MM-DD") }}</span>
+          <span>{{ row.EndTime| moment("YYYY-MM-DD") }}</span>
         </template>
       </el-table-column>
       <el-table-column

@@ -75,6 +75,9 @@ namespace EMS.Application.Train
             var subs = from trainPlanYear in _defaultDbContext.EmsTrainPlanYears
                        join dept in _defaultDbContext.MbpDepts
                        on trainPlanYear.DeptId equals dept.Id
+                       join attachment in _defaultDbContext.EmsAttachments 
+                       on trainPlanYear.AttachmentRelative equals attachment.BussinessId
+                       into attachments from attachment in attachments.DefaultIfEmpty()
                        where trainPlanYear.Title.Contains(searchOptions.Search.Title == null ? "" : searchOptions.Search.Title) &&
            (!string.IsNullOrEmpty(searchOptions.Search.DeptName) ? dept.DeptName.Contains(searchOptions.Search.DeptName) : true) &&
            (searchOptions.Search.Year > 0 ? trainPlanYear.Year == searchOptions.Search.Year : true)
@@ -87,7 +90,9 @@ namespace EMS.Application.Train
                            Title = trainPlanYear.Title,
                            AttachmentRelative = trainPlanYear.AttachmentRelative,
                            Remark = trainPlanYear.Remark,
-                           ConcurrencyStamp = trainPlanYear.ConcurrencyStamp
+                           ConcurrencyStamp = trainPlanYear.ConcurrencyStamp,
+                           AttachementUrl = attachment.Url,
+                           AttachmentName = attachment.Name
                        };
 
             // 分页

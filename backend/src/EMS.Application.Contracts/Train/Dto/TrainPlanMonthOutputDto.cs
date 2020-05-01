@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EMS.Application.Contracts.Train.Dto
 {
-    public class TrainPlanMonthOutputDto : DtoBase
+    public class TrainPlanMonthOutputDto : DtoBase, IHasAttachmentDto
     {
         public int Id { get; set; }
 
@@ -38,6 +38,10 @@ namespace EMS.Application.Contracts.Train.Dto
         public string Remark { get; set; }
 
         public Guid AttachmentRelative { get; set; }
+
+        public string AttachmentName { get; set; }
+
+        public string AttachementUrl { get; set; }
 
         public byte[] ConcurrencyStamp { get; set; }
     }

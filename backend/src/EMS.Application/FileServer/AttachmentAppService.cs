@@ -105,6 +105,17 @@ namespace EMS.Application.FileServer
             };
         }
 
+        [HttpGet("GetAttachment")]
+        public virtual async Task<AttachmentOutputDto> GetAttachment(Guid bussinessId)
+        {
+            int total = 0;
+
+            var attachment = _defaultDbContext.EmsAttachments.PageByAscending(100, 1, out total,
+                (c) => c.BussinessId == bussinessId, (c => c.Id)).FirstOrDefault();
+
+            return _mapper.Map<AttachmentOutputDto>(attachment);
+        }
+
         [HttpPut("ClearUserTemp")]
         public virtual int ClearUserTemp(AttachmentInputDto attachmentDto)
         {

@@ -52,22 +52,22 @@
       </el-table-column>
       <el-table-column label="标题" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.NoticeTitle }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.NoticeTitle }}</span>
         </template>
       </el-table-column>
       <el-table-column label="发布时间" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.PublishTime }}</span>
+          <span>{{ row.PublishTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="类型" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ getNoticeType(row.NoticeType) }}</span>
+          <span>{{ getNoticeType(row.NoticeType) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ getNoticeStatus(row.NoticeStatus) }}</span>
+          <span>{{ getNoticeStatus(row.NoticeStatus) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center">

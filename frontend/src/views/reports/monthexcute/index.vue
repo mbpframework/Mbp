@@ -33,37 +33,37 @@
       </el-table-column>
       <el-table-column label="应训人数" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.TrainNumber }}</span>
+          <span>{{ row.TrainNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column label="实训人数" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.AttendNumber }}</span>
+          <span>{{ row.AttendNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column label="参训率" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.AttendRate }}</span>
+          <span>{{ row.AttendRate }}</span>
         </template>
       </el-table-column>
       <el-table-column label="平均参训时长" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.AvgTrainHour }}</span>
+          <span>{{ row.AvgTrainHour }}</span>
         </template>
       </el-table-column>
       <el-table-column label="训练计划完成率" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.TrainPlanRate }}</span>
+          <span>{{ row.TrainPlanRate }}</span>
         </template>
       </el-table-column>
       <el-table-column label="参加考核总数" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.AttendExamNumber }}</span>
+          <span>{{ row.AttendExamNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column label="人均参考次数" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.AvgAttendExamNumber }}</span>
+          <span>{{ row.AvgAttendExamNumber }}</span>
         </template>
       </el-table-column>
     </el-table>
