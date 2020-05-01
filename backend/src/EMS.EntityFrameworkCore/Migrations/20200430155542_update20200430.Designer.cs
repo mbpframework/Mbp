@@ -3,14 +3,16 @@ using System;
 using EMS.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EMS.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DefaultDbContext))]
-    partial class DefaultDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200430155542_update20200430")]
+    partial class update20200430
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -301,43 +303,6 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.ToTable("EmsTrainPlanMonths");
                 });
 
-            modelBuilder.Entity("EMS.Domain.DomainEntities.Train.Plan.EmsTrainPlanQuarter", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("AttachmentRelative")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp(6)");
-
-                    b.Property<int>("DeptId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DeptName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("Quarter")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Remark")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EmsTrainPlanQuarters");
-                });
-
             modelBuilder.Entity("EMS.Domain.DomainEntities.Train.Plan.EmsTrainPlanWeek", b =>
                 {
                     b.Property<int>("Id")
@@ -431,43 +396,6 @@ namespace EMS.EntityFrameworkCore.Migrations
                     b.HasIndex("EmsTrainPlanWeekId");
 
                     b.ToTable("EmsTrainPlanWeekDetails");
-                });
-
-            modelBuilder.Entity("EMS.Domain.DomainEntities.Train.Plan.EmsTrainPlanYear", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("AttachmentRelative")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp(6)");
-
-                    b.Property<int>("DeptId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DeptName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Remark")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EmsTrainPlanYears");
                 });
 
             modelBuilder.Entity("Mbp.EntityFrameworkCore.Domain.MbpCategory", b =>

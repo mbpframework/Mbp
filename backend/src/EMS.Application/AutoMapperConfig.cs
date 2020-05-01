@@ -83,6 +83,18 @@ namespace EMS.Application
                 cfg.CreateMap<TrainPlanWeekDetailInputDto, EmsTrainPlanWeekDetail>();
                 cfg.CreateMap<EmsTrainPlanWeekDetail, TrainPlanWeekDetailOutputDto>();
 
+                // 训练月计划映射
+                cfg.CreateMap<TrainPlanMonthInputDto, EmsTrainPlanMonth>();
+                cfg.CreateMap<EmsTrainPlanMonth, TrainPlanMonthOutputDto>();
+
+                // 训练季度计划映射
+                cfg.CreateMap<TrainPlanQuarterInputDto, EmsTrainPlanQuarter>();
+                cfg.CreateMap<EmsTrainPlanQuarter, TrainPlanQuarterOutputDto>();
+
+                // 训练年计划映射
+                cfg.CreateMap<TrainPlanYearInputDto, EmsTrainPlanYear>();
+                cfg.CreateMap<EmsTrainPlanYear, TrainPlanYearOutputDto>();
+
                 // 训练成绩映射
                 cfg.CreateMap<TrainScoreInputDto, EmsTrainScore>();
                 cfg.CreateMap<EmsTrainScore, TrainScoreOutputDto>();

@@ -42,7 +42,7 @@ namespace EMS.Application.Contracts.Train.Dto
         /// <summary>
         /// 月份
         /// </summary>
-        public short Month { get; set; }
+        public string Month { get; set; }
 
         /// <summary>
         /// 训练详情

@@ -130,7 +130,7 @@
         :model="temp"
         label-position="right"
         label-width="90px"
-        style="width: 650px; margin-left:50px;"
+        style="width: 550px; margin-left:50px;"
       >
         <el-row>
           <el-col :span="24">
@@ -144,8 +144,17 @@
         </el-row>
         <el-row>
           <el-col :span="12">
+            <el-form-item label="发布时间" prop="PublishTime">
+              <el-date-picker
+                v-model="temp.PublishTime"
+                type="datetime"
+                placeholder="发布时间"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="类型" prop="NoticeType">
-              <el-select v-model="temp.NoticeType" placeholder="请选择" style="width:220px;">
+              <el-select v-model="temp.NoticeType" placeholder="请选择">
                 <el-option
                   v-for="item in noticeTypeOptions"
                   :key="item.value"
@@ -153,15 +162,6 @@
                   :value="item.value"
                 />
               </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="发布时间" prop="PublishTime">
-              <el-date-picker
-                v-model="temp.PublishTime"
-                type="datetime"
-                placeholder="发布时间"
-              />
             </el-form-item>
           </el-col>
         </el-row>

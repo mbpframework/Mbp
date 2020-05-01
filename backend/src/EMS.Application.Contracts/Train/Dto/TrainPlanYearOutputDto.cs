@@ -1,13 +1,14 @@
-﻿using Mbp.Core.Entity;
-using Mbp.Core.Entity.Aggregate;
+﻿using Mbp.Ddd.Application.Mbp.Dto;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EMS.Domain.DomainEntities.Train.Plan
+namespace EMS.Application.Contracts.Train.Dto
 {
-    public class EmsTrainPlanMonth : AggregateBase<int>, ISoftDelete, IHasAttachment
+    public class TrainPlanYearOutputDto : DtoBase
     {
+        public int Id { get; set; }
+
         /// <summary>
         /// 部门Id
         /// </summary>
@@ -24,9 +25,9 @@ namespace EMS.Domain.DomainEntities.Train.Plan
         public string Title { get; set; }
 
         /// <summary>
-        /// 月份(yyyy-MM)
+        /// 年份
         /// </summary>
-        public string Month { get; set; }
+        public int Year { get; set; }
 
         /// <summary>
         /// 
@@ -39,5 +40,7 @@ namespace EMS.Domain.DomainEntities.Train.Plan
         public string Remark { get; set; }
 
         public Guid AttachmentRelative { get; set; }
+
+        public byte[] ConcurrencyStamp { get; set; }
     }
 }

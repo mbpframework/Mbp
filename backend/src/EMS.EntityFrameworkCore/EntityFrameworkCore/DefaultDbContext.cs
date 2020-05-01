@@ -27,9 +27,15 @@ namespace EMS.EntityFrameworkCore.EntityFrameworkCore
 
         public DbSet<EmsTrainSubject> EmsTrainSubjects { get; set; }
 
-        public DbSet<EmsTrainPlanWeek>  EmsTrainPlanWeeks { get; set; }
+        public DbSet<EmsTrainPlanWeek> EmsTrainPlanWeeks { get; set; }
 
         public DbSet<EmsTrainPlanWeekDetail> EmsTrainPlanWeekDetails { get; set; }
+
+        public DbSet<EmsTrainPlanMonth> EmsTrainPlanMonths { get; set; }
+
+        public DbSet<EmsTrainPlanQuarter> EmsTrainPlanQuarters { get; set; }
+
+        public DbSet<EmsTrainPlanYear> EmsTrainPlanYears { get; set; }
 
         public DbSet<EmsTrainRecord> EmsTrainRecords { get; set; }
 
@@ -41,7 +47,7 @@ namespace EMS.EntityFrameworkCore.EntityFrameworkCore
 
         public DbSet<EmsTrainNotice> EmsTrainNotices { get; set; }
 
-        public DbSet<EmsAttachment>  EmsAttachments { get; set; }
+        public DbSet<EmsAttachment> EmsAttachments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
