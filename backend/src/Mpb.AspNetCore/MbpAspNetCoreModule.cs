@@ -34,7 +34,7 @@ namespace Mbp.AspNetCore
 
         public override IServiceCollection AddServices(IServiceCollection services)
         {
-            services.AddMvc().AddNewtonsoftJson(options =>
+            services.AddControllers().AddNewtonsoftJson(options =>
             {
                 // 忽略循环引用
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -56,9 +56,13 @@ namespace Mbp.AspNetCore
                 // 请求响应统一格式处理中间件
                 options.Filters.Add(typeof(ResponseMiddleware));
 
-            }); ;
+            }).AddControllersAsServices();
+
+            
 
             AddAutoWebApi(services, new AutoWebApiOptions());
+
+            services.AddControllers().AddControllersAsServices();
 
             // 创建Cors策略
             services.AddCors(options =>

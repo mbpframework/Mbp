@@ -30,12 +30,31 @@ namespace EMS.Application
         {
             base.Load(builder);
 
+            //builder.RegisterType(typeof(LogInterceptor));
+
+            // 所有集成IDomainService的类型都会被扫入IOC
+            //builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+            //          .Where(t => t.Name.EndsWith("AppService")
+            //          && typeof(IAppService).IsAssignableFrom(t)
+            //          && typeof(IPerRequestDependency).IsAssignableFrom(t)
+            //          )
+            //          .AsImplementedInterfaces().InstancePerDependency()
+            //          .EnableClassInterceptors()
+            //          .InterceptedBy(typeof(LogInterceptor));
+
+           
+
+            
+
+
             // 注册OOM
             builder.RegisterInstance(AutoMapperConfig.CreateMapper()).SingleInstance();
         }
 
         public override IServiceCollection AddServices(IServiceCollection services)
         {
+            //services.AddControllers().AddControllersAsServices();
+
             // 注册全局授权策略处理程序
             services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
 

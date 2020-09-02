@@ -11,6 +11,10 @@ using Microsoft.AspNetCore.Authorization;
 using Mbp.Authentication;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using Autofac;
+using Mbp.Core.Aop;
+using Autofac.Extras.DynamicProxy;
+using EMS.Application.Demo;
 
 namespace EMS.Web
 {
@@ -28,6 +32,15 @@ namespace EMS.Web
         {
             // 加载mbp平台框架
             services.AddMedicalFramework<AspMbpModuleManager>();
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterType(typeof(LogInterceptor));
+
+            builder.RegisterType<DemoAppService>().EnableClassInterceptors().InterceptedBy(typeof(LogInterceptor)); 
+
+            builder.RegisterType<ValuesController>().EnableClassInterceptors().InterceptedBy(typeof(LogInterceptor));
         }
 
         // asp.net core 管道,管道顺序和微软官网的说明有些冲突,跨域资源共享中间件需要在Routing和EndPoints之间,而这里只满足在EndPoints之前

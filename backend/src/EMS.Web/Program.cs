@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Net;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -60,8 +61,8 @@ namespace EMS.Web
                        .ReadFrom.Configuration(context.Configuration)
                        .Enrich.FromLogContext()
                         .WriteTo.File($"{AppContext.BaseDirectory}Log/.log", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:HH:mm} || {Level} || {SourceContext:l} || {Message} || {Exception} ||end {NewLine}")
-                       .WriteTo.Console());
-                   });
+                       .WriteTo.Console()).UseEnvironment("Development");
+                   }).UseServiceProviderFactory(new AutofacServiceProviderFactory());
         }
     }
 }

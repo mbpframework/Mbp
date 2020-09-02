@@ -14,5 +14,7 @@ namespace Mbp.Core.Core.Config
         public SwaggerConfig Swagger { get; set; }
 
         public DatabaseConfig Database { get; set; }
+
+        public RedisConfig Redis { get; set; }
     }
 }
