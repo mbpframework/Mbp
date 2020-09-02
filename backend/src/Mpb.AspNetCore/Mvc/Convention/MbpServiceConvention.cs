@@ -22,6 +22,10 @@ namespace Mbp.AspNetCore.Mvc.Convention
             this._services = services;
         }
 
+        /// <summary>
+        /// 定制应用模型
+        /// </summary>
+        /// <param name="application"></param>
         public void Apply(ApplicationModel application)
         {
             foreach (var controller in application.Controllers)
@@ -29,52 +33,32 @@ namespace Mbp.AspNetCore.Mvc.Convention
                 var type = controller.ControllerType.AsType();
 
                 var dynamicWebApiAttr = ReflectionHelper.GetSingleAttributeOrDefaultByFullSearch<AutoWebApiAttribute>(type.GetTypeInfo());
+
+                // 自定义的应用服务
                 if (typeof(IAppService).GetTypeInfo().IsAssignableFrom(type))
                 {
                     controller.ControllerName = controller.ControllerName.RemovePostFix(AppConsts.ControllerPostfixes.ToArray());
-                    ConfigureArea(controller, dynamicWebApiAttr);
-                    ConfigureDynamicWebApi(controller, dynamicWebApiAttr);
+                    ConfigureApplicationService(controller, dynamicWebApiAttr);
                 }
                 else
                 {
+                    // Web Api控制器
                     if (dynamicWebApiAttr != null)
                     {
-                        ConfigureArea(controller, dynamicWebApiAttr);
-                        ConfigureDynamicWebApi(controller, dynamicWebApiAttr);
+                        ConfigureApplicationService(controller, dynamicWebApiAttr);
                     }
                 }
             }
         }
 
-        private void ConfigureArea(ControllerModel controller, AutoWebApiAttribute attr)
-        {
-            if (attr == null)
-            {
-                throw new ArgumentException(nameof(attr));
-            }
-
-            if (!controller.RouteValues.ContainsKey("area"))
-            {
-                if (!string.IsNullOrEmpty(attr.Module))
-                {
-                    controller.RouteValues["area"] = attr.Module;
-                }
-                else if (!string.IsNullOrEmpty(AppConsts.DefaultAreaName))
-                {
-                    controller.RouteValues["area"] = AppConsts.DefaultAreaName;
-                }
-            }
-
-        }
-
-        private void ConfigureDynamicWebApi(ControllerModel controller, AutoWebApiAttribute controllerAttr)
+        protected void ConfigureApplicationService(ControllerModel controller, AutoWebApiAttribute controllerAttr)
         {
             ConfigureApiExplorer(controller);
             ConfigureSelector(controller, controllerAttr);
             ConfigureParameters(controller);
         }
 
-        private void ConfigureParameters(ControllerModel controller)
+        protected void ConfigureParameters(ControllerModel controller)
         {
             foreach (var action in controller.Actions)
             {
@@ -96,8 +80,7 @@ namespace Mbp.AspNetCore.Mvc.Convention
             }
         }
 
-
-        private bool CanUseFormBodyBinding(ActionModel action, ParameterModel parameter)
+        protected bool CanUseFormBodyBinding(ActionModel action, ParameterModel parameter)
         {
             if (AppConsts.FormBodyBindingIgnoredTypes.Any(t => t.IsAssignableFrom(parameter.ParameterInfo.ParameterType)))
             {
@@ -129,10 +112,7 @@ namespace Mbp.AspNetCore.Mvc.Convention
             return true;
         }
 
-
-        #region ConfigureApiExplorer
-
-        private void ConfigureApiExplorer(ControllerModel controller)
+        protected void ConfigureApiExplorer(ControllerModel controller)
         {
             if (controller.ApiExplorer.GroupName.IsNullOrEmpty())
             {
@@ -150,7 +130,7 @@ namespace Mbp.AspNetCore.Mvc.Convention
             }
         }
 
-        private void ConfigureApiExplorer(ActionModel action)
+        protected void ConfigureApiExplorer(ActionModel action)
         {
             if (action.ApiExplorer.IsVisible == null)
             {
@@ -158,9 +138,7 @@ namespace Mbp.AspNetCore.Mvc.Convention
             }
         }
 
-        #endregion
-
-        private void ConfigureSelector(ControllerModel controller, AutoWebApiAttribute controllerAttr)
+        protected void ConfigureSelector(ControllerModel controller, AutoWebApiAttribute controllerAttr)
         {
             RemoveEmptySelectors(controller.Selectors);
 
@@ -169,20 +147,20 @@ namespace Mbp.AspNetCore.Mvc.Convention
                 return;
             }
 
-            var areaName = string.Empty;
+            var rootPath = string.Empty;
 
             if (controllerAttr != null)
             {
-                areaName = controllerAttr.Module;
+                rootPath = controllerAttr.Module;
             }
 
             foreach (var action in controller.Actions)
             {
-                ConfigureSelector(areaName, controller.ControllerName, action);
+                ConfigureSelector(rootPath, controller.ControllerName, action);
             }
         }
 
-        private void ConfigureSelector(string areaName, string controllerName, ActionModel action)
+        protected void ConfigureSelector(string rootPath, string controllerName, ActionModel action)
         {
             RemoveEmptySelectors(action.Selectors);
 
@@ -195,24 +173,21 @@ namespace Mbp.AspNetCore.Mvc.Convention
 
             if (!action.Selectors.Any())
             {
-                AddAppServiceSelector(areaName, controllerName, action);
+                AddAppServiceSelector(rootPath, controllerName, action);
             }
             else
             {
-                NormalizeSelectorRoutes(areaName, controllerName, action);
+                NormalizeSelectorRoutes(rootPath, controllerName, action);
             }
         }
 
-        private void AddAppServiceSelector(string areaName, string controllerName, ActionModel action)
+        protected void AddAppServiceSelector(string rootPath, string controllerName, ActionModel action)
         {
-            string verb;
-            var verbKey = action.ActionName.GetPascalOrCamelCaseFirstWord().ToLower();
-            verb = AppConsts.HttpVerbs.ContainsKey(verbKey) ? AppConsts.HttpVerbs[verbKey] : AppConsts.DefaultHttpVerb;
+            string verb = GetConventionalVerbForMethodName(action);
 
-            action.ActionName = GetRestFulActionName(action.ActionName);
             var appServiceSelectorModel = new SelectorModel
             {
-                AttributeRouteModel = CreateActionRouteModel(areaName, controllerName, action.ActionName)
+                AttributeRouteModel = CreateActionRouteModel(rootPath, controllerName, action)
             };
 
             appServiceSelectorModel.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { verb }));
@@ -220,13 +195,13 @@ namespace Mbp.AspNetCore.Mvc.Convention
             action.Selectors.Add(appServiceSelectorModel);
         }
 
-        /// <summary>
-        /// Processing action name
-        /// </summary>
-        /// <param name="actionName"></param>
-        /// <returns></returns>
-        private static string GetRestFulActionName(string actionName)
+        protected string GetRestFulActionName(string actionName)
         {
+            // 如果不启用Restful风格
+            //if (!bool.Parse(_services.BuildServiceProvider().GetService<IConfiguration>().GetSection("IsRestful").Value))
+            return actionName;
+
+
             // Remove Postfix
             actionName = actionName.RemovePostFix(AppConsts.ActionPostfixes.ToArray());
 
@@ -249,25 +224,73 @@ namespace Mbp.AspNetCore.Mvc.Convention
             }
         }
 
-        private static void NormalizeSelectorRoutes(string areaName, string controllerName, ActionModel action)
+        protected void NormalizeSelectorRoutes(string rootPath, string controllerName, ActionModel action)
         {
-            action.ActionName = GetRestFulActionName(action.ActionName);
             foreach (var selector in action.Selectors)
             {
+                // 防止正常的控制器类没有指定 HttpMethod，根据约定加上
+                string verb = GetConventionalVerbForMethodName(action);
+
+                if (!selector.ActionConstraints.OfType<HttpMethodActionConstraint>().Any())
+                {
+                    selector.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { verb }));
+                }
+
+                // 没有指定路由会同Nitrogen的应用服务一起被定制 否则会使用指定的路由
                 selector.AttributeRouteModel = selector.AttributeRouteModel == null ?
-                    CreateActionRouteModel(areaName, controllerName, action.ActionName) :
-                    AttributeRouteModel.CombineAttributeRouteModel(CreateActionRouteModel(areaName, controllerName, ""), selector.AttributeRouteModel);
+                    CreateActionRouteModel(rootPath, controllerName, action) :
+                    AttributeRouteModel.CombineAttributeRouteModel(CreateActionRouteModel(rootPath, controllerName), selector.AttributeRouteModel);
+
             }
         }
 
-        private static AttributeRouteModel CreateActionRouteModel(string areaName, string controllerName, string actionName)
+        private static string GetConventionalVerbForMethodName(ActionModel action)
+        {
+            string verb;
+            var verbKey = action.ActionName.GetPascalOrCamelCaseFirstWord().ToLower();
+            verb = AppConsts.HttpVerbs.ContainsKey(verbKey) ? AppConsts.HttpVerbs[verbKey] : AppConsts.DefaultHttpVerb;
+            return verb;
+        }
+
+        protected AttributeRouteModel CreateActionRouteModel(string rootPath, string controllerName)
         {
             var routeStr =
-                $"{AppConsts.DefaultApiPreFix}/{areaName}/{controllerName}/{actionName}".Replace("//", "/");
+               $"{AppConsts.DefaultApiPreFix}/{rootPath}/{controllerName}".Replace("//", "/");
+
             return new AttributeRouteModel(new RouteAttribute(routeStr));
         }
 
-        private static void RemoveEmptySelectors(IList<SelectorModel> selectors)
+        protected AttributeRouteModel CreateActionRouteModel(string rootPath, string controllerName, ActionModel action)
+        {
+            action.ActionName = GetRestFulActionName(action.ActionName);
+
+            var routeStr =
+                $"{AppConsts.DefaultApiPreFix}/{rootPath}/{controllerName}/{action.ActionName}".Replace("//", "/");
+
+            var idParameterModel = action.Parameters.FirstOrDefault(p => p.ParameterName == "id");
+            if (idParameterModel != null)
+            {
+                if (TypeHelper.IsPrimitiveExtended(idParameterModel.ParameterType, includeEnums: true))
+                {
+                    routeStr += "/{id}";
+                }
+                else
+                {
+                    var properties = idParameterModel
+                        .ParameterType
+                        .GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
+                    foreach (var property in properties)
+                    {
+                        routeStr += "/{" + property.Name + "}";
+                    }
+                }
+            }
+
+            return new AttributeRouteModel(new RouteAttribute(routeStr));
+        }
+
+        protected void RemoveEmptySelectors(IList<SelectorModel> selectors)
         {
             selectors
                 .Where(IsEmptySelector)
@@ -275,9 +298,12 @@ namespace Mbp.AspNetCore.Mvc.Convention
                 .ForEach(s => selectors.Remove(s));
         }
 
-        private static bool IsEmptySelector(SelectorModel selector)
+        protected bool IsEmptySelector(SelectorModel selector)
         {
-            return selector.AttributeRouteModel == null && selector.ActionConstraints.IsNullOrEmpty();
+            return selector.AttributeRouteModel == null
+                   && selector.ActionConstraints.IsNullOrEmpty()
+                   // 防止Authorize被移除
+                   && selector.EndpointMetadata.IsNullOrEmpty();
         }
     }
 }

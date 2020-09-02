@@ -25,9 +25,9 @@ using Microsoft.Extensions.Logging;
 namespace EMS.Application.Demo
 {
     //[Authorize("GlobalPermission")]
-    [AutoAop]
+    //[AutoAop]
     [AutoWebApi]
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     public class DemoAppService : IDemoAppService
     {
         private readonly IDemoDomainService _demoDomainService = AutofacService.Resolve<IDemoDomainService>();
@@ -145,7 +145,7 @@ namespace EMS.Application.Demo
         }
 
         [AllowAnonymous]
-        [HttpGet("GetToken")]
+        //[HttpGet("GetToken")]
         public async virtual Task<Jwt> GetToken()
         {
             // todo 取出用户的角色
